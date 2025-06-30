@@ -22,185 +22,167 @@ def _clean_attribute_name(attr_id: str) -> str:
     return name.replace(".", "_")
 
 
-# AI-EDITABLE: forge.semantic.generate
-def forge_semantic_generate_execute(
-    input_description: str,
-    output_path: str,
-    llm_model: str,
-    validation_status: str,
-    llm_temperature: Optional[float] = None,
-    validation_errors: Optional[List[str]] = None,
+# AI-EDITABLE: weaver.registry.check
+def weaver_registry_check_execute(
+    registry_check_path: str,
+    registry_check_valid: bool,
+    registry_check_strict: Optional[bool] = None,
+    registry_check_errors: Optional[List[str]] = None,
 ) -> ForgeResult:
-    """Generate semantic convention from natural language description
+    """Validate a semantic convention registry for correctness
     
     Args:
-        input_description: Natural language description to convert to semantic convention
-        output_path: Path where semantic YAML will be written
-        llm_model: LLM model identifier used for generation
-        llm_temperature: Temperature parameter for LLM generation
-        validation_status: Weaver validation result
-        validation_errors: Validation error messages if any
+        registry_check_path: Path to the registry to check
+        registry_check_strict: Enable strict validation mode
+        registry_check_valid: Whether the registry passed validation
+        registry_check_errors: List of validation errors if validation failed
         
     Returns:
         ForgeResult with success status and relevant data
     """
     
-    # Wrap Weaver CLI for semantic generation
+    # AI-EDITABLE: Implementation using runtime layer
     try:
-        # Create a basic semantic convention file
-        basic_semconv = create_basic_semantic_convention(
-            description=input_description,
-            output_path=output_path
-        )
-        write_file(output_path, basic_semconv)
-        
-        # Validate with Weaver CLI
-        is_valid, errors = weaver_registry_check(output_path)
-        
-        # Update validation status
-        validation_status = "passed" if is_valid else "failed"
-        validation_errors = errors if not is_valid else None
+        # Call runtime layer to check registry
+        is_valid, errors = weaver_registry_check(registry_check_path)
         
         return ForgeResult(
             success=is_valid,
-            data={
-                "output_path": output_path,
-                "validation_status": validation_status,
-                "llm_model": llm_model  # Track which model was used (even if mocked)
-            },
-            errors=validation_errors
+            data={"valid": is_valid, "strict": registry_check_strict},
+            errors=errors
         )
-            
     except Exception as e:
         return ForgeResult(success=False, errors=[str(e)])
     
     
 
 
-# AI-EDITABLE: forge.code.generate
-def forge_code_generate_execute(
-    input_semantic_path: str,
-    target_language: str,
-    template_directory: str,
-    output_directory: str,
-    files_generated: Optional[List[str]] = None,
+# AI-EDITABLE: weaver.registry.generate
+def weaver_registry_generate_execute(
+    registry_generate_registry_path: str,
+    registry_generate_target: str,
+    registry_generate_output_dir: str,
+    registry_generate_files_count: int,
+    registry_generate_template_path: Optional[str] = None,
+    registry_generate_params: Optional[Dict[str, str]] = None,
+    registry_generate_files: Optional[List[str]] = None,
 ) -> ForgeResult:
-    """Generate code from semantic convention using Weaver
+    """Generate code or documentation from a semantic convention registry
     
     Args:
-        input_semantic_path: Path to semantic convention YAML file
-        target_language: Target programming language for generation
-        template_directory: Directory containing Weaver templates
-        output_directory: Directory where generated code will be written
-        files_generated: List of files generated
+        registry_generate_registry_path: Path to the semantic convention registry
+        registry_generate_target: Target language or format for generation
+        registry_generate_template_path: Path to custom templates
+        registry_generate_output_dir: Output directory for generated files
+        registry_generate_params: Additional parameters passed to templates
+        registry_generate_files_count: Number of files generated
+        registry_generate_files: List of generated file paths
         
     Returns:
         ForgeResult with success status and relevant data
     """
     
-    # Wrap Weaver CLI for code generation
+    # AI-EDITABLE: Implementation using runtime layer
     try:
-        # Validate inputs
-        if not validate_file_exists(input_semantic_path):
-            return ForgeResult(success=False, errors=[f"Semantic file not found: {input_semantic_path}"])
-        
-        if not Path(template_directory).exists():
-            return ForgeResult(success=False, errors=[f"Template directory not found: {template_directory}"])
-        
-        # Use Weaver CLI to generate code
-        generated_files = weaver_registry_generate(
-            registry_path=input_semantic_path,
-            target_name=target_language,
-            template_path=template_directory,
-            output_dir=output_directory
+        # Call runtime layer to generate code
+        files = weaver_registry_generate(
+            registry_path=registry_generate_registry_path,
+            target_name=registry_generate_target,
+            template_path=registry_generate_template_path or "templates",
+            output_dir=registry_generate_output_dir,
+            params=registry_generate_params
         )
         
         return ForgeResult(
             success=True,
             data={
-                "files_generated": generated_files,
-                "output_directory": output_directory
+                "files": files,
+                "files_count": len(files),
+                "target": registry_generate_target,
+                "output_dir": registry_generate_output_dir
             }
         )
-        
     except Exception as e:
         return ForgeResult(success=False, errors=[str(e)])
     
     
 
 
-# AI-EDITABLE: forge.self.improve
-def forge_self_improve_execute(
-    current_version: str,
-    improvements: List[str],
-    target_version: str,
-    reference_depth: Optional[int] = None,
+# AI-EDITABLE: weaver.registry.resolve
+def weaver_registry_resolve_execute(
+    registry_resolve_registry_path: str,
+    registry_resolve_groups_count: int,
+    registry_resolve_format: Optional[str] = None,
+    registry_resolve_output_path: Optional[str] = None,
 ) -> ForgeResult:
-    """Self-referential improvement of Weaver Forge
+    """Resolve references and merge semantic conventions
     
     Args:
-        current_version: Current version of Forge being improved
-        improvements: List of improvements being applied
-        reference_depth: Depth of self-reference (how many times Forge generated itself)
-        target_version: Target version after improvements
+        registry_resolve_registry_path: Path to the registry to resolve
+        registry_resolve_format: Output format for resolved registry
+        registry_resolve_output_path: Path to write resolved output
+        registry_resolve_groups_count: Number of groups in resolved registry
         
     Returns:
         ForgeResult with success status and relevant data
     """
     
-    # Self-improvement through regeneration
-    try:
-        # Step 1: Validate current version exists
-        current_path = f"weaver_forge_v{current_version}.yaml"
-        if not validate_file_exists(current_path):
-            # Use the main weaver-forge.yaml as starting point
-            current_path = "weaver-forge.yaml"
-            if not validate_file_exists(current_path):
-                return ForgeResult(success=False, errors=["No base semantic convention found"])
+    # AI-EDITABLE: Implement this operation
+    return ForgeResult(success=False, errors=["Operation not implemented"])
+    
+    
+
+
+# AI-EDITABLE: weaver.registry.stats
+def weaver_registry_stats_execute(
+    registry_stats_registry_path: str,
+    registry_stats_total_groups: int,
+    registry_stats_total_attributes: int,
+    registry_stats_stable_count: Optional[int] = None,
+    registry_stats_experimental_count: Optional[int] = None,
+) -> ForgeResult:
+    """Generate statistics about a semantic convention registry
+    
+    Args:
+        registry_stats_registry_path: Path to the registry
+        registry_stats_total_groups: Total number of groups
+        registry_stats_total_attributes: Total number of attributes
+        registry_stats_stable_count: Number of stable definitions
+        registry_stats_experimental_count: Number of experimental definitions
         
-        # Step 2: Copy to new version (in real implementation, would apply improvements)
-        target_path = f"weaver_forge_v{target_version}.yaml"
-        content = read_file(current_path)
+    Returns:
+        ForgeResult with success status and relevant data
+    """
+    
+    # AI-EDITABLE: Implement this operation
+    return ForgeResult(success=False, errors=["Operation not implemented"])
+    
+    
+
+
+# AI-EDITABLE: weaver.multi.generate
+def weaver_multi_generate_execute(
+    multi_generate_registry_path: str,
+    multi_generate_languages: List[str],
+    multi_generate_total_files: int,
+    multi_generate_parallel: Optional[bool] = None,
+    multi_generate_duration_ms: Optional[int] = None,
+) -> ForgeResult:
+    """Generate code for multiple languages in parallel
+    
+    Args:
+        multi_generate_registry_path: Path to the registry
+        multi_generate_languages: List of target languages
+        multi_generate_parallel: Whether to generate in parallel
+        multi_generate_total_files: Total files generated across all languages
+        multi_generate_duration_ms: Total duration in milliseconds
         
-        # Apply improvements (placeholder - in real implementation would modify the YAML)
-        improved_content = apply_improvements_to_yaml(content, improvements)
-        write_file(target_path, improved_content)
-        
-        # Step 3: Regenerate templates and code from improved semantics
-        if Path("templates/registry/python").exists():
-            # Create a proper registry structure for the improved YAML
-            registry_path = create_registry_structure(target_path)
-            try:
-                generated_files = weaver_registry_generate(
-                    registry_path=registry_path,
-                    target_name="python",
-                    template_path="templates",
-                    output_dir=f"generated/forge_v{target_version}"
-                )
-            finally:
-                # Clean up temporary registry
-                import shutil
-                shutil.rmtree(registry_path.rsplit('/', 1)[0], ignore_errors=True)
-            
-            return ForgeResult(
-                success=True,
-                data={
-                    "improved_semantic_path": target_path,
-                    "generated_files": generated_files,
-                    "reference_depth": (reference_depth or 0) + 1
-                }
-            )
-        else:
-            return ForgeResult(
-                success=True,
-                data={
-                    "improved_semantic_path": target_path,
-                    "reference_depth": (reference_depth or 0) + 1
-                }
-            )
-            
-    except Exception as e:
-        return ForgeResult(success=False, errors=[str(e)])
+    Returns:
+        ForgeResult with success status and relevant data
+    """
+    
+    # AI-EDITABLE: Implement this operation
+    return ForgeResult(success=False, errors=["Operation not implemented"])
     
     
 

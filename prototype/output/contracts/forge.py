@@ -60,134 +60,149 @@ def files_were_generated(file_list: Optional[List[str]]) -> bool:
 # Contract decorators for operations
 
 
-# Contracts for forge.semantic.generate
-class ForgeSemanticGenerateContracts:
-    """Contract definitions for forge.semantic.generate"""
+# Contracts for weaver.registry.check
+class WeaverRegistryCheckContracts:
+    """Contract definitions for weaver.registry.check"""
     
     
     @staticmethod
-    def require_input_description(input_description: str) -> bool:
-        """Natural language description to convert to semantic convention - Required"""
-        return isinstance(input_description, str) and len(input_description) > 0
-    
-    @staticmethod
-    def require_output_path(output_path: str) -> bool:
-        """Path where semantic YAML will be written - Required"""
-        return isinstance(output_path, str) and len(output_path) > 0
-    
-    @staticmethod
-    def require_llm_model(llm_model: str) -> bool:
-        """LLM model identifier used for generation - Required"""
-        return isinstance(llm_model, str) and len(llm_model) > 0
+    def require_registry_check_path(registry_check_path: str) -> bool:
+        """Path to the registry to check - Required"""
+        return isinstance(registry_check_path, str) and len(registry_check_path) > 0
     
     
     @staticmethod
-    def require_validation_status(validation_status: str) -> bool:
-        """Weaver validation result - Required"""
-        return isinstance(validation_status, str) and len(validation_status) > 0
+    def require_registry_check_valid(registry_check_valid: bool) -> bool:
+        """Whether the registry passed validation - Required"""
+        return True  # Default validation
     
     
     
     
-    # Specific contracts for semantic generation
-    preconditions = [
-        icontract.require(lambda input_description: len(input_description) > 0, "Description cannot be empty"),
-        icontract.require(lambda output_path: valid_file_path(output_path), "Output path must be valid"),
-        icontract.require(lambda llm_model: valid_model(llm_model), "Model must be supported"),
-    ]
-    
-    postconditions = [
-        icontract.ensure(lambda result: hasattr(result, 'success'), "Result must have success attribute"),
-        icontract.ensure(lambda output_path, result: not result.success or file_was_created(output_path), 
-                        "Output file must exist on success"),
-    ]
+    # Default contracts
+    preconditions = []
+    postconditions = []
     
 
 
-# Contracts for forge.code.generate
-class ForgeCodeGenerateContracts:
-    """Contract definitions for forge.code.generate"""
+# Contracts for weaver.registry.generate
+class WeaverRegistryGenerateContracts:
+    """Contract definitions for weaver.registry.generate"""
     
     
     @staticmethod
-    def require_input_semantic_path(input_semantic_path: str) -> bool:
-        """Path to semantic convention YAML file - Required"""
-        return isinstance(input_semantic_path, str) and len(input_semantic_path) > 0
+    def require_registry_generate_registry_path(registry_generate_registry_path: str) -> bool:
+        """Path to the semantic convention registry - Required"""
+        return isinstance(registry_generate_registry_path, str) and len(registry_generate_registry_path) > 0
     
     @staticmethod
-    def require_target_language(target_language: str) -> bool:
-        """Target programming language for generation - Required"""
-        return isinstance(target_language, str) and len(target_language) > 0
+    def require_registry_generate_target(registry_generate_target: str) -> bool:
+        """Target language or format for generation - Required"""
+        return isinstance(registry_generate_target, str) and len(registry_generate_target) > 0
+    
     
     @staticmethod
-    def require_template_directory(template_directory: str) -> bool:
-        """Directory containing Weaver templates - Required"""
-        return isinstance(template_directory, str) and len(template_directory) > 0
+    def require_registry_generate_output_dir(registry_generate_output_dir: str) -> bool:
+        """Output directory for generated files - Required"""
+        return isinstance(registry_generate_output_dir, str) and len(registry_generate_output_dir) > 0
+    
     
     @staticmethod
-    def require_output_directory(output_directory: str) -> bool:
-        """Directory where generated code will be written - Required"""
-        return isinstance(output_directory, str) and len(output_directory) > 0
+    def require_registry_generate_files_count(registry_generate_files_count: int) -> bool:
+        """Number of files generated - Required"""
+        return isinstance(registry_generate_files_count, int) and registry_generate_files_count >= 0
     
     
     
     
-    # Specific contracts for code generation
-    preconditions = [
-        icontract.require(lambda input_semantic_path: valid_semantic_path(input_semantic_path), 
-                         "Semantic file must exist"),
-        icontract.require(lambda target_language: valid_language(target_language), 
-                         "Target language must be supported"),
-        icontract.require(lambda template_directory: Path(template_directory).exists(), 
-                         "Template directory must exist"),
-    ]
-    
-    postconditions = [
-        icontract.ensure(lambda result: hasattr(result, 'success'), "Result must have success attribute"),
-        icontract.ensure(lambda result: not result.success or 'files_generated' in (result.data or {}), 
-                        "Generated files must be listed on success"),
-    ]
+    # Default contracts
+    preconditions = []
+    postconditions = []
     
 
 
-# Contracts for forge.self.improve
-class ForgeSelfImproveContracts:
-    """Contract definitions for forge.self.improve"""
+# Contracts for weaver.registry.resolve
+class WeaverRegistryResolveContracts:
+    """Contract definitions for weaver.registry.resolve"""
     
     
     @staticmethod
-    def require_current_version(current_version: str) -> bool:
-        """Current version of Forge being improved - Required"""
-        return isinstance(current_version, str) and len(current_version) > 0
+    def require_registry_resolve_registry_path(registry_resolve_registry_path: str) -> bool:
+        """Path to the registry to resolve - Required"""
+        return isinstance(registry_resolve_registry_path, str) and len(registry_resolve_registry_path) > 0
     
-    @staticmethod
-    def require_improvements(improvements: List[str]) -> bool:
-        """List of improvements being applied - Required"""
-        return isinstance(improvements, list) and all(isinstance(i, str) for i in improvements)
     
     
     @staticmethod
-    def require_target_version(target_version: str) -> bool:
-        """Target version after improvements - Required"""
-        return isinstance(target_version, str) and len(target_version) > 0
+    def require_registry_resolve_groups_count(registry_resolve_groups_count: int) -> bool:
+        """Number of groups in resolved registry - Required"""
+        return isinstance(registry_resolve_groups_count, int) and registry_resolve_groups_count >= 0
     
     
     
-    # Specific contracts for self-improvement
-    preconditions = [
-        icontract.require(lambda current_version: valid_version(current_version), 
-                         "Current version must be valid"),
-        icontract.require(lambda target_version: valid_version(target_version), 
-                         "Target version must be valid"),
-        icontract.require(lambda improvements: len(improvements) > 0, 
-                         "Must specify at least one improvement"),
-    ]
+    # Default contracts
+    preconditions = []
+    postconditions = []
     
-    postconditions = [
-        icontract.ensure(lambda result: hasattr(result, 'success'), "Result must have success attribute"),
-        icontract.ensure(lambda result: not result.success or 'reference_depth' in (result.data or {}), 
-                        "Reference depth must be tracked"),
-    ]
+
+
+# Contracts for weaver.registry.stats
+class WeaverRegistryStatsContracts:
+    """Contract definitions for weaver.registry.stats"""
+    
+    
+    @staticmethod
+    def require_registry_stats_registry_path(registry_stats_registry_path: str) -> bool:
+        """Path to the registry - Required"""
+        return isinstance(registry_stats_registry_path, str) and len(registry_stats_registry_path) > 0
+    
+    @staticmethod
+    def require_registry_stats_total_groups(registry_stats_total_groups: int) -> bool:
+        """Total number of groups - Required"""
+        return isinstance(registry_stats_total_groups, int) and registry_stats_total_groups >= 0
+    
+    @staticmethod
+    def require_registry_stats_total_attributes(registry_stats_total_attributes: int) -> bool:
+        """Total number of attributes - Required"""
+        return isinstance(registry_stats_total_attributes, int) and registry_stats_total_attributes >= 0
+    
+    
+    
+    
+    
+    # Default contracts
+    preconditions = []
+    postconditions = []
+    
+
+
+# Contracts for weaver.multi.generate
+class WeaverMultiGenerateContracts:
+    """Contract definitions for weaver.multi.generate"""
+    
+    
+    @staticmethod
+    def require_multi_generate_registry_path(multi_generate_registry_path: str) -> bool:
+        """Path to the registry - Required"""
+        return isinstance(multi_generate_registry_path, str) and len(multi_generate_registry_path) > 0
+    
+    @staticmethod
+    def require_multi_generate_languages(multi_generate_languages: List[str]) -> bool:
+        """List of target languages - Required"""
+        return isinstance(multi_generate_languages, list) and all(isinstance(i, str) for i in multi_generate_languages)
+    
+    
+    @staticmethod
+    def require_multi_generate_total_files(multi_generate_total_files: int) -> bool:
+        """Total files generated across all languages - Required"""
+        return isinstance(multi_generate_total_files, int) and multi_generate_total_files >= 0
+    
+    
+    
+    
+    # Default contracts
+    preconditions = []
+    postconditions = []
     
 
 

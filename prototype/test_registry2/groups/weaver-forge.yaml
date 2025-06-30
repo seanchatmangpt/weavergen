@@ -11,31 +11,37 @@ groups:
         requirement_level: required
         brief: 'Natural language description to convert to semantic convention'
         examples: ['generate telemetry for database operations', 'create metrics for API endpoints']
+        stability: experimental
       - id: forge.semantic.output.path
         type: string
         requirement_level: required
         brief: 'Path where semantic YAML will be written'
         examples: ['./semantics/database.yaml', './semantics/api.yaml']
+        stability: experimental
       - id: forge.semantic.llm.model
         type: string
         requirement_level: required
         brief: 'LLM model identifier used for generation'
         examples: ['llama3.2', 'gpt-4', 'mistral', 'codellama']
+        stability: experimental
       - id: forge.semantic.llm.temperature
         type: double
         requirement_level: recommended
         brief: 'Temperature parameter for LLM generation'
         examples: [0.1, 0.3]
+        stability: experimental
       - id: forge.semantic.validation.status
         type: string
         requirement_level: required
         brief: 'Weaver validation result'
         examples: ['passed', 'failed']
+        stability: experimental
       - id: forge.semantic.validation.errors
         type: string[]
         requirement_level: recommended
         brief: 'Validation error messages if any'
         examples: [['invalid attribute type', 'missing required field']]
+        stability: experimental
 
   # Span definition for semantic generation
   - id: forge.semantic.generate
@@ -56,26 +62,31 @@ groups:
         requirement_level: required
         brief: 'Path to semantic convention YAML file'
         examples: ['./semantics/forge.yaml', './semantics/http.yaml']
+        stability: experimental
       - id: forge.code.target.language
         type: string
         requirement_level: required
         brief: 'Target programming language for generation'
         examples: ['python', 'go', 'rust', 'java', 'typescript']
+        stability: experimental
       - id: forge.code.template.directory
         type: string
         requirement_level: required
         brief: 'Directory containing Weaver templates'
         examples: ['./templates/registry/python', './templates/registry/go']
+        stability: experimental
       - id: forge.code.output.directory
         type: string
         requirement_level: required
         brief: 'Directory where generated code will be written'
         examples: ['./generated/forge', './src/telemetry']
+        stability: experimental
       - id: forge.code.files.generated
         type: string[]
         requirement_level: recommended
         brief: 'List of files generated'
         examples: [['commands/forge.py', 'operations/forge.py', 'runtime/forge.py']]
+        stability: experimental
 
   # Span definition for code generation
   - id: forge.code.generate
@@ -96,21 +107,25 @@ groups:
         requirement_level: required
         brief: 'Current version of Forge being improved'
         examples: ['1.0.0', '2.1.3']
+        stability: experimental
       - id: forge.self.improvements
         type: string[]
         requirement_level: required
         brief: 'List of improvements being applied'
         examples: [['retry logic', 'caching', 'async support']]
+        stability: experimental
       - id: forge.self.reference.depth
         type: int
         requirement_level: recommended
         brief: 'Depth of self-reference (how many times Forge generated itself)'
         examples: [0, 1, 2, 3]
+        stability: experimental
       - id: forge.self.target.version
         type: string
         requirement_level: required
         brief: 'Target version after improvements'
         examples: ['1.1.0', '2.2.0']
+        stability: experimental
 
   # Span definition for self-improvement
   - id: forge.self.improve

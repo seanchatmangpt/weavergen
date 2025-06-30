@@ -59,36 +59,33 @@ def files_were_generated(file_list: Optional[List[str]]) -> bool:
 
 # Contract decorators for operations
 
-
-# Contracts for forge.semantic.generate
-class ForgeSemanticGenerateContracts:
-    """Contract definitions for forge.semantic.generate"""
+{% for operation in ctx %}
+# Contracts for {{ operation.id }}
+class {{ operation.id | replace(".", "_") | title | replace("_", "") }}Contracts:
+    """Contract definitions for {{ operation.id }}"""
     
-    
+    {% for attr in operation.attributes %}
+    {%- if attr.requirement_level == "required" %}
     @staticmethod
-    def require_input_description(input_description: str) -> bool:
-        """Natural language description to convert to semantic convention - Required"""
-        return isinstance(input_description, str) and len(input_description) > 0
+    def require_{{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}: {% if "[]" in attr.type %}List[{{ attr.type | replace("[]", "") | map_text("python_types") }}]{% else %}{{ attr.type | map_text("python_types") }}{% endif %}) -> bool:
+        """{{ attr.brief }} - Required"""
+        {%- if attr.type == "string" and "path" in attr.name %}
+        return isinstance({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}, str) and len({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}) > 0
+        {%- elif attr.type == "string[]" %}
+        return isinstance({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}, list) and all(isinstance(i, str) for i in {{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }})
+        {%- elif attr.type == "string" %}
+        return isinstance({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}, str) and len({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}) > 0
+        {%- elif attr.type == "int" %}
+        return isinstance({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}, int) and {{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }} >= 0
+        {%- elif attr.type == "double" %}
+        return isinstance({{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}, (int, float))
+        {%- else %}
+        return True  # Default validation
+        {%- endif %}
+    {%- endif %}
+    {% endfor %}
     
-    @staticmethod
-    def require_output_path(output_path: str) -> bool:
-        """Path where semantic YAML will be written - Required"""
-        return isinstance(output_path, str) and len(output_path) > 0
-    
-    @staticmethod
-    def require_llm_model(llm_model: str) -> bool:
-        """LLM model identifier used for generation - Required"""
-        return isinstance(llm_model, str) and len(llm_model) > 0
-    
-    
-    @staticmethod
-    def require_validation_status(validation_status: str) -> bool:
-        """Weaver validation result - Required"""
-        return isinstance(validation_status, str) and len(validation_status) > 0
-    
-    
-    
-    
+    {% if operation.id == "forge.semantic.generate" %}
     # Specific contracts for semantic generation
     preconditions = [
         icontract.require(lambda input_description: len(input_description) > 0, "Description cannot be empty"),
@@ -101,37 +98,7 @@ class ForgeSemanticGenerateContracts:
         icontract.ensure(lambda output_path, result: not result.success or file_was_created(output_path), 
                         "Output file must exist on success"),
     ]
-    
-
-
-# Contracts for forge.code.generate
-class ForgeCodeGenerateContracts:
-    """Contract definitions for forge.code.generate"""
-    
-    
-    @staticmethod
-    def require_input_semantic_path(input_semantic_path: str) -> bool:
-        """Path to semantic convention YAML file - Required"""
-        return isinstance(input_semantic_path, str) and len(input_semantic_path) > 0
-    
-    @staticmethod
-    def require_target_language(target_language: str) -> bool:
-        """Target programming language for generation - Required"""
-        return isinstance(target_language, str) and len(target_language) > 0
-    
-    @staticmethod
-    def require_template_directory(template_directory: str) -> bool:
-        """Directory containing Weaver templates - Required"""
-        return isinstance(template_directory, str) and len(template_directory) > 0
-    
-    @staticmethod
-    def require_output_directory(output_directory: str) -> bool:
-        """Directory where generated code will be written - Required"""
-        return isinstance(output_directory, str) and len(output_directory) > 0
-    
-    
-    
-    
+    {% elif operation.id == "forge.code.generate" %}
     # Specific contracts for code generation
     preconditions = [
         icontract.require(lambda input_semantic_path: valid_semantic_path(input_semantic_path), 
@@ -147,32 +114,7 @@ class ForgeCodeGenerateContracts:
         icontract.ensure(lambda result: not result.success or 'files_generated' in (result.data or {}), 
                         "Generated files must be listed on success"),
     ]
-    
-
-
-# Contracts for forge.self.improve
-class ForgeSelfImproveContracts:
-    """Contract definitions for forge.self.improve"""
-    
-    
-    @staticmethod
-    def require_current_version(current_version: str) -> bool:
-        """Current version of Forge being improved - Required"""
-        return isinstance(current_version, str) and len(current_version) > 0
-    
-    @staticmethod
-    def require_improvements(improvements: List[str]) -> bool:
-        """List of improvements being applied - Required"""
-        return isinstance(improvements, list) and all(isinstance(i, str) for i in improvements)
-    
-    
-    @staticmethod
-    def require_target_version(target_version: str) -> bool:
-        """Target version after improvements - Required"""
-        return isinstance(target_version, str) and len(target_version) > 0
-    
-    
-    
+    {% elif operation.id == "forge.self.improve" %}
     # Specific contracts for self-improvement
     preconditions = [
         icontract.require(lambda current_version: valid_version(current_version), 
@@ -188,9 +130,13 @@ class ForgeSelfImproveContracts:
         icontract.ensure(lambda result: not result.success or 'reference_depth' in (result.data or {}), 
                         "Reference depth must be tracked"),
     ]
-    
+    {% else %}
+    # Default contracts
+    preconditions = []
+    postconditions = []
+    {% endif %}
 
-
+{% endfor %}
 
 # Apply contracts to operations
 def apply_contracts(func, contract_class):

@@ -39,5 +39,3 @@ text_maps:
     "int[]": "List[int]"
     "double[]": "List[float]"
     "boolean[]": "List[bool]"
-    "template[string]": "Dict[str, str]"
-    "template[int]": "Dict[str, int]"

@@ -57,12 +57,14 @@ groups:
         type: double
         brief: LLM temperature for response variability
         requirement_level: optional
+        note: Controls randomness in AI responses
         examples: [0.7, 0.3, 0.9]
       
       - id: agent.ai.max_tokens
         type: int
         brief: Maximum tokens for agent response
         requirement_level: optional
+        note: Limits the length of AI responses
         examples: [500, 1000, 2000]
 
   # Agent Decision Making

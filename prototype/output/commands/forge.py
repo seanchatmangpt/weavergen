@@ -42,13 +42,15 @@ def _clean_attribute_name(attr_id: str) -> str:
     return name.replace(".", "_")
 
 
-def weaver_registry_check(
-    registry_check_path: str,
-    registry_check_valid: bool,
-    registry_check_strict: Optional[bool] = None,
-    registry_check_errors: Optional[List[str]] = None,
+def forge_semantic_generate(
+    input_description: str,
+    output_path: str,
+    llm_model: str,
+    validation_status: str,
+    llm_temperature: Optional[float] = None,
+    validation_errors: Optional[List[str]] = None,
 ) -> ForgeResult:
-    """Validate a semantic convention registry for correctness
+    """Generate semantic convention from natural language description
     
     This is a thin wrapper that:
     1. Records telemetry (traces and metrics)
@@ -57,41 +59,49 @@ def weaver_registry_check(
     4. Returns standardized results
     
     Args:
-        registry_check_path: Path to the registry to check
-        registry_check_strict: Enable strict validation mode
-        registry_check_valid: Whether the registry passed validation
-        registry_check_errors: List of validation errors if validation failed
+        input_description: Natural language description to convert to semantic convention
+        output_path: Path where semantic YAML will be written
+        llm_model: LLM model identifier used for generation
+        llm_temperature: Temperature parameter for LLM generation
+        validation_status: Weaver validation result
+        validation_errors: Validation error messages if any
         
     Returns:
         ForgeResult containing operation outcome
     """
-    with tracer.start_span("weaver.registry.check") as span:
+    with tracer.start_span("forge.semantic.generate") as span:
         # Record span attributes
         
-        span.set_attribute("registry.check.path", registry_check_path)
+        span.set_attribute("forge.semantic.input.description", input_description)
         
-        if registry_check_strict is not None:
-            span.set_attribute("registry.check.strict", registry_check_strict)
+        span.set_attribute("forge.semantic.output.path", output_path)
         
-        span.set_attribute("registry.check.valid", registry_check_valid)
+        span.set_attribute("forge.semantic.llm.model", llm_model)
         
-        if registry_check_errors is not None:
-            span.set_attribute("registry.check.errors", registry_check_errors)
+        if llm_temperature is not None:
+            span.set_attribute("forge.semantic.llm.temperature", llm_temperature)
+        
+        span.set_attribute("forge.semantic.validation.status", validation_status)
+        
+        if validation_errors is not None:
+            span.set_attribute("forge.semantic.validation.errors", validation_errors)
         
         
         # Increment operation counter
-        operation_counter.add(1, {"operation": "weaver.registry.check"})
+        operation_counter.add(1, {"operation": "forge.semantic.generate"})
         
         try:
             # Import and delegate to operations layer
-            from operations.forge import weaver_registry_check_execute
+            from operations.forge import forge_semantic_generate_execute
             
             # Call the operation
-            result = weaver_registry_check_execute(
-                registry_check_path=registry_check_path,
-                registry_check_valid=registry_check_valid,
-                registry_check_strict=registry_check_strict,
-                registry_check_errors=registry_check_errors,
+            result = forge_semantic_generate_execute(
+                input_description=input_description,
+                output_path=output_path,
+                llm_model=llm_model,
+                validation_status=validation_status,
+                llm_temperature=llm_temperature,
+                validation_errors=validation_errors,
             )
             
             # Record success
@@ -117,16 +127,14 @@ def weaver_registry_check(
             return ForgeResult(success=False, errors=[str(e)])
 
 
-def weaver_registry_generate(
-    registry_generate_registry_path: str,
-    registry_generate_target: str,
-    registry_generate_output_dir: str,
-    registry_generate_files_count: int,
-    registry_generate_template_path: Optional[str] = None,
-    registry_generate_params: Optional[template[string]] = None,
-    registry_generate_files: Optional[List[str]] = None,
+def forge_code_generate(
+    input_semantic_path: str,
+    target_language: str,
+    template_directory: str,
+    output_directory: str,
+    files_generated: Optional[List[str]] = None,
 ) -> ForgeResult:
-    """Generate code or documentation from a semantic convention registry
+    """Generate code from semantic convention using Weaver
     
     This is a thin wrapper that:
     1. Records telemetry (traces and metrics)
@@ -135,54 +143,44 @@ def weaver_registry_generate(
     4. Returns standardized results
     
     Args:
-        registry_generate_registry_path: Path to the semantic convention registry
-        registry_generate_target: Target language or format for generation
-        registry_generate_template_path: Path to custom templates
-        registry_generate_output_dir: Output directory for generated files
-        registry_generate_params: Additional parameters passed to templates
-        registry_generate_files_count: Number of files generated
-        registry_generate_files: List of generated file paths
+        input_semantic_path: Path to semantic convention YAML file
+        target_language: Target programming language for generation
+        template_directory: Directory containing Weaver templates
+        output_directory: Directory where generated code will be written
+        files_generated: List of files generated
         
     Returns:
         ForgeResult containing operation outcome
     """
-    with tracer.start_span("weaver.registry.generate") as span:
+    with tracer.start_span("forge.code.generate") as span:
         # Record span attributes
         
-        span.set_attribute("registry.generate.registry_path", registry_generate_registry_path)
+        span.set_attribute("forge.code.input.semantic_path", input_semantic_path)
         
-        span.set_attribute("registry.generate.target", registry_generate_target)
+        span.set_attribute("forge.code.target.language", target_language)
         
-        if registry_generate_template_path is not None:
-            span.set_attribute("registry.generate.template_path", registry_generate_template_path)
+        span.set_attribute("forge.code.template.directory", template_directory)
         
-        span.set_attribute("registry.generate.output_dir", registry_generate_output_dir)
+        span.set_attribute("forge.code.output.directory", output_directory)
         
-        if registry_generate_params is not None:
-            span.set_attribute("registry.generate.params", registry_generate_params)
-        
-        span.set_attribute("registry.generate.files_count", registry_generate_files_count)
-        
-        if registry_generate_files is not None:
-            span.set_attribute("registry.generate.files", registry_generate_files)
+        if files_generated is not None:
+            span.set_attribute("forge.code.files.generated", files_generated)
         
         
         # Increment operation counter
-        operation_counter.add(1, {"operation": "weaver.registry.generate"})
+        operation_counter.add(1, {"operation": "forge.code.generate"})
         
         try:
             # Import and delegate to operations layer
-            from operations.forge import weaver_registry_generate_execute
+            from operations.forge import forge_code_generate_execute
             
             # Call the operation
-            result = weaver_registry_generate_execute(
-                registry_generate_registry_path=registry_generate_registry_path,
-                registry_generate_target=registry_generate_target,
-                registry_generate_output_dir=registry_generate_output_dir,
-                registry_generate_files_count=registry_generate_files_count,
-                registry_generate_template_path=registry_generate_template_path,
-                registry_generate_params=registry_generate_params,
-                registry_generate_files=registry_generate_files,
+            result = forge_code_generate_execute(
+                input_semantic_path=input_semantic_path,
+                target_language=target_language,
+                template_directory=template_directory,
+                output_directory=output_directory,
+                files_generated=files_generated,
             )
             
             # Record success
@@ -208,13 +206,13 @@ def weaver_registry_generate(
             return ForgeResult(success=False, errors=[str(e)])
 
 
-def weaver_registry_resolve(
-    registry_resolve_registry_path: str,
-    registry_resolve_groups_count: int,
-    registry_resolve_format: Optional[str] = None,
-    registry_resolve_output_path: Optional[str] = None,
+def forge_self_improve(
+    current_version: str,
+    improvements: List[str],
+    target_version: str,
+    reference_depth: Optional[int] = None,
 ) -> ForgeResult:
-    """Resolve references and merge semantic conventions
+    """Self-referential improvement of Weaver Forge
     
     This is a thin wrapper that:
     1. Records telemetry (traces and metrics)
@@ -223,201 +221,40 @@ def weaver_registry_resolve(
     4. Returns standardized results
     
     Args:
-        registry_resolve_registry_path: Path to the registry to resolve
-        registry_resolve_format: Output format for resolved registry
-        registry_resolve_output_path: Path to write resolved output
-        registry_resolve_groups_count: Number of groups in resolved registry
+        current_version: Current version of Forge being improved
+        improvements: List of improvements being applied
+        reference_depth: Depth of self-reference (how many times Forge generated itself)
+        target_version: Target version after improvements
         
     Returns:
         ForgeResult containing operation outcome
     """
-    with tracer.start_span("weaver.registry.resolve") as span:
+    with tracer.start_span("forge.self.improve") as span:
         # Record span attributes
         
-        span.set_attribute("registry.resolve.registry_path", registry_resolve_registry_path)
+        span.set_attribute("forge.self.current.version", current_version)
         
-        if registry_resolve_format is not None:
-            span.set_attribute("registry.resolve.format", registry_resolve_format)
+        span.set_attribute("forge.self.improvements", improvements)
         
-        if registry_resolve_output_path is not None:
-            span.set_attribute("registry.resolve.output_path", registry_resolve_output_path)
+        if reference_depth is not None:
+            span.set_attribute("forge.self.reference.depth", reference_depth)
         
-        span.set_attribute("registry.resolve.groups_count", registry_resolve_groups_count)
+        span.set_attribute("forge.self.target.version", target_version)
         
         
         # Increment operation counter
-        operation_counter.add(1, {"operation": "weaver.registry.resolve"})
+        operation_counter.add(1, {"operation": "forge.self.improve"})
         
         try:
             # Import and delegate to operations layer
-            from operations.forge import weaver_registry_resolve_execute
+            from operations.forge import forge_self_improve_execute
             
             # Call the operation
-            result = weaver_registry_resolve_execute(
-                registry_resolve_registry_path=registry_resolve_registry_path,
-                registry_resolve_groups_count=registry_resolve_groups_count,
-                registry_resolve_format=registry_resolve_format,
-                registry_resolve_output_path=registry_resolve_output_path,
-            )
-            
-            # Record success
-            span.set_status(trace.Status(trace.StatusCode.OK))
-            if isinstance(result, ForgeResult):
-                if result.success:
-                    span.set_attribute("forge.result.success", True)
-                else:
-                    span.set_status(trace.Status(trace.StatusCode.ERROR))
-                    span.set_attribute("forge.result.success", False)
-                    if result.errors:
-                        span.set_attribute("forge.result.errors", result.errors)
-                return result
-            else:
-                # Wrap non-ForgeResult returns
-                return ForgeResult(success=True, data=result)
-                
-        except Exception as e:
-            # Record failure
-            span.record_exception(e)
-            span.set_status(trace.Status(trace.StatusCode.ERROR))
-            span.set_attribute("forge.result.success", False)
-            return ForgeResult(success=False, errors=[str(e)])
-
-
-def weaver_registry_stats(
-    registry_stats_registry_path: str,
-    registry_stats_total_groups: int,
-    registry_stats_total_attributes: int,
-    registry_stats_stable_count: Optional[int] = None,
-    registry_stats_experimental_count: Optional[int] = None,
-) -> ForgeResult:
-    """Generate statistics about a semantic convention registry
-    
-    This is a thin wrapper that:
-    1. Records telemetry (traces and metrics)
-    2. Validates inputs according to semantic conventions
-    3. Delegates to the operations layer
-    4. Returns standardized results
-    
-    Args:
-        registry_stats_registry_path: Path to the registry
-        registry_stats_total_groups: Total number of groups
-        registry_stats_total_attributes: Total number of attributes
-        registry_stats_stable_count: Number of stable definitions
-        registry_stats_experimental_count: Number of experimental definitions
-        
-    Returns:
-        ForgeResult containing operation outcome
-    """
-    with tracer.start_span("weaver.registry.stats") as span:
-        # Record span attributes
-        
-        span.set_attribute("registry.stats.registry_path", registry_stats_registry_path)
-        
-        span.set_attribute("registry.stats.total_groups", registry_stats_total_groups)
-        
-        span.set_attribute("registry.stats.total_attributes", registry_stats_total_attributes)
-        
-        if registry_stats_stable_count is not None:
-            span.set_attribute("registry.stats.stable_count", registry_stats_stable_count)
-        
-        if registry_stats_experimental_count is not None:
-            span.set_attribute("registry.stats.experimental_count", registry_stats_experimental_count)
-        
-        
-        # Increment operation counter
-        operation_counter.add(1, {"operation": "weaver.registry.stats"})
-        
-        try:
-            # Import and delegate to operations layer
-            from operations.forge import weaver_registry_stats_execute
-            
-            # Call the operation
-            result = weaver_registry_stats_execute(
-                registry_stats_registry_path=registry_stats_registry_path,
-                registry_stats_total_groups=registry_stats_total_groups,
-                registry_stats_total_attributes=registry_stats_total_attributes,
-                registry_stats_stable_count=registry_stats_stable_count,
-                registry_stats_experimental_count=registry_stats_experimental_count,
-            )
-            
-            # Record success
-            span.set_status(trace.Status(trace.StatusCode.OK))
-            if isinstance(result, ForgeResult):
-                if result.success:
-                    span.set_attribute("forge.result.success", True)
-                else:
-                    span.set_status(trace.Status(trace.StatusCode.ERROR))
-                    span.set_attribute("forge.result.success", False)
-                    if result.errors:
-                        span.set_attribute("forge.result.errors", result.errors)
-                return result
-            else:
-                # Wrap non-ForgeResult returns
-                return ForgeResult(success=True, data=result)
-                
-        except Exception as e:
-            # Record failure
-            span.record_exception(e)
-            span.set_status(trace.Status(trace.StatusCode.ERROR))
-            span.set_attribute("forge.result.success", False)
-            return ForgeResult(success=False, errors=[str(e)])
-
-
-def weaver_multi_generate(
-    multi_generate_registry_path: str,
-    multi_generate_languages: List[str],
-    multi_generate_total_files: int,
-    multi_generate_parallel: Optional[bool] = None,
-    multi_generate_duration_ms: Optional[int] = None,
-) -> ForgeResult:
-    """Generate code for multiple languages in parallel
-    
-    This is a thin wrapper that:
-    1. Records telemetry (traces and metrics)
-    2. Validates inputs according to semantic conventions
-    3. Delegates to the operations layer
-    4. Returns standardized results
-    
-    Args:
-        multi_generate_registry_path: Path to the registry
-        multi_generate_languages: List of target languages
-        multi_generate_parallel: Whether to generate in parallel
-        multi_generate_total_files: Total files generated across all languages
-        multi_generate_duration_ms: Total duration in milliseconds
-        
-    Returns:
-        ForgeResult containing operation outcome
-    """
-    with tracer.start_span("weaver.multi.generate") as span:
-        # Record span attributes
-        
-        span.set_attribute("multi.generate.registry_path", multi_generate_registry_path)
-        
-        span.set_attribute("multi.generate.languages", multi_generate_languages)
-        
-        if multi_generate_parallel is not None:
-            span.set_attribute("multi.generate.parallel", multi_generate_parallel)
-        
-        span.set_attribute("multi.generate.total_files", multi_generate_total_files)
-        
-        if multi_generate_duration_ms is not None:
-            span.set_attribute("multi.generate.duration_ms", multi_generate_duration_ms)
-        
-        
-        # Increment operation counter
-        operation_counter.add(1, {"operation": "weaver.multi.generate"})
-        
-        try:
-            # Import and delegate to operations layer
-            from operations.forge import weaver_multi_generate_execute
-            
-            # Call the operation
-            result = weaver_multi_generate_execute(
-                multi_generate_registry_path=multi_generate_registry_path,
-                multi_generate_languages=multi_generate_languages,
-                multi_generate_total_files=multi_generate_total_files,
-                multi_generate_parallel=multi_generate_parallel,
-                multi_generate_duration_ms=multi_generate_duration_ms,
+            result = forge_self_improve_execute(
+                current_version=current_version,
+                improvements=improvements,
+                target_version=target_version,
+                reference_depth=reference_depth,
             )
             
             # Record success

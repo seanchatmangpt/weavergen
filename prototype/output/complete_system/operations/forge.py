@@ -86,7 +86,7 @@ def otel_communication_execute(
 def roberts_enhanced_execute(
     roberts_enhanced_meeting_id: str,
     roberts_enhanced_meeting_type: {"members": [{"brief": none, "deprecated": none, "id": "board", "note": none, "stability": none, "value": "board"}, {"brief": none, "deprecated": none, "id": "committee", "note": none, "stability": none, "value": "committee"}, {"brief": none, "deprecated": none, "id": "development", "note": none, "stability": none, "value": "development"}, {"brief": none, "deprecated": none, "id": "scrum_of_scrums", "note": none, "stability": none, "value": "scrum_of_scrums"}]},
-    roberts_enhanced_trace_context: template[string],
+    roberts_enhanced_trace_context: Dict[str, str],
     roberts_enhanced_communication_mode: {"members": [{"brief": none, "deprecated": none, "id": "otel_spans", "note": none, "stability": none, "value": "otel_spans"}, {"brief": none, "deprecated": none, "id": "direct", "note": none, "stability": none, "value": "direct"}, {"brief": none, "deprecated": none, "id": "hybrid", "note": none, "stability": none, "value": "hybrid"}]},
 ) -> ForgeResult:
     """Enhanced Roberts Rules with OTel integration
@@ -113,7 +113,7 @@ def motion_otel_execute(
     motion_otel_trace_id: str,
     motion_otel_proposer_span_id: str,
     motion_otel_seconder_span_ids: Optional[List[str]] = None,
-    motion_otel_vote_span_ids: Optional[template[string]] = None,
+    motion_otel_vote_span_ids: Optional[Dict[str, str]] = None,
     motion_otel_discussion_span_ids: Optional[List[str]] = None,
 ) -> ForgeResult:
     """Parliamentary motion with OpenTelemetry tracking
@@ -197,7 +197,7 @@ def dev_team_meeting_execute(
     dev_team_meeting_feature_proposed: str,
     dev_team_meeting_files_analyzed: int,
     dev_team_meeting_decisions: List[str],
-    dev_team_meeting_action_items: template[string],
+    dev_team_meeting_action_items: Dict[str, str],
     dev_team_meeting_otel_spans_created: Optional[int] = None,
 ) -> ForgeResult:
     """Development team meeting with code analysis
@@ -228,7 +228,7 @@ def scrum_scale_execute(
     scrum_scale_story_points_complete: int,
     scrum_scale_story_points_total: int,
     scrum_scale_impediments: Optional[List[str]] = None,
-    scrum_scale_dependencies: Optional[template[string]] = None,
+    scrum_scale_dependencies: Optional[Dict[str, str]] = None,
 ) -> ForgeResult:
     """Scrum of Scrums using Roberts Rules
     

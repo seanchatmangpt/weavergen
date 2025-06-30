@@ -29,12 +29,16 @@ from typing import List, Optional
 
 class WeaverConfig(BaseModel):
     """Weaver configuration."""
-    weaver_path: Optional[str] = None
+    weaver_path: Optional[Path] = None
+    template_dir: Optional[Path] = None
+    cache_dir: Optional[Path] = None
     
 class WeaverCommand(BaseModel):
     """Weaver command."""
     command: str
     args: List[str] = []
+    cwd: Optional[Path] = None
+    env: Optional[Dict[str, str]] = None
 
 
 class WeaverGenError(Exception):
@@ -84,7 +88,7 @@ class WeaverGen:
         """Ensure OTel Weaver binary is available."""
         # Try configured path first
         if self._weaver_config.weaver_path:
-            if self._weaver_config.weaver_path.exists():
+            if Path(self._weaver_config.weaver_path).exists():
                 return
         
         # Try to find weaver in PATH
@@ -143,22 +147,19 @@ class WeaverGen:
             # Ensure output directory exists
             self.config.output_dir.mkdir(parents=True, exist_ok=True)
             
-            # Build weaver forge command
+            # Build weaver registry generate command
             forge_args = [
-                "forge",
+                "registry", "generate",
                 "--registry", str(self.config.registry_url),
-                "--output", str(self.config.output_dir),
-                "--language", self.config.language,
+                self.config.language,
+                str(self.config.output_dir),
             ]
             
             if self.config.template_dir:
                 forge_args.extend(["--templates", str(self.config.template_dir)])
             
-            if self.config.force:
-                forge_args.append("--force")
-            
             if self.config.verbose:
-                forge_args.append("--verbose")
+                forge_args.append("--debug")
             
             command = WeaverCommand(
                 command="weaver",
@@ -172,7 +173,7 @@ class WeaverGen:
             if result.returncode != 0:
                 return GenerationResult(
                     success=False,
-                    error=f"Weaver forge failed: {result.stderr}",
+                    error=f"Weaver generate failed: {result.stderr}",
                     duration_seconds=time.time() - start_time,
                 )
             

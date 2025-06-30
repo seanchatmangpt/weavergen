@@ -166,7 +166,7 @@ async def example_contact_validation():
     console.print("\n[bold blue]Example 1: Contact Validation with Retries[/bold blue]")
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=ContactInfo,
         system_prompt="""Extract contact information from the text.
         Ensure email addresses are valid and phone numbers include country code.
@@ -196,7 +196,7 @@ async def example_contact_validation():
         console.print(f"\n[yellow]Input:[/yellow] {input_text}")
         try:
             result = await agent.run(input_text)
-            contact = result.data
+            contact = result.output
             
             table = Table()
             table.add_column("Field", style="cyan")
@@ -219,7 +219,7 @@ async def example_financial_validation():
     console.print("\n[bold blue]Example 2: Financial Data Validation[/bold blue]")
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=AccountStatement,
         system_prompt="""Generate a bank account statement with transactions.
         Rules:
@@ -250,7 +250,7 @@ async def example_financial_validation():
     
     try:
         result = await agent.run(prompt)
-        statement = result.data
+        statement = result.output
         
         # Display statement header
         console.print(Panel(
@@ -293,7 +293,7 @@ async def example_code_validation():
     console.print("\n[bold blue]Example 3: Code Generation with Validation[/bold blue]")
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=CodeSnippet,
         system_prompt="""Generate code snippets based on the request.
         Rules:
@@ -332,7 +332,7 @@ async def example_code_validation():
         console.print(f"\n[yellow]Request:[/yellow] {prompt}")
         try:
             result = await agent.run(prompt)
-            snippet = result.data
+            snippet = result.output
             
             # Display metadata
             console.print(Panel(

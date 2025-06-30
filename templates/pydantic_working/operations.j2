@@ -21,30 +21,26 @@ def _clean_attribute_name(attr_id: str) -> str:
             name = name[len(prefix):]
     return name.replace(".", "_")
 
-
-# AI-EDITABLE: forge.semantic.generate
-def forge_semantic_generate_execute(
-    input_description: str,
-    output_path: str,
-    llm_model: str,
-    validation_status: str,
-    llm_temperature: Optional[float] = None,
-    validation_errors: Optional[List[str]] = None,
+{% for operation in ctx %}
+# AI-EDITABLE: {{ operation.id }}
+def {{ operation.id | replace(".", "_") }}_execute(
+    {%- for attr in operation.attributes if attr.requirement_level == "required" %}
+    {{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}: {{ attr.type | map_text("python_types") }},
+    {%- endfor %}
+    {%- for attr in operation.attributes if attr.requirement_level != "required" %}
+    {{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}: Optional[{{ attr.type | map_text("python_types") }}] = None,
+    {%- endfor %}
 ) -> ForgeResult:
-    """Generate semantic convention from natural language description
+    """{{ operation.brief }}
     
     Args:
-        input_description: Natural language description to convert to semantic convention
-        output_path: Path where semantic YAML will be written
-        llm_model: LLM model identifier used for generation
-        llm_temperature: Temperature parameter for LLM generation
-        validation_status: Weaver validation result
-        validation_errors: Validation error messages if any
-        
+        {% for attr in operation.attributes -%}
+        {{ attr.name | replace("forge.semantic.", "") | replace("forge.code.", "") | replace("forge.self.", "") | replace(".", "_") }}: {{ attr.brief }}
+        {% endfor %}
     Returns:
         ForgeResult with success status and relevant data
     """
-    
+    {% if operation.id == "forge.semantic.generate" %}
     # Wrap Weaver CLI for semantic generation
     try:
         # Create a basic semantic convention file
@@ -73,31 +69,7 @@ def forge_semantic_generate_execute(
             
     except Exception as e:
         return ForgeResult(success=False, errors=[str(e)])
-    
-    
-
-
-# AI-EDITABLE: forge.code.generate
-def forge_code_generate_execute(
-    input_semantic_path: str,
-    target_language: str,
-    template_directory: str,
-    output_directory: str,
-    files_generated: Optional[List[str]] = None,
-) -> ForgeResult:
-    """Generate code from semantic convention using Weaver
-    
-    Args:
-        input_semantic_path: Path to semantic convention YAML file
-        target_language: Target programming language for generation
-        template_directory: Directory containing Weaver templates
-        output_directory: Directory where generated code will be written
-        files_generated: List of files generated
-        
-    Returns:
-        ForgeResult with success status and relevant data
-    """
-    
+    {% elif operation.id == "forge.code.generate" %}
     # Wrap Weaver CLI for code generation
     try:
         # Validate inputs
@@ -125,29 +97,7 @@ def forge_code_generate_execute(
         
     except Exception as e:
         return ForgeResult(success=False, errors=[str(e)])
-    
-    
-
-
-# AI-EDITABLE: forge.self.improve
-def forge_self_improve_execute(
-    current_version: str,
-    improvements: List[str],
-    target_version: str,
-    reference_depth: Optional[int] = None,
-) -> ForgeResult:
-    """Self-referential improvement of Weaver Forge
-    
-    Args:
-        current_version: Current version of Forge being improved
-        improvements: List of improvements being applied
-        reference_depth: Depth of self-reference (how many times Forge generated itself)
-        target_version: Target version after improvements
-        
-    Returns:
-        ForgeResult with success status and relevant data
-    """
-    
+    {% elif operation.id == "forge.self.improve" %}
     # Self-improvement through regeneration
     try:
         # Step 1: Validate current version exists
@@ -201,10 +151,13 @@ def forge_self_improve_execute(
             
     except Exception as e:
         return ForgeResult(success=False, errors=[str(e)])
-    
+    {% else %}
+    # AI-EDITABLE: Implement this operation
+    return ForgeResult(success=False, errors=["Operation not implemented"])
+    {% endif %}
     
 
-
+{% endfor %}
 
 # Helper functions
 

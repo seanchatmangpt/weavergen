@@ -1,0 +1,11 @@
+file_format: 0.1.0
+
+# Pydantic model generation configuration for Weaver
+templates:
+  - pattern: 'pydantic/models.py.j2'
+    filter: '.'
+    application_mode: single
+    
+  - pattern: 'pydantic/__init__.py.j2'
+    filter: '.'
+    application_mode: single

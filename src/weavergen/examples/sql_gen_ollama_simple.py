@@ -9,6 +9,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.syntax import Syntax
 
+from .ollama_utils import get_ollama_model, handle_ollama_error
+
 
 # Database schema for the example
 SCHEMA = """
@@ -51,13 +53,10 @@ class SqlQuery(BaseModel):
         return v
 
 
+@handle_ollama_error
 def main():
     """Run simple SQL generation example."""
     console = Console()
-    
-    # Set up Ollama via environment variables
-    os.environ["OPENAI_API_KEY"] = "ollama"
-    os.environ["OPENAI_BASE_URL"] = "http://localhost:11434/v1"
     
     # Build system prompt
     examples = "\n\n".join(
@@ -84,9 +83,15 @@ Important rules:
 6. Provide clear explanations of what each query does
 """
     
-    # Create agent
+    # Create agent with error handling
+    try:
+        model = get_ollama_model("qwen3:latest")
+    except Exception as e:
+        console.print(f"[red]Error: {e}[/red]")
+        return
+    
     agent = Agent(
-        model=OpenAIModel(model_name="llama3.2:latest"),
+        model=model,
         result_type=SqlQuery,
         system_prompt=system_prompt
     )
@@ -109,14 +114,14 @@ Important rules:
             
             # Display explanation
             console.print(Panel(
-                result.data.explanation,
+                result.output.explanation,
                 title="Query Explanation",
                 border_style="blue"
             ))
             
             # Display SQL with syntax highlighting
             syntax = Syntax(
-                result.data.query, 
+                result.output.query, 
                 "sql", 
                 theme="monokai", 
                 line_numbers=True

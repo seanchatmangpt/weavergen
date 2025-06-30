@@ -1,0 +1,30 @@
+groups:
+  - id: http.client
+    type: span
+    span_kind: client
+    brief: HTTP client spans
+    stability: stable
+    attributes:
+      - id: http.method
+        type: string
+        brief: HTTP request method
+        requirement_level: required
+        stability: stable
+        note: The HTTP method used in the request
+        examples: ["GET", "POST", "PUT"]
+      
+      - id: http.url
+        type: string
+        brief: Full HTTP request URL
+        requirement_level: required
+        stability: stable
+        note: The complete URL of the HTTP request
+        examples: ["https://example.com/api/users"]
+      
+      - id: http.status_code
+        type: int
+        brief: HTTP response status code
+        requirement_level: required
+        stability: stable
+        note: The status code returned by the server
+        examples: [200, 404, 500]

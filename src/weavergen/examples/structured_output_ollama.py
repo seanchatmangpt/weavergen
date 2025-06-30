@@ -147,7 +147,7 @@ async def example_basic_output():
     console.print("\n[bold blue]Example 1: Basic Structured Output[/bold blue]")
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=City,
         system_prompt="Extract city information from the user's input."
     )
@@ -161,7 +161,7 @@ async def example_basic_output():
     for input_text in inputs:
         try:
             result = await agent.run(input_text)
-            city = result.data
+            city = result.output
             
             table = Table(title=f"City: {city.name}")
             table.add_column("Property", style="cyan")
@@ -183,7 +183,7 @@ async def example_complex_structure():
     console.print("\n[bold blue]Example 2: Complex Nested Structure[/bold blue]")
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=Recipe,
         system_prompt="""You are a helpful cooking assistant. 
         Extract recipe information and ensure all details are accurate.
@@ -205,7 +205,7 @@ async def example_complex_structure():
     
     try:
         result = await agent.run(prompt)
-        recipe = result.data
+        recipe = result.output
         
         console.print(Panel(f"[bold]{recipe.name}[/bold]\n{recipe.cuisine} cuisine - {recipe.difficulty} difficulty"))
         
@@ -238,7 +238,7 @@ async def example_union_types():
     console.print("\n[bold blue]Example 3: Union Types and Enums[/bold blue]")
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=Project,
         system_prompt="""You are a project manager. 
         Create a project plan with multiple tasks.
@@ -249,7 +249,7 @@ async def example_union_types():
     
     try:
         result = await agent.run(prompt)
-        project = result.data
+        project = result.output
         
         console.print(Panel(f"[bold]{project.name}[/bold]\n{project.description}"))
         
@@ -297,7 +297,7 @@ async def example_dynamic_schema():
     ProductInfo = create_data_extractor(product_fields)
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=ProductInfo,
         system_prompt="Extract product information from the description."
     )
@@ -310,7 +310,7 @@ async def example_dynamic_schema():
     for desc in descriptions:
         try:
             result = await agent.run(desc)
-            product = result.data
+            product = result.output
             
             console.print(f"\n[bold]Product Information:[/bold]")
             for field_name, _, _ in product_fields:
@@ -337,7 +337,7 @@ async def example_prompted_output():
         complexity: str = Field(description="Complexity level: beginner, intermediate, advanced")
     
     agent = Agent(
-        OpenAIModel(model_name="llama3.2:latest"),
+        OpenAIModel(model_name="qwen3:latest"),
         result_type=PromptedOutput[CodeExample],
         system_prompt="You are a coding instructor providing examples."
     )
@@ -346,7 +346,7 @@ async def example_prompted_output():
     
     try:
         result = await agent.run(prompt)
-        example = result.data.output
+        example = result.output.output
         
         console.print(Panel(f"[bold]{example.language} Example[/bold] - {example.complexity}"))
         

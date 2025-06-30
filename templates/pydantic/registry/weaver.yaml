@@ -1,0 +1,14 @@
+templates:
+  - template: models.py.j2
+    filter: |
+      .groups 
+      | map(select(.type == "span" or .type == "attribute_group"))
+    application_mode: single
+    file_name: "models.py"
+    
+  - template: __init__.py.j2
+    filter: |
+      .groups 
+      | map(select(.type == "span" or .type == "attribute_group"))
+    application_mode: single
+    file_name: "__init__.py"

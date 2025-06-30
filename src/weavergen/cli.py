@@ -229,6 +229,36 @@ def config(
         rprint(f"[green]✅ Weaver path updated to: {weaver_path}[/green]")
 
 
+@app.command()
+def generate_models(
+    semantic_yaml: Path = typer.Argument(..., help="Path to semantic convention YAML file"),
+    output_dir: Path = typer.Option(Path("generated"), "--output", "-o", help="Output directory"),
+    validate: bool = typer.Option(True, "--validate/--no-validate", help="Validate generated models")
+):
+    """🏗️ Generate Pydantic models from semantic conventions."""
+    # Lazy import to avoid circular dependency
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent))
+    from generate_models import generate_pydantic_models, validate_generated_models
+    
+    if not semantic_yaml.exists():
+        rprint(f"[red]Error: {semantic_yaml} not found[/red]")
+        raise typer.Exit(1)
+    
+    # Generate models
+    result = generate_pydantic_models(semantic_yaml, output_dir)
+    
+    if not result.success:
+        raise typer.Exit(1)
+    
+    # Validate if requested
+    if validate:
+        model_file = output_dir / "pydantic" / "models.py"
+        if model_file.exists():
+            if not validate_generated_models(model_file):
+                raise typer.Exit(1)
+
+
 # ============= Agent Commands =============
 
 @agents_app.command()

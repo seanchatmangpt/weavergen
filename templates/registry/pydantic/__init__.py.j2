@@ -1,0 +1,18 @@
+"""
+Pydantic models generated from semantic conventions.
+"""
+
+from .models import *
+
+__all__ = [
+{%- for group in groups %}
+{%- if group.type == "span" or group.type == "attribute_group" %}
+    "{{ group.id | replace(".", "_") | replace("-", "_") | capitalize }}Model",
+{%- endif -%}
+{%- endfor %}
+{%- for group in groups %}
+{%- if group.id starts_with "agent.output" %}
+    "{{ group.id | replace("agent.output.", "") | capitalize }}Output",
+{%- endif -%}
+{%- endfor %}
+]

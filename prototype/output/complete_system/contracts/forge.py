@@ -155,7 +155,7 @@ class RobertsEnhancedContracts:
         return True  # Default validation
     
     @staticmethod
-    def require_roberts_enhanced_trace_context(roberts_enhanced_trace_context: template[string]) -> bool:
+    def require_roberts_enhanced_trace_context(roberts_enhanced_trace_context: Dict[str, str]) -> bool:
         """OpenTelemetry trace context for the meeting - Required"""
         return True  # Default validation
     
@@ -297,7 +297,7 @@ class DevTeamMeetingContracts:
         return isinstance(dev_team_meeting_decisions, list) and all(isinstance(i, str) for i in dev_team_meeting_decisions)
     
     @staticmethod
-    def require_dev_team_meeting_action_items(dev_team_meeting_action_items: template[string]) -> bool:
+    def require_dev_team_meeting_action_items(dev_team_meeting_action_items: Dict[str, str]) -> bool:
         """Action items assigned to agents - Required"""
         return True  # Default validation
     

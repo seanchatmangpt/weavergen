@@ -1,0 +1,66 @@
+# Makefile for WeaverGen Ollama Examples
+
+.PHONY: quickstart setup demo test clean help
+
+# Default target
+help:
+	@echo "WeaverGen Ollama Examples - Available Commands:"
+	@echo ""
+	@echo "  make quickstart    - Run quickstart (install + setup + demo)"
+	@echo "  make setup         - Check Ollama setup"
+	@echo "  make demo          - Run interactive demo menu"
+	@echo "  make test          - Run integration tests"
+	@echo "  make complete      - Run complete example"
+	@echo "  make clean         - Clean generated files"
+	@echo ""
+	@echo "Individual demos:"
+	@echo "  make demo-sql      - SQL generation demo"
+	@echo "  make demo-struct   - Structured output demo"
+	@echo "  make demo-valid    - Validation demo"
+
+# Quick start - one command to rule them all
+quickstart:
+	@echo "🚀 Running WeaverGen Ollama Quickstart..."
+	@python quickstart.py
+
+# Check setup
+setup:
+	@echo "🔍 Checking Ollama setup..."
+	@python -m weavergen.examples setup
+
+# Interactive demo
+demo:
+	@echo "✨ Starting interactive demo..."
+	@python -m weavergen.examples
+
+# Individual demos
+demo-sql:
+	@python -m weavergen.examples sql
+
+demo-struct:
+	@python -m weavergen.examples structured
+
+demo-valid:
+	@python -m weavergen.examples validation
+
+# Complete example
+complete:
+	@echo "🎯 Running complete code analysis example..."
+	@python -m weavergen.examples.complete_example
+
+# Run tests
+test:
+	@echo "🧪 Running integration tests..."
+	@pytest tests/test_ollama_integration.py -v
+
+# Clean up
+clean:
+	@echo "🧹 Cleaning up..."
+	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@rm -f VALIDATION_REPORT.md 2>/dev/null || true
+
+# Install dependencies
+install:
+	@echo "📦 Installing dependencies..."
+	@pip install -e ".[examples]"

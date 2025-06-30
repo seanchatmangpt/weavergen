@@ -67,7 +67,7 @@ class SqlQuery(BaseModel):
 class SqlGenAgent:
     """SQL generation agent using Ollama."""
     
-    def __init__(self, model_name: str = "llama3.2:latest", base_url: str = "http://localhost:11434/v1"):
+    def __init__(self, model_name: str = "qwen3:latest", base_url: str = "http://localhost:11434/v1"):
         """Initialize the SQL generation agent.
         
         Args:
@@ -154,7 +154,7 @@ Important rules:
             Validated SQL query result
         """
         result = await self.agent.run(prompt, deps=conn)
-        return result.data
+        return result.output
     
     def display_result(self, result: SqlQuery):
         """Display the generated query with syntax highlighting."""
@@ -214,7 +214,7 @@ async def main():
     
     parser = argparse.ArgumentParser(description="Generate SQL queries using Ollama")
     parser.add_argument("prompt", help="Natural language query description")
-    parser.add_argument("--model", default="llama3.2:latest", help="Ollama model to use")
+    parser.add_argument("--model", default="qwen3:latest", help="Ollama model to use")
     parser.add_argument("--ollama-url", default="http://localhost:11434/v1", help="Ollama API URL")
     parser.add_argument("--setup", action="store_true", help="Set up example database")
     parser.add_argument("--db-host", default="localhost", help="PostgreSQL host")

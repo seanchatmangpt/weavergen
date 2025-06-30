@@ -1,0 +1,6 @@
+groups:
+- id: auth
+  type: span
+  brief: User authentication telemetry with login tracking
+  stability: experimental
+  attributes: []

@@ -1,0 +1,83 @@
+{
+  "loops": [
+    {
+      "loop_id": "registry_monitor",
+      "name": "Registry Monitoring",
+      "description": "Monitor semantic convention registries for updates",
+      "interval_seconds": 3600,
+      "enabled": true,
+      "last_run": null,
+      "run_count": 0,
+      "success_count": 0,
+      "performance_metrics": {},
+      "auto_healing": true,
+      "evolution_tracking": true
+    },
+    {
+      "loop_id": "generation_quality",
+      "name": "Generation Quality Monitoring",
+      "description": "Continuously validate generated code quality",
+      "interval_seconds": 1800,
+      "enabled": true,
+      "last_run": null,
+      "run_count": 0,
+      "success_count": 0,
+      "performance_metrics": {},
+      "auto_healing": true,
+      "evolution_tracking": true
+    },
+    {
+      "loop_id": "performance_optimization",
+      "name": "Performance Optimization",
+      "description": "Autonomous performance optimization and tuning",
+      "interval_seconds": 7200,
+      "enabled": true,
+      "last_run": null,
+      "run_count": 0,
+      "success_count": 0,
+      "performance_metrics": {},
+      "auto_healing": true,
+      "evolution_tracking": true
+    },
+    {
+      "loop_id": "session_health",
+      "name": "Session Health Monitoring",
+      "description": "Monitor and heal CCCS session state",
+      "interval_seconds": 300,
+      "enabled": true,
+      "last_run": null,
+      "run_count": 0,
+      "success_count": 0,
+      "performance_metrics": {},
+      "auto_healing": true,
+      "evolution_tracking": false
+    },
+    {
+      "loop_id": "cache_optimization",
+      "name": "Cache Optimization",
+      "description": "Optimize pattern cache and template compilation",
+      "interval_seconds": 1800,
+      "enabled": true,
+      "last_run": null,
+      "run_count": 0,
+      "success_count": 0,
+      "performance_metrics": {},
+      "auto_healing": true,
+      "evolution_tracking": true
+    },
+    {
+      "loop_id": "evolution_tracking",
+      "name": "Evolution Tracking",
+      "description": "Track and implement >20% improvement mutations",
+      "interval_seconds": 86400,
+      "enabled": true,
+      "last_run": null,
+      "run_count": 0,
+      "success_count": 0,
+      "performance_metrics": {},
+      "auto_healing": false,
+      "evolution_tracking": true
+    }
+  ],
+  "updated_at": 1751246904.555982
+}

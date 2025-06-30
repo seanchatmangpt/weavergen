@@ -1,0 +1,31 @@
+groups:
+- id: custom.database_connection_pooling_with_retry_logic
+  type: attribute_group
+  brief: Attributes for database connection pooling with retry logic
+  stability: experimental
+  attributes:
+  - id: custom.database_connection_pooling_with_retry_logic.input.description
+    type: string
+    requirement_level: required
+    brief: Input description for database connection pooling with retry logic
+    examples:
+    - database connection pooling with retry logic
+  - id: custom.database_connection_pooling_with_retry_logic.output.path
+    type: string
+    requirement_level: required
+    brief: Output path for database connection pooling with retry logic result
+    examples:
+    - ./database_connection_pooling_with_retry_logic.yaml
+  - id: custom.database_connection_pooling_with_retry_logic.status
+    type: string
+    requirement_level: required
+    brief: Status of database connection pooling with retry logic operation
+    examples:
+    - success
+    - failed
+- id: custom.database_connection_pooling_with_retry_logic.execute
+  type: span
+  brief: Execute database connection pooling with retry logic
+  extends: custom.database_connection_pooling_with_retry_logic
+  span_kind: internal
+  stability: experimental

@@ -1,0 +1,7 @@
+groups:
+- id: generated.test
+  type: span
+  brief: Create a telemetry system for monitoring API endpoints with request/response
+    tracking
+  stability: experimental
+  attributes: []

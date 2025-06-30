@@ -1,0 +1,18 @@
+groups:
+- id: forge.hello_world_operation
+  type: span
+  brief: hello world operation
+  stability: experimental
+  attributes:
+  - id: forge.hello_world_operation.input
+    type: string
+    requirement_level: required
+    brief: Input parameter
+  - id: forge.hello_world_operation.output
+    type: string
+    requirement_level: required
+    brief: Output path
+  - id: forge.hello_world_operation.success
+    type: boolean
+    requirement_level: required
+    brief: Operation success status

@@ -1,0 +1,15 @@
+{
+  "session_id": "cccs_1751246908_be07c7a4",
+  "project_path": "/Users/sac/dev/weavergen",
+  "active_registry": null,
+  "target_languages": [],
+  "output_directories": {},
+  "generation_state": "idle",
+  "last_command": null,
+  "context_anchors": [
+    "2025-06-29T18:28:28.825556: Bootstrapped session with languages: "
+  ],
+  "performance_metrics": {},
+  "created_at": 1751246908.8246772,
+  "updated_at": 1751246908.8255591
+}

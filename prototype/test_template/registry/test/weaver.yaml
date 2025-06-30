@@ -1,0 +1,7 @@
+templates:
+  - template: test.j2
+    filter: |
+      .groups 
+      | map(select(.type == "span"))
+    application_mode: single
+    file_name: "test_output.txt"

@@ -1,0 +1,115 @@
+# Example Semantic Convention for WeaverGen demonstration
+# This file shows how semantic conventions are defined for code generation
+
+groups:
+  - id: http.client
+    type: span
+    brief: "Semantic convention for HTTP client spans."
+    note: >
+      HTTP client instrumentation measures the time taken to make HTTP requests.
+      This includes time for DNS resolution, establishing connections, sending
+      requests, and receiving responses.
+    attributes:
+      - id: http.method
+        requirement_level: required
+        type: string
+        brief: "HTTP request method."
+        examples: ["GET", "POST", "PUT", "DELETE"]
+        note: >
+          HTTP request method value SHOULD be "known" to the instrumentation.
+          By default, this is limited to a set of well-known methods.
+      
+      - id: http.url
+        requirement_level: required
+        type: string
+        brief: "Full HTTP request URL in the form scheme://host[:port]/path?query[#fragment]."
+        examples: ["https://www.example.com/path?query=123"]
+        note: >
+          MUST NOT contain credentials.
+          Fragment identifier MUST NOT be included.
+      
+      - id: http.status_code
+        requirement_level: conditionally_required
+        type: int
+        brief: "HTTP response status code."
+        examples: [200, 404, 500]
+        note: >
+          MUST be provided if and only if one was received/sent.
+      
+      - id: http.response_size
+        requirement_level: recommended
+        type: int
+        brief: "The size of the response payload body in bytes."
+        examples: [1024, 2048]
+        unit: "By"
+        
+      - id: http.request_size
+        requirement_level: recommended  
+        type: int
+        brief: "The size of the request payload body in bytes."
+        examples: [512, 1024]
+        unit: "By"
+
+  - id: http.server
+    type: span
+    brief: "Semantic convention for HTTP server spans."
+    note: >
+      HTTP server instrumentation measures the time taken to process HTTP requests.
+      This includes parsing requests, executing business logic, and sending responses.
+    attributes:
+      - ref: http.method
+      - ref: http.status_code
+      - ref: http.response_size
+      - ref: http.request_size
+      
+      - id: http.route
+        requirement_level: conditionally_required
+        type: string
+        brief: "The matched route (path template in the format used by the respective server framework)."
+        examples: ["/users/{id}", "/api/v1/items/{item_id}"]
+        note: >
+          MUST NOT be populated when this is not supported by the HTTP server framework.
+      
+      - id: http.target
+        requirement_level: required
+        type: string  
+        brief: "The full request target as passed in a HTTP request line or equivalent."
+        examples: ["/path/12314/?q=ddds#123", "/path/12314/", "/path/12314?q=ddds"]
+
+  - id: database.client
+    type: span
+    brief: "Semantic convention for database client spans."
+    note: >
+      Database client instrumentation should create a span for each database operation.
+    attributes:
+      - id: db.system
+        requirement_level: required
+        type: string
+        brief: "An identifier for the database management system (DBMS) product being used."
+        examples: ["postgresql", "mysql", "mssql", "redis", "mongodb"]
+        
+      - id: db.connection_string
+        requirement_level: recommended
+        type: string
+        brief: "The connection string used to connect to the database."
+        examples: ["Server=shopdb.example.com;Database=ShopDb;Uid=billing_user;"]
+        note: >
+          It is recommended to remove embedded credentials.
+          
+      - id: db.user
+        requirement_level: recommended
+        type: string
+        brief: "Username for accessing the database."
+        examples: ["readonly_user", "reporting_user"]
+        
+      - id: db.name
+        requirement_level: conditionally_required
+        type: string
+        brief: "This attribute is used to report the name of the database being accessed."
+        examples: ["customers", "main"]
+        note: >
+          In some SQL databases, the database name to be used is called "schema name".
+          In case there are multiple layers that could be considered for database name,
+          it is recommended to use the database name that is closest to the application.
+
+schema_url: "https://opentelemetry.io/schemas/1.21.0"

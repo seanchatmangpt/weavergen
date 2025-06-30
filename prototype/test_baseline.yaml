@@ -1,0 +1,18 @@
+groups:
+- id: forge.database_connection_pooling
+  type: span
+  brief: database connection pooling
+  stability: experimental
+  attributes:
+  - id: forge.database_connection_pooling.input
+    type: string
+    requirement_level: required
+    brief: Input parameter
+  - id: forge.database_connection_pooling.output
+    type: string
+    requirement_level: required
+    brief: Output path
+  - id: forge.database_connection_pooling.success
+    type: boolean
+    requirement_level: required
+    brief: Operation success status

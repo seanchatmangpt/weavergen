@@ -1,0 +1,121 @@
+# Semantic conventions for Weaver Forge - a self-referential code generator
+groups:
+  # Attribute group for semantic generation operations
+  - id: forge.semantic
+    type: attribute_group
+    brief: 'Attributes for semantic convention generation from natural language'
+    stability: experimental
+    attributes:
+      - id: forge.semantic.input.description
+        type: string
+        requirement_level: required
+        brief: 'Natural language description to convert to semantic convention'
+        examples: ['generate telemetry for database operations', 'create metrics for API endpoints']
+      - id: forge.semantic.output.path
+        type: string
+        requirement_level: required
+        brief: 'Path where semantic YAML will be written'
+        examples: ['./semantics/database.yaml', './semantics/api.yaml']
+      - id: forge.semantic.llm.model
+        type: string
+        requirement_level: required
+        brief: 'LLM model identifier used for generation'
+        examples: ['llama3.2', 'gpt-4', 'mistral', 'codellama']
+      - id: forge.semantic.llm.temperature
+        type: double
+        requirement_level: recommended
+        brief: 'Temperature parameter for LLM generation'
+        examples: [0.1, 0.3]
+      - id: forge.semantic.validation.status
+        type: string
+        requirement_level: required
+        brief: 'Weaver validation result'
+        examples: ['passed', 'failed']
+      - id: forge.semantic.validation.errors
+        type: string[]
+        requirement_level: recommended
+        brief: 'Validation error messages if any'
+        examples: [['invalid attribute type', 'missing required field']]
+
+  # Span definition for semantic generation
+  - id: forge.semantic.generate
+    type: span
+    brief: 'Generate semantic convention from natural language description'
+    extends: forge.semantic
+    span_kind: internal
+    stability: experimental
+
+  # Attribute group for code generation operations
+  - id: forge.code
+    type: attribute_group
+    brief: 'Attributes for code generation from semantic conventions'
+    stability: experimental
+    attributes:
+      - id: forge.code.input.semantic_path
+        type: string
+        requirement_level: required
+        brief: 'Path to semantic convention YAML file'
+        examples: ['./semantics/forge.yaml', './semantics/http.yaml']
+      - id: forge.code.target.language
+        type: string
+        requirement_level: required
+        brief: 'Target programming language for generation'
+        examples: ['python', 'go', 'rust', 'java', 'typescript']
+      - id: forge.code.template.directory
+        type: string
+        requirement_level: required
+        brief: 'Directory containing Weaver templates'
+        examples: ['./templates/registry/python', './templates/registry/go']
+      - id: forge.code.output.directory
+        type: string
+        requirement_level: required
+        brief: 'Directory where generated code will be written'
+        examples: ['./generated/forge', './src/telemetry']
+      - id: forge.code.files.generated
+        type: string[]
+        requirement_level: recommended
+        brief: 'List of files generated'
+        examples: [['commands/forge.py', 'operations/forge.py', 'runtime/forge.py']]
+
+  # Span definition for code generation
+  - id: forge.code.generate
+    type: span
+    brief: 'Generate code from semantic convention using Weaver'
+    extends: forge.code
+    span_kind: internal
+    stability: experimental
+
+  # Attribute group for self-improvement operations
+  - id: forge.self
+    type: attribute_group
+    brief: 'Attributes for self-referential improvement operations'
+    stability: experimental
+    attributes:
+      - id: forge.self.current.version
+        type: string
+        requirement_level: required
+        brief: 'Current version of Forge being improved'
+        examples: ['1.0.0', '2.1.3']
+      - id: forge.self.improvements
+        type: string[]
+        requirement_level: required
+        brief: 'List of improvements being applied'
+        examples: [['retry logic', 'caching', 'async support']]
+      - id: forge.self.reference.depth
+        type: int
+        requirement_level: recommended
+        brief: 'Depth of self-reference (how many times Forge generated itself)'
+        examples: [0, 1, 2, 3]
+      - id: forge.self.target.version
+        type: string
+        requirement_level: required
+        brief: 'Target version after improvements'
+        examples: ['1.1.0', '2.2.0']
+
+  # Span definition for self-improvement
+  - id: forge.self.improve
+    type: span
+    brief: 'Self-referential improvement of Weaver Forge'
+    extends: forge.self
+    span_kind: internal
+    stability: experimental

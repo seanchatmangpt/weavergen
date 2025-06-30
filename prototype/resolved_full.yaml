@@ -1,0 +1,427 @@
+groups:
+- id: forge.semantic
+  type: attribute_group
+  brief: Attributes for semantic convention generation from natural language
+  stability: development
+  attributes:
+  - name: forge.semantic.input.description
+    type: string
+    brief: Natural language description to convert to semantic convention
+    examples:
+    - generate telemetry for database operations
+    - create metrics for API endpoints
+    requirement_level: required
+  - name: forge.semantic.output.path
+    type: string
+    brief: Path where semantic YAML will be written
+    examples:
+    - ./semantics/database.yaml
+    - ./semantics/api.yaml
+    requirement_level: required
+  - name: forge.semantic.llm.model
+    type: string
+    brief: LLM model identifier used for generation
+    examples:
+    - llama3.2
+    - gpt-4
+    - mistral
+    - codellama
+    requirement_level: required
+  - name: forge.semantic.llm.temperature
+    type: double
+    brief: Temperature parameter for LLM generation
+    examples:
+    - 0.1
+    - 0.3
+    requirement_level: recommended
+  - name: forge.semantic.validation.status
+    type: string
+    brief: Weaver validation result
+    examples:
+    - passed
+    - failed
+    requirement_level: required
+  - name: forge.semantic.validation.errors
+    type: string[]
+    brief: Validation error messages if any
+    examples:
+    - - invalid attribute type
+      - missing required field
+    requirement_level: recommended
+  span_kind: null
+  events: []
+  metric_name: null
+  instrument: null
+  unit: null
+  name: null
+  lineage:
+    provenance:
+      registry_id: forge-registry
+      path: test_registry2/groups/weaver-forge.yaml
+- id: forge.semantic.generate
+  type: span
+  brief: Generate semantic convention from natural language description
+  stability: development
+  attributes:
+  - name: forge.semantic.input.description
+    type: string
+    brief: Natural language description to convert to semantic convention
+    examples:
+    - generate telemetry for database operations
+    - create metrics for API endpoints
+    requirement_level: required
+  - name: forge.semantic.output.path
+    type: string
+    brief: Path where semantic YAML will be written
+    examples:
+    - ./semantics/database.yaml
+    - ./semantics/api.yaml
+    requirement_level: required
+  - name: forge.semantic.llm.model
+    type: string
+    brief: LLM model identifier used for generation
+    examples:
+    - llama3.2
+    - gpt-4
+    - mistral
+    - codellama
+    requirement_level: required
+  - name: forge.semantic.llm.temperature
+    type: double
+    brief: Temperature parameter for LLM generation
+    examples:
+    - 0.1
+    - 0.3
+    requirement_level: recommended
+  - name: forge.semantic.validation.status
+    type: string
+    brief: Weaver validation result
+    examples:
+    - passed
+    - failed
+    requirement_level: required
+  - name: forge.semantic.validation.errors
+    type: string[]
+    brief: Validation error messages if any
+    examples:
+    - - invalid attribute type
+      - missing required field
+    requirement_level: recommended
+  span_kind: internal
+  events: []
+  metric_name: null
+  instrument: null
+  unit: null
+  name: null
+  lineage:
+    provenance:
+      registry_id: forge-registry
+      path: test_registry2/groups/weaver-forge.yaml
+    attributes:
+      forge.semantic.input.description:
+        source_group: forge.semantic
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.semantic.llm.model:
+        source_group: forge.semantic
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.semantic.llm.temperature:
+        source_group: forge.semantic
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.semantic.output.path:
+        source_group: forge.semantic
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.semantic.validation.errors:
+        source_group: forge.semantic
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.semantic.validation.status:
+        source_group: forge.semantic
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+- id: forge.code
+  type: attribute_group
+  brief: Attributes for code generation from semantic conventions
+  stability: development
+  attributes:
+  - name: forge.code.input.semantic_path
+    type: string
+    brief: Path to semantic convention YAML file
+    examples:
+    - ./semantics/forge.yaml
+    - ./semantics/http.yaml
+    requirement_level: required
+  - name: forge.code.target.language
+    type: string
+    brief: Target programming language for generation
+    examples:
+    - python
+    - go
+    - rust
+    - java
+    - typescript
+    requirement_level: required
+  - name: forge.code.template.directory
+    type: string
+    brief: Directory containing Weaver templates
+    examples:
+    - ./templates/registry/python
+    - ./templates/registry/go
+    requirement_level: required
+  - name: forge.code.output.directory
+    type: string
+    brief: Directory where generated code will be written
+    examples:
+    - ./generated/forge
+    - ./src/telemetry
+    requirement_level: required
+  - name: forge.code.files.generated
+    type: string[]
+    brief: List of files generated
+    examples:
+    - - commands/forge.py
+      - operations/forge.py
+      - runtime/forge.py
+    requirement_level: recommended
+  span_kind: null
+  events: []
+  metric_name: null
+  instrument: null
+  unit: null
+  name: null
+  lineage:
+    provenance:
+      registry_id: forge-registry
+      path: test_registry2/groups/weaver-forge.yaml
+- id: forge.code.generate
+  type: span
+  brief: Generate code from semantic convention using Weaver
+  stability: development
+  attributes:
+  - name: forge.code.input.semantic_path
+    type: string
+    brief: Path to semantic convention YAML file
+    examples:
+    - ./semantics/forge.yaml
+    - ./semantics/http.yaml
+    requirement_level: required
+  - name: forge.code.target.language
+    type: string
+    brief: Target programming language for generation
+    examples:
+    - python
+    - go
+    - rust
+    - java
+    - typescript
+    requirement_level: required
+  - name: forge.code.template.directory
+    type: string
+    brief: Directory containing Weaver templates
+    examples:
+    - ./templates/registry/python
+    - ./templates/registry/go
+    requirement_level: required
+  - name: forge.code.output.directory
+    type: string
+    brief: Directory where generated code will be written
+    examples:
+    - ./generated/forge
+    - ./src/telemetry
+    requirement_level: required
+  - name: forge.code.files.generated
+    type: string[]
+    brief: List of files generated
+    examples:
+    - - commands/forge.py
+      - operations/forge.py
+      - runtime/forge.py
+    requirement_level: recommended
+  span_kind: internal
+  events: []
+  metric_name: null
+  instrument: null
+  unit: null
+  name: null
+  lineage:
+    provenance:
+      registry_id: forge-registry
+      path: test_registry2/groups/weaver-forge.yaml
+    attributes:
+      forge.code.files.generated:
+        source_group: forge.code
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.code.input.semantic_path:
+        source_group: forge.code
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.code.output.directory:
+        source_group: forge.code
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.code.target.language:
+        source_group: forge.code
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.code.template.directory:
+        source_group: forge.code
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+- id: forge.self
+  type: attribute_group
+  brief: Attributes for self-referential improvement operations
+  stability: development
+  attributes:
+  - name: forge.self.current.version
+    type: string
+    brief: Current version of Forge being improved
+    examples:
+    - 1.0.0
+    - 2.1.3
+    requirement_level: required
+  - name: forge.self.improvements
+    type: string[]
+    brief: List of improvements being applied
+    examples:
+    - - retry logic
+      - caching
+      - async support
+    requirement_level: required
+  - name: forge.self.reference.depth
+    type: int
+    brief: Depth of self-reference (how many times Forge generated itself)
+    examples:
+    - 0
+    - 1
+    - 2
+    - 3
+    requirement_level: recommended
+  - name: forge.self.target.version
+    type: string
+    brief: Target version after improvements
+    examples:
+    - 1.1.0
+    - 2.2.0
+    requirement_level: required
+  span_kind: null
+  events: []
+  metric_name: null
+  instrument: null
+  unit: null
+  name: null
+  lineage:
+    provenance:
+      registry_id: forge-registry
+      path: test_registry2/groups/weaver-forge.yaml
+- id: forge.self.improve
+  type: span
+  brief: Self-referential improvement of Weaver Forge
+  stability: development
+  attributes:
+  - name: forge.self.current.version
+    type: string
+    brief: Current version of Forge being improved
+    examples:
+    - 1.0.0
+    - 2.1.3
+    requirement_level: required
+  - name: forge.self.improvements
+    type: string[]
+    brief: List of improvements being applied
+    examples:
+    - - retry logic
+      - caching
+      - async support
+    requirement_level: required
+  - name: forge.self.reference.depth
+    type: int
+    brief: Depth of self-reference (how many times Forge generated itself)
+    examples:
+    - 0
+    - 1
+    - 2
+    - 3
+    requirement_level: recommended
+  - name: forge.self.target.version
+    type: string
+    brief: Target version after improvements
+    examples:
+    - 1.1.0
+    - 2.2.0
+    requirement_level: required
+  span_kind: internal
+  events: []
+  metric_name: null
+  instrument: null
+  unit: null
+  name: null
+  lineage:
+    provenance:
+      registry_id: forge-registry
+      path: test_registry2/groups/weaver-forge.yaml
+    attributes:
+      forge.self.current.version:
+        source_group: forge.self
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.self.improvements:
+        source_group: forge.self
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.self.reference.depth:
+        source_group: forge.self
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level
+      forge.self.target.version:
+        source_group: forge.self
+        inherited_fields:
+        - brief
+        - examples
+        - note
+        - requirement_level

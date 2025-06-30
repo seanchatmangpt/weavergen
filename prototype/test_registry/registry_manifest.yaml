@@ -1,0 +1,5 @@
+name: forge-test
+semconv_version: 1.0.0
+schema_base_url: https://example.com/schemas
+groups:
+  - ../weaver-forge.yaml

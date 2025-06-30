@@ -1,0 +1,18 @@
+groups:
+- id: forge.cache_get_operation
+  type: span
+  brief: cache get operation
+  stability: experimental
+  attributes:
+  - id: forge.cache_get_operation.input
+    type: string
+    requirement_level: required
+    brief: Input parameter
+  - id: forge.cache_get_operation.output
+    type: string
+    requirement_level: required
+    brief: Output path
+  - id: forge.cache_get_operation.success
+    type: boolean
+    requirement_level: required
+    brief: Operation success status

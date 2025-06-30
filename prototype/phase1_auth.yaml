@@ -1,0 +1,31 @@
+groups:
+- id: custom.user_authentication_service
+  type: attribute_group
+  brief: Attributes for user authentication service
+  stability: experimental
+  attributes:
+  - id: custom.user_authentication_service.input.description
+    type: string
+    requirement_level: required
+    brief: Input description for user authentication service
+    examples:
+    - user authentication service
+  - id: custom.user_authentication_service.output.path
+    type: string
+    requirement_level: required
+    brief: Output path for user authentication service result
+    examples:
+    - ./user_authentication_service.yaml
+  - id: custom.user_authentication_service.status
+    type: string
+    requirement_level: required
+    brief: Status of user authentication service operation
+    examples:
+    - success
+    - failed
+- id: custom.user_authentication_service.execute
+  type: span
+  brief: Execute user authentication service
+  extends: custom.user_authentication_service
+  span_kind: internal
+  stability: experimental

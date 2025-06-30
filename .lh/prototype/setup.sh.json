@@ -1,0 +1,18 @@
+{
+    "sourceFile": "prototype/setup.sh",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1751257473625,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1751257473625,
+            "name": "Commit-0",
+            "content": "#!/bin/bash\n# Weaver Forge Prototype Setup Script\n# This script sets up the prototype environment and runs initial tests\n\nset -e  # Exit on any error\n\necho \"🔨 Weaver Forge Prototype Setup\"\necho \"===============================\"\necho \"\"\n\n# Check if we're in the right directory\nif [ ! -f \"forge_mvp.py\" ]; then\n    echo \"❌ Error: Please run this script from the prototype directory\"\n    echo \"   cd /path/to/weavergen/prototype\"\n    exit 1\nfi\n\n# Check Python version\necho \"🐍 Checking Python version...\"\npython3 --version\nif [ $? -ne 0 ]; then\n    echo \"❌ Error: Python 3 is required but not found\"\n    exit 1\nfi\n\n# Create virtual environment\necho \"\"\necho \"📦 Creating virtual environment...\"\nif [ -d \"venv\" ]; then\n    echo \"⚠️  Virtual environment already exists, removing...\"\n    rm -rf venv\nfi\n\npython3 -m venv venv\necho \"✅ Virtual environment created\"\n\n# Activate and install dependencies\necho \"\"\necho \"📥 Installing dependencies...\"\nsource venv/bin/activate\npip install --upgrade pip\npip install -r requirements.txt\necho \"✅ Dependencies installed\"\n\n# Make test script executable\necho \"\"\necho \"🔧 Setting up test scripts...\"\nchmod +x test_prototype.sh\necho \"✅ Test scripts ready\"\n\n# Run initial test\necho \"\"\necho \"🧪 Running initial test...\"\npython forge_mvp.py \"test operation\" --skip-validation\n\necho \"\"\necho \"🎉 Setup complete!\"\necho \"\"\necho \"📋 Next steps:\"\necho \"   1. Activate the environment: source venv/bin/activate\"\necho \"   2. Run the full test suite: ./test_prototype.sh\"\necho \"   3. Try self-generation: python forge_mvp.py --self-test\"\necho \"   4. Generate your own: python forge_mvp.py 'your operation description'\"\necho \"\"\necho \"📚 Documentation: README.md\"\necho \"🎯 The prototype proves the semantic quine concept!\" "
+        }
+    ]
+}

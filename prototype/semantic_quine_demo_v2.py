@@ -102,7 +102,7 @@ def demonstrate_semantic_quine():
         # Use the generated code generation function
         gen_result = weaver_registry_generate(
             registry_generate_registry_path=temp_registry,
-            registry_generate_target="code/python",
+            registry_generate_target="python",
             registry_generate_output_dir=str(regen_dir),
             registry_generate_files_count=0,
             registry_generate_template_path="templates/registry"

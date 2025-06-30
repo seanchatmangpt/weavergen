@@ -1,0 +1,276 @@
+groups:
+  - id: roberts.meeting
+    type: span
+    brief: Robert's Rules of Order meeting management operations
+    attributes:
+      - id: roberts.meeting.id
+        type: string
+        brief: Unique identifier for the meeting
+        requirement_level: required
+        examples:
+          - "mtg-2024-01-15-board"
+          - "annual-general-2024"
+      - id: roberts.meeting.type
+        type:
+          allow_custom_values: false
+          members:
+            - id: board
+              value: "board"
+              brief: Board of directors meeting
+            - id: committee
+              value: "committee"
+              brief: Committee meeting
+            - id: general
+              value: "general"
+              brief: General membership meeting
+            - id: special
+              value: "special"
+              brief: Special meeting
+        brief: Type of meeting being conducted
+        requirement_level: required
+      - id: roberts.meeting.quorum
+        type: int
+        brief: Number of members required for quorum
+        requirement_level: required
+        examples: [5, 10, 51]
+      - id: roberts.meeting.members_present
+        type: int
+        brief: Current number of members present
+        requirement_level: required
+      - id: roberts.meeting.chair
+        type: string
+        brief: Name or ID of the meeting chair
+        requirement_level: required
+      - id: roberts.meeting.secretary
+        type: string
+        brief: Name or ID of the meeting secretary
+        requirement_level: required
+      - id: roberts.meeting.agenda_items
+        type: string[]
+        brief: List of agenda items for the meeting
+        requirement_level: optional
+        note: List of items to be discussed in the meeting
+      - id: roberts.meeting.minutes_path
+        type: string
+        brief: Path where meeting minutes will be saved
+        requirement_level: optional
+        note: File path for saving meeting minutes
+
+  - id: roberts.motion
+    type: span
+    brief: Motion handling operations in Robert's Rules
+    attributes:
+      - id: roberts.motion.id
+        type: string
+        brief: Unique identifier for the motion
+        requirement_level: required
+        examples: ["motion-001", "amend-budget-2024"]
+      - id: roberts.motion.type
+        type:
+          allow_custom_values: false
+          members:
+            - id: main
+              value: "main"
+              brief: Main motion
+            - id: subsidiary
+              value: "subsidiary"
+              brief: Subsidiary motion (amend, postpone, etc.)
+            - id: privileged
+              value: "privileged"
+              brief: Privileged motion (recess, adjourn, etc.)
+            - id: incidental
+              value: "incidental"
+              brief: Incidental motion (point of order, etc.)
+        brief: Type of motion according to Robert's Rules
+        requirement_level: required
+      - id: roberts.motion.text
+        type: string
+        brief: The full text of the motion
+        requirement_level: required
+      - id: roberts.motion.mover
+        type: string
+        brief: Member who made the motion
+        requirement_level: required
+      - id: roberts.motion.seconder
+        type: string
+        brief: Member who seconded the motion
+        requirement_level: optional
+        note: Required for most motions except those that don't require a second
+      - id: roberts.motion.requires_second
+        type: boolean
+        brief: Whether this motion requires a second
+        requirement_level: required
+      - id: roberts.motion.debatable
+        type: boolean
+        brief: Whether this motion is debatable
+        requirement_level: required
+      - id: roberts.motion.vote_required
+        type:
+          allow_custom_values: false
+          members:
+            - id: majority
+              value: "majority"
+              brief: Simple majority (more than half)
+            - id: two_thirds
+              value: "two_thirds"
+              brief: Two-thirds majority
+            - id: unanimous
+              value: "unanimous"
+              brief: Unanimous consent
+        brief: Vote threshold required to pass
+        requirement_level: required
+      - id: roberts.motion.status
+        type:
+          allow_custom_values: false
+          members:
+            - id: pending
+              value: "pending"
+              brief: Motion is pending
+            - id: seconded
+              value: "seconded"
+              brief: Motion has been seconded
+            - id: debating
+              value: "debating"
+              brief: Motion is under debate
+            - id: voting
+              value: "voting"
+              brief: Motion is being voted on
+            - id: passed
+              value: "passed"
+              brief: Motion passed
+            - id: failed
+              value: "failed"
+              brief: Motion failed
+            - id: withdrawn
+              value: "withdrawn"
+              brief: Motion was withdrawn
+            - id: tabled
+              value: "tabled"
+              brief: Motion was tabled
+        brief: Current status of the motion
+        requirement_level: required
+
+  - id: roberts.vote
+    type: span
+    brief: Voting operations according to Robert's Rules
+    attributes:
+      - id: roberts.vote.motion_id
+        type: string
+        brief: ID of the motion being voted on
+        requirement_level: required
+      - id: roberts.vote.method
+        type:
+          allow_custom_values: false
+          members:
+            - id: voice
+              value: "voice"
+              brief: Voice vote (aye/nay)
+            - id: show_of_hands
+              value: "show_of_hands"
+              brief: Show of hands
+            - id: roll_call
+              value: "roll_call"
+              brief: Roll call vote
+            - id: ballot
+              value: "ballot"
+              brief: Secret ballot
+            - id: unanimous_consent
+              value: "unanimous_consent"
+              brief: Unanimous consent
+        brief: Method of voting
+        requirement_level: required
+      - id: roberts.vote.yes_count
+        type: int
+        brief: Number of yes votes
+        requirement_level: required
+      - id: roberts.vote.no_count
+        type: int
+        brief: Number of no votes
+        requirement_level: required
+      - id: roberts.vote.abstain_count
+        type: int
+        brief: Number of abstentions
+        requirement_level: optional
+        note: Count of members who abstained from voting
+        examples: [0, 2, 5]
+      - id: roberts.vote.result
+        type:
+          allow_custom_values: false
+          members:
+            - id: passed
+              value: "passed"
+              brief: Motion passed
+            - id: failed
+              value: "failed"
+              brief: Motion failed
+            - id: tied
+              value: "tied"
+              brief: Vote was tied
+        brief: Result of the vote
+        requirement_level: required
+
+  - id: roberts.point_of_order
+    type: span
+    brief: Point of order operations
+    attributes:
+      - id: roberts.point_of_order.member
+        type: string
+        brief: Member raising the point of order
+        requirement_level: required
+      - id: roberts.point_of_order.issue
+        type: string
+        brief: Description of the procedural issue
+        requirement_level: required
+      - id: roberts.point_of_order.ruling
+        type: string
+        brief: Chair's ruling on the point
+        requirement_level: optional
+        note: The chair's decision on the point of order
+      - id: roberts.point_of_order.appealed
+        type: boolean
+        brief: Whether the ruling was appealed
+        requirement_level: optional
+        note: Indicates if the chair's ruling was appealed to the assembly
+        examples: [true, false]
+
+  - id: roberts.recognition
+    type: span
+    brief: Member recognition and speaking order
+    attributes:
+      - id: roberts.recognition.member
+        type: string
+        brief: Member seeking recognition
+        requirement_level: required
+      - id: roberts.recognition.purpose
+        type:
+          allow_custom_values: true
+          members:
+            - id: speak_for
+              value: "speak_for"
+              brief: Speak in favor of motion
+            - id: speak_against
+              value: "speak_against"
+              brief: Speak against motion
+            - id: ask_question
+              value: "ask_question"
+              brief: Ask a question
+            - id: make_motion
+              value: "make_motion"
+              brief: Make a new motion
+            - id: point_of_order
+              value: "point_of_order"
+              brief: Raise point of order
+            - id: point_of_information
+              value: "point_of_information"
+              brief: Point of information
+        brief: Purpose of seeking recognition
+        requirement_level: required
+      - id: roberts.recognition.granted
+        type: boolean
+        brief: Whether recognition was granted
+        requirement_level: required
+      - id: roberts.recognition.queue_position
+        type: int
+        brief: Position in speaking queue
+        requirement_level: optional
+        note: Position in the queue if not immediately recognized

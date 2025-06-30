@@ -1,0 +1,12 @@
+operation,agent,phase,success,duration_ms,span_id
+meeting_start,Chair,setup,True,0.5,
+motion_make,Member1,main_business,True,0.1,
+motion_second,Member2,main_business,True,0.1,
+motion_make,Member3,amendment,True,0.1,
+motion_second,Member1,amendment,True,0.1,
+recognition_request,Member2,debate,True,0.1,
+point_of_order,Member2,debate,True,0.1,f9301739e619d74b
+vote_record,Secretary,voting,True,0.1,
+vote_record,Secretary,voting,True,0.1,
+recognition_request,Member3,new_business,True,0.0,
+motion_make,Member3,adjournment,True,0.1,

@@ -123,7 +123,7 @@ def weaver_registry_generate(
     registry_generate_output_dir: str,
     registry_generate_files_count: int,
     registry_generate_template_path: Optional[str] = None,
-    registry_generate_params: Optional[Dict[str, str]] = None,
+    registry_generate_params: Optional[template[string]] = None,
     registry_generate_files: Optional[List[str]] = None,
 ) -> ForgeResult:
     """Generate code or documentation from a semantic convention registry

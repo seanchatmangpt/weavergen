@@ -1,0 +1,59 @@
+{
+  "model": "qwen3:latest",
+  "gpu_info": {
+    "gpu_found": true,
+    "gpu_name": "Apple M3 Max",
+    "metal_support": false
+  },
+  "metal_info": {
+    "error": "'utf-8' codec can't decode byte 0x83 in position 1360132: invalid start byte"
+  },
+  "benchmarks": [
+    {
+      "role": "Platform Scrum Master",
+      "duration_ms": 14884.887218475342,
+      "tokens": 339,
+      "tokens_per_sec": 22.794932539284265,
+      "cpu_delta": -3.0,
+      "memory_delta_gb": 2.3455963134765625,
+      "response_preview": "<think>\nOkay, the user wants me to act as a Platform Scrum Master in a Scrum of Scrums and report th..."
+    },
+    {
+      "role": "Mobile Scrum Master",
+      "duration_ms": 4958.104848861694,
+      "tokens": 139,
+      "tokens_per_sec": 28.055074315730785,
+      "cpu_delta": -0.5,
+      "memory_delta_gb": 0.043731689453125,
+      "response_preview": "<think>\nOkay, the user is a Mobile Scrum Master in a Scrum of Scrums. They need a sprint status repo..."
+    },
+    {
+      "role": "Web Scrum Master",
+      "duration_ms": 10971.601724624634,
+      "tokens": 319,
+      "tokens_per_sec": 29.1479774810128,
+      "cpu_delta": -3.999999999999999,
+      "memory_delta_gb": -0.009368896484375,
+      "response_preview": "<think>\nOkay, the user wants me to act as a Web Scrum Master in a Scrum of Scrums and report the spr..."
+    },
+    {
+      "role": "Backend Scrum Master",
+      "duration_ms": 6992.68913269043,
+      "tokens": 218,
+      "tokens_per_sec": 31.232619648282697,
+      "cpu_delta": 6.0,
+      "memory_delta_gb": 0.00469970703125,
+      "response_preview": "<think>\nOkay, the user is a Backend Scrum Master in a Scrum of Scrums. They need a sprint status rep..."
+    },
+    {
+      "role": "Data Scrum Master",
+      "duration_ms": 7421.103239059448,
+      "tokens": 206,
+      "tokens_per_sec": 27.85300154727361,
+      "cpu_delta": -7.3,
+      "memory_delta_gb": 0.01568603515625,
+      "response_preview": "<think>\nOkay, the user wants a report on the sprint status. Let me break down the key points. They m..."
+    }
+  ],
+  "timestamp": "2025-06-30T12:14:57.411068"
+}

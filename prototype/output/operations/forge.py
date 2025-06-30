@@ -41,18 +41,8 @@ def weaver_registry_check_execute(
         ForgeResult with success status and relevant data
     """
     
-    # AI-EDITABLE: Implementation using runtime layer
-    try:
-        # Call runtime layer to check registry
-        is_valid, errors = weaver_registry_check(registry_check_path)
-        
-        return ForgeResult(
-            success=is_valid,
-            data={"valid": is_valid, "strict": registry_check_strict},
-            errors=errors
-        )
-    except Exception as e:
-        return ForgeResult(success=False, errors=[str(e)])
+    # AI-EDITABLE: Implement this operation
+    return ForgeResult(success=False, errors=["Operation not implemented"])
     
     
 
@@ -64,7 +54,7 @@ def weaver_registry_generate_execute(
     registry_generate_output_dir: str,
     registry_generate_files_count: int,
     registry_generate_template_path: Optional[str] = None,
-    registry_generate_params: Optional[Dict[str, str]] = None,
+    registry_generate_params: Optional[template[string]] = None,
     registry_generate_files: Optional[List[str]] = None,
 ) -> ForgeResult:
     """Generate code or documentation from a semantic convention registry
@@ -82,28 +72,8 @@ def weaver_registry_generate_execute(
         ForgeResult with success status and relevant data
     """
     
-    # AI-EDITABLE: Implementation using runtime layer
-    try:
-        # Call runtime layer to generate code
-        files = weaver_registry_generate(
-            registry_path=registry_generate_registry_path,
-            target_name=registry_generate_target,
-            template_path=registry_generate_template_path or "templates",
-            output_dir=registry_generate_output_dir,
-            params=registry_generate_params
-        )
-        
-        return ForgeResult(
-            success=True,
-            data={
-                "files": files,
-                "files_count": len(files),
-                "target": registry_generate_target,
-                "output_dir": registry_generate_output_dir
-            }
-        )
-    except Exception as e:
-        return ForgeResult(success=False, errors=[str(e)])
+    # AI-EDITABLE: Implement this operation
+    return ForgeResult(success=False, errors=["Operation not implemented"])
     
     
 

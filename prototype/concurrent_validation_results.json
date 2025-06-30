@@ -1,0 +1,429 @@
+{
+  "timestamp": "2025-06-30T12:21:22.424015",
+  "duration_seconds": 0.00937199592590332,
+  "validation_results": {
+    "commands": [
+      {
+        "file": "output/roberts/commands/forge.py",
+        "has_otel": true,
+        "has_attributes": true,
+        "has_contracts": false,
+        "valid": true
+      },
+      {
+        "file": "output/roberts/commands/__init__.py",
+        "has_otel": false,
+        "has_attributes": false,
+        "has_contracts": false,
+        "valid": false
+      },
+      {
+        "file": "output/roberts_generated/commands/forge.py",
+        "has_otel": true,
+        "has_attributes": true,
+        "has_contracts": false,
+        "valid": true
+      }
+    ],
+    "operations": [
+      {
+        "file": "output/roberts/operations/forge.py",
+        "has_business_logic": true,
+        "is_ai_editable": true,
+        "has_type_hints": true,
+        "valid": true
+      },
+      {
+        "file": "output/roberts/operations/__init__.py",
+        "has_business_logic": false,
+        "is_ai_editable": true,
+        "has_type_hints": false,
+        "valid": false
+      },
+      {
+        "file": "output/roberts/operations/roberts.py",
+        "has_business_logic": true,
+        "is_ai_editable": true,
+        "has_type_hints": true,
+        "valid": true
+      }
+    ],
+    "runtime": [
+      {
+        "file": "output/roberts/runtime/forge.py",
+        "handles_external_tools": true,
+        "has_error_handling": true,
+        "isolates_side_effects": true,
+        "valid": true
+      },
+      {
+        "file": "output/roberts/runtime/__init__.py",
+        "handles_external_tools": false,
+        "has_error_handling": false,
+        "isolates_side_effects": true,
+        "valid": false
+      },
+      {
+        "file": "output/roberts/runtime/roberts.py",
+        "handles_external_tools": true,
+        "has_error_handling": false,
+        "isolates_side_effects": true,
+        "valid": false
+      }
+    ],
+    "contracts": [
+      {
+        "file": "output/roberts/contracts/forge.py",
+        "has_preconditions": false,
+        "has_postconditions": false,
+        "has_validation": false,
+        "valid": false
+      },
+      {
+        "file": "output/roberts/contracts/__init__.py",
+        "has_preconditions": false,
+        "has_postconditions": false,
+        "has_validation": false,
+        "valid": false
+      },
+      {
+        "file": "output/roberts_generated/contracts/forge.py",
+        "has_preconditions": false,
+        "has_postconditions": false,
+        "has_validation": false,
+        "valid": false
+      }
+    ],
+    "file_analysis": [
+      {
+        "file": "semantic_quine_demo_v2.py",
+        "lines": 169,
+        "size": 5797,
+        "hash": "6517a7e9",
+        "insights": [
+          "Found 4-layer architecture patterns"
+        ]
+      },
+      {
+        "file": "weaver-forge.yaml",
+        "lines": 121,
+        "size": 4668,
+        "hash": "d1fbfcb0",
+        "insights": [
+          "Semantic convention definitions found"
+        ]
+      },
+      {
+        "file": "output/commands/forge.py",
+        "lines": 444,
+        "size": 18422,
+        "hash": "583211ca",
+        "insights": [
+          "Found 4-layer architecture patterns"
+        ]
+      },
+      {
+        "file": "output/operations/forge.py",
+        "lines": 192,
+        "size": 6605,
+        "hash": "584dac69",
+        "insights": [
+          "Found 4-layer architecture patterns"
+        ]
+      },
+      {
+        "file": "output/runtime/forge.py",
+        "lines": 296,
+        "size": 10105,
+        "hash": "21ef769c",
+        "insights": [
+          "Found 4-layer architecture patterns"
+        ]
+      },
+      {
+        "file": "output/contracts/forge.py",
+        "lines": 221,
+        "size": 7378,
+        "hash": "f3b85ec6",
+        "insights": [
+          "Found 4-layer architecture patterns"
+        ]
+      },
+      {
+        "file": "semantic_quine_demo_v2.py",
+        "lines": 169,
+        "size": 5797,
+        "hash": "6517a7e9",
+        "insights": []
+      },
+      {
+        "file": "weaver-forge.yaml",
+        "lines": 121,
+        "size": 4668,
+        "hash": "d1fbfcb0",
+        "insights": []
+      },
+      {
+        "file": "output/commands/forge.py",
+        "lines": 444,
+        "size": 18422,
+        "hash": "583211ca",
+        "insights": []
+      },
+      {
+        "file": "output/operations/forge.py",
+        "lines": 192,
+        "size": 6605,
+        "hash": "584dac69",
+        "insights": []
+      },
+      {
+        "file": "output/runtime/forge.py",
+        "lines": 296,
+        "size": 10105,
+        "hash": "21ef769c",
+        "insights": []
+      },
+      {
+        "file": "output/contracts/forge.py",
+        "lines": 221,
+        "size": 7378,
+        "hash": "f3b85ec6",
+        "insights": []
+      },
+      {
+        "file": "semantic_quine_demo_v2.py",
+        "lines": 169,
+        "size": 5797,
+        "hash": "6517a7e9",
+        "insights": [
+          "Contract validation patterns detected"
+        ]
+      },
+      {
+        "file": "weaver-forge.yaml",
+        "lines": 121,
+        "size": 4668,
+        "hash": "d1fbfcb0",
+        "insights": []
+      },
+      {
+        "file": "output/commands/forge.py",
+        "lines": 444,
+        "size": 18422,
+        "hash": "583211ca",
+        "insights": []
+      },
+      {
+        "file": "output/operations/forge.py",
+        "lines": 192,
+        "size": 6605,
+        "hash": "584dac69",
+        "insights": [
+          "Contract validation patterns detected"
+        ]
+      },
+      {
+        "file": "output/runtime/forge.py",
+        "lines": 296,
+        "size": 10105,
+        "hash": "21ef769c",
+        "insights": []
+      },
+      {
+        "file": "output/contracts/forge.py",
+        "lines": 221,
+        "size": 7378,
+        "hash": "f3b85ec6",
+        "insights": [
+          "Contract validation patterns detected"
+        ]
+      },
+      {
+        "file": "semantic_quine_demo_v2.py",
+        "lines": 169,
+        "size": 5797,
+        "hash": "6517a7e9",
+        "insights": [
+          "OpenTelemetry instrumentation present"
+        ]
+      },
+      {
+        "file": "weaver-forge.yaml",
+        "lines": 121,
+        "size": 4668,
+        "hash": "d1fbfcb0",
+        "insights": [
+          "OpenTelemetry instrumentation present"
+        ]
+      },
+      {
+        "file": "output/commands/forge.py",
+        "lines": 444,
+        "size": 18422,
+        "hash": "583211ca",
+        "insights": [
+          "OpenTelemetry instrumentation present"
+        ]
+      },
+      {
+        "file": "output/operations/forge.py",
+        "lines": 192,
+        "size": 6605,
+        "hash": "584dac69",
+        "insights": []
+      },
+      {
+        "file": "output/runtime/forge.py",
+        "lines": 296,
+        "size": 10105,
+        "hash": "21ef769c",
+        "insights": [
+          "OpenTelemetry instrumentation present"
+        ]
+      },
+      {
+        "file": "output/contracts/forge.py",
+        "lines": 221,
+        "size": 7378,
+        "hash": "f3b85ec6",
+        "insights": []
+      },
+      {
+        "file": "semantic_quine_demo_v2.py",
+        "lines": 169,
+        "size": 5797,
+        "hash": "6517a7e9",
+        "insights": []
+      },
+      {
+        "file": "weaver-forge.yaml",
+        "lines": 121,
+        "size": 4668,
+        "hash": "d1fbfcb0",
+        "insights": []
+      },
+      {
+        "file": "output/commands/forge.py",
+        "lines": 444,
+        "size": 18422,
+        "hash": "583211ca",
+        "insights": []
+      },
+      {
+        "file": "output/operations/forge.py",
+        "lines": 192,
+        "size": 6605,
+        "hash": "584dac69",
+        "insights": []
+      },
+      {
+        "file": "output/runtime/forge.py",
+        "lines": 296,
+        "size": 10105,
+        "hash": "21ef769c",
+        "insights": []
+      },
+      {
+        "file": "output/contracts/forge.py",
+        "lines": 221,
+        "size": 7378,
+        "hash": "f3b85ec6",
+        "insights": []
+      }
+    ],
+    "meeting_transcript": [
+      {
+        "speaker": "Sarah Chen (Chair)",
+        "statement": "I call this development team meeting to order. We have quorum with 5 members present.",
+        "action": "call_to_order"
+      },
+      {
+        "speaker": "Sarah Chen",
+        "statement": "I analyzed 6 files. Key findings: Found 4-layer architecture patterns, Semantic convention definitions found",
+        "action": "report"
+      },
+      {
+        "speaker": "Emily Davis",
+        "statement": "I analyzed 6 files. Key findings: Contract validation patterns detected, Contract validation patterns detected",
+        "action": "report"
+      },
+      {
+        "speaker": "Alex Kumar",
+        "statement": "I analyzed 6 files. Key findings: OpenTelemetry instrumentation present, OpenTelemetry instrumentation present",
+        "action": "report"
+      },
+      {
+        "speaker": "Mike Johnson",
+        "statement": "I move that we implement a Visual Studio Code extension for WeaverGen to provide real-time semantic validation",
+        "action": "motion_main"
+      },
+      {
+        "speaker": "Emily Davis",
+        "statement": "I second the motion",
+        "action": "second"
+      },
+      {
+        "speaker": "Alex Kumar",
+        "statement": "I move to amend by adding 'with integrated OpenTelemetry tracing visualization'",
+        "action": "motion_amend"
+      },
+      {
+        "speaker": "Lisa Wong",
+        "statement": "Second the amendment",
+        "action": "second"
+      },
+      {
+        "speaker": "Sarah Chen (Chair)",
+        "statement": "All in favor of the amendment? Motion carries 4-1.",
+        "action": "vote",
+        "result": {
+          "yes": 4,
+          "no": 1,
+          "abstain": 0
+        }
+      },
+      {
+        "speaker": "Emily Davis",
+        "statement": "Point of information: Will this integrate with our existing 4-layer validation?",
+        "action": "point_of_information"
+      },
+      {
+        "speaker": "Mike Johnson",
+        "statement": "Yes, it will validate all layers concurrently and show real-time feedback",
+        "action": "response"
+      },
+      {
+        "speaker": "Sarah Chen (Chair)",
+        "statement": "Question on the main motion as amended. All in favor? Motion passes unanimously 5-0.",
+        "action": "vote",
+        "result": {
+          "yes": 5,
+          "no": 0,
+          "abstain": 0
+        }
+      },
+      {
+        "speaker": "Sarah Chen (Chair)",
+        "statement": "Action items: Mike leads backend API, Emily handles validation, Alex sets up telemetry, Lisa creates UI",
+        "action": "action_items"
+      },
+      {
+        "speaker": "Lisa Wong",
+        "statement": "I move to adjourn",
+        "action": "motion_adjourn"
+      },
+      {
+        "speaker": "Alex Kumar",
+        "statement": "Second",
+        "action": "second"
+      },
+      {
+        "speaker": "Sarah Chen (Chair)",
+        "statement": "Meeting adjourned. Next meeting Tuesday to review progress.",
+        "action": "adjourn"
+      }
+    ]
+  },
+  "feature_decision": "VS Code Extension with OTel Visualization"
+}

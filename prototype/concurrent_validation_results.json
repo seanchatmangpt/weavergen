@@ -1,8 +1,15 @@
 {
-  "timestamp": "2025-06-30T12:21:22.424015",
-  "duration_seconds": 0.00937199592590332,
+  "timestamp": "2025-06-30T12:37:16.798278",
+  "duration_seconds": 0.007189273834228516,
   "validation_results": {
     "commands": [
+      {
+        "file": "output/complete_system/commands/forge.py",
+        "has_otel": true,
+        "has_attributes": true,
+        "has_contracts": false,
+        "valid": true
+      },
       {
         "file": "output/roberts/commands/forge.py",
         "has_otel": true,
@@ -16,16 +23,16 @@
         "has_attributes": false,
         "has_contracts": false,
         "valid": false
-      },
-      {
-        "file": "output/roberts_generated/commands/forge.py",
-        "has_otel": true,
-        "has_attributes": true,
-        "has_contracts": false,
-        "valid": true
       }
     ],
     "operations": [
+      {
+        "file": "output/complete_system/operations/forge.py",
+        "has_business_logic": true,
+        "is_ai_editable": true,
+        "has_type_hints": true,
+        "valid": true
+      },
       {
         "file": "output/roberts/operations/forge.py",
         "has_business_logic": true,
@@ -39,16 +46,16 @@
         "is_ai_editable": true,
         "has_type_hints": false,
         "valid": false
-      },
-      {
-        "file": "output/roberts/operations/roberts.py",
-        "has_business_logic": true,
-        "is_ai_editable": true,
-        "has_type_hints": true,
-        "valid": true
       }
     ],
     "runtime": [
+      {
+        "file": "output/complete_system/runtime/forge.py",
+        "handles_external_tools": true,
+        "has_error_handling": true,
+        "isolates_side_effects": true,
+        "valid": true
+      },
       {
         "file": "output/roberts/runtime/forge.py",
         "handles_external_tools": true,
@@ -62,16 +69,16 @@
         "has_error_handling": false,
         "isolates_side_effects": true,
         "valid": false
-      },
-      {
-        "file": "output/roberts/runtime/roberts.py",
-        "handles_external_tools": true,
-        "has_error_handling": false,
-        "isolates_side_effects": true,
-        "valid": false
       }
     ],
     "contracts": [
+      {
+        "file": "output/complete_system/contracts/forge.py",
+        "has_preconditions": false,
+        "has_postconditions": false,
+        "has_validation": true,
+        "valid": true
+      },
       {
         "file": "output/roberts/contracts/forge.py",
         "has_preconditions": false,
@@ -81,13 +88,6 @@
       },
       {
         "file": "output/roberts/contracts/__init__.py",
-        "has_preconditions": false,
-        "has_postconditions": false,
-        "has_validation": false,
-        "valid": false
-      },
-      {
-        "file": "output/roberts_generated/contracts/forge.py",
         "has_preconditions": false,
         "has_postconditions": false,
         "has_validation": false,

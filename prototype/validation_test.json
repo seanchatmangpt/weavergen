@@ -1,0 +1,59 @@
+{
+  "timestamp": "2025-06-30T12:37:48.560975",
+  "components": {
+    "semantic_quine": true,
+    "roberts_rules": true,
+    "otel_communication": true,
+    "four_layer_arch": true,
+    "ai_agents": true
+  },
+  "semantic_files": [
+    "roberts-rules-simple.yaml",
+    "forge_semantics.yaml",
+    "phase1_test.yaml",
+    "cache_get_operation.yaml",
+    "weaver-cli-semantics.yaml",
+    "resolved_registry.yaml",
+    "resolved_registry2.yaml",
+    "test_baseline.yaml",
+    "scrum-at-scale-semantics.yaml",
+    "weaver_forge.yaml",
+    "weaver-forge.yaml",
+    "weaver-forge-complete.yaml",
+    "roberts-rules.yaml",
+    "resolved_full.yaml",
+    "phase1_auth.yaml",
+    "hello_world_operation.yaml"
+  ],
+  "generated_files": [
+    "output/contracts/forge.py",
+    "output/runtime/forge.py",
+    "output/operations/forge.py",
+    "output/commands/forge.py",
+    "output/roberts/__init__.py",
+    "output/roberts_generated/contracts/forge.py",
+    "output/roberts_generated/runtime/forge.py",
+    "output/roberts_generated/operations/forge.py",
+    "output/roberts_generated/commands/forge.py",
+    "output/roberts/contracts/forge.py",
+    "output/roberts/contracts/__init__.py",
+    "output/roberts/runtime/forge.py",
+    "output/roberts/runtime/__init__.py",
+    "output/roberts/runtime/roberts.py",
+    "output/roberts/operations/forge.py",
+    "output/roberts/operations/__init__.py",
+    "output/roberts/operations/roberts.py",
+    "output/roberts/commands/forge.py",
+    "output/roberts/commands/__init__.py",
+    "output/complete_system/contracts/forge.py",
+    "output/complete_system/runtime/forge.py",
+    "output/complete_system/operations/forge.py",
+    "output/complete_system/commands/forge.py"
+  ],
+  "models": [
+    "Agent",
+    "OTelMessage",
+    "EnhancedMeeting",
+    "OTelMotion"
+  ]
+}

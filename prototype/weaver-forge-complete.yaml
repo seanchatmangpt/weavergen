@@ -1,0 +1,418 @@
+groups:
+  # Core Agent System
+  - id: agent
+    type: span
+    brief: AI agent participating in distributed systems
+    attributes:
+      - id: agent.id
+        type: string
+        brief: Unique identifier for the agent
+        requirement_level: required
+        examples: ['agent-sarah-chen-001', 'agent-mike-johnson-002']
+      
+      - id: agent.name
+        type: string
+        brief: Human-readable name of the agent
+        requirement_level: required
+        examples: ['Sarah Chen', 'Mike Johnson']
+      
+      - id: agent.role
+        type: string
+        brief: Role or position of the agent
+        requirement_level: required
+        examples: ['chair', 'backend_dev', 'qa_engineer', 'devops', 'frontend_dev']
+      
+      - id: agent.expertise
+        type: string[]
+        brief: Areas of expertise for the agent
+        requirement_level: recommended
+        examples: [['architecture', 'semantics'], ['operations', 'runtime']]
+      
+      - id: agent.status
+        type: 
+          members:
+            - id: active
+              value: 'active'
+            - id: idle
+              value: 'idle'
+            - id: busy
+              value: 'busy'
+            - id: offline
+              value: 'offline'
+        brief: Current status of the agent
+        requirement_level: recommended
+
+  # OpenTelemetry Communication Bus
+  - id: otel.communication
+    type: span
+    brief: OpenTelemetry-based communication between agents
+    attributes:
+      - id: otel.communication.message_id
+        type: string
+        brief: Unique identifier for the message
+        requirement_level: required
+        examples: ['msg-001-motion-main', 'msg-002-second']
+      
+      - id: otel.communication.sender
+        type: string
+        brief: Agent ID of the message sender
+        requirement_level: required
+      
+      - id: otel.communication.recipient
+        type: string
+        brief: Agent ID of recipient or 'all' for broadcast
+        requirement_level: required
+        examples: ['agent-sarah-chen-001', 'all']
+      
+      - id: otel.communication.message_type
+        type:
+          members:
+            - id: statement
+              value: 'statement'
+            - id: motion
+              value: 'motion'
+            - id: second
+              value: 'second'
+            - id: vote
+              value: 'vote'
+            - id: point_of_order
+              value: 'point_of_order'
+            - id: recognition_request
+              value: 'recognition_request'
+            - id: grant_recognition
+              value: 'grant_recognition'
+            - id: report
+              value: 'report'
+        brief: Type of message being sent
+        requirement_level: required
+      
+      - id: otel.communication.content
+        type: string
+        brief: The actual message content
+        requirement_level: required
+      
+      - id: otel.communication.trace_id
+        type: string
+        brief: OpenTelemetry trace ID for correlation
+        requirement_level: required
+      
+      - id: otel.communication.span_id
+        type: string
+        brief: OpenTelemetry span ID for this message
+        requirement_level: required
+      
+      - id: otel.communication.parent_span_id
+        type: string
+        brief: Parent span ID for message hierarchy
+        requirement_level: recommended
+        note: 'Optional - used for linked messages'
+
+  # Roberts Rules Enhanced
+  - id: roberts.enhanced
+    type: span
+    brief: Enhanced Roberts Rules with OTel integration
+    attributes:
+      - id: roberts.enhanced.meeting_id
+        type: string
+        brief: Unique meeting identifier
+        requirement_level: required
+        examples: ['meeting-2024-12-30-dev-team']
+      
+      - id: roberts.enhanced.meeting_type
+        type:
+          members:
+            - id: board
+              value: 'board'
+            - id: committee
+              value: 'committee'
+            - id: development
+              value: 'development'
+            - id: scrum_of_scrums
+              value: 'scrum_of_scrums'
+        brief: Type of meeting
+        requirement_level: required
+      
+      - id: roberts.enhanced.trace_context
+        type: template[string]
+        brief: OpenTelemetry trace context for the meeting
+        requirement_level: required
+        note: 'Maps trace IDs to meeting phases'
+      
+      - id: roberts.enhanced.communication_mode
+        type:
+          members:
+            - id: otel_spans
+              value: 'otel_spans'
+            - id: direct
+              value: 'direct'
+            - id: hybrid
+              value: 'hybrid'
+        brief: How agents communicate
+        requirement_level: required
+
+  # Motion with OTel Tracking
+  - id: motion.otel
+    type: span
+    brief: Parliamentary motion with OpenTelemetry tracking
+    attributes:
+      - id: motion.otel.id
+        type: string
+        brief: Unique motion identifier
+        requirement_level: required
+        examples: ['motion-vscode-extension', 'motion-otel-comm']
+      
+      - id: motion.otel.trace_id
+        type: string
+        brief: OTel trace ID when motion was made
+        requirement_level: required
+      
+      - id: motion.otel.proposer_span_id
+        type: string
+        brief: Span ID of the proposer's message
+        requirement_level: required
+      
+      - id: motion.otel.seconder_span_ids
+        type: string[]
+        brief: Span IDs of seconding messages
+        requirement_level: recommended
+        note: 'Can have multiple seconders'
+      
+      - id: motion.otel.vote_span_ids
+        type: template[string]
+        brief: Map of agent ID to vote span ID
+        requirement_level: recommended
+        note: 'Tracks all votes via span references'
+      
+      - id: motion.otel.discussion_span_ids
+        type: string[]
+        brief: Span IDs of discussion messages
+        requirement_level: recommended
+
+  # Agent File Analysis
+  - id: agent.file_analysis
+    type: span
+    brief: Agent's analysis of project files
+    attributes:
+      - id: agent.file_analysis.agent_id
+        type: string
+        brief: Agent performing the analysis
+        requirement_level: required
+      
+      - id: agent.file_analysis.file_path
+        type: string
+        brief: Path to the analyzed file
+        requirement_level: required
+        examples: ['output/commands/forge.py', 'weaver-forge.yaml']
+      
+      - id: agent.file_analysis.file_hash
+        type: string
+        brief: Hash of file contents for versioning
+        requirement_level: recommended
+      
+      - id: agent.file_analysis.insights
+        type: string[]
+        brief: Insights discovered by the agent
+        requirement_level: required
+        examples: [['Found 4-layer architecture', 'OTel instrumentation present']]
+      
+      - id: agent.file_analysis.patterns_found
+        type: template[int]
+        brief: Count of various patterns found
+        requirement_level: recommended
+        note: 'e.g., {"otel_spans": 15, "contracts": 8}'
+
+  # Concurrent Validation
+  - id: validation.concurrent
+    type: span
+    brief: Concurrent validation of system layers
+    attributes:
+      - id: validation.concurrent.layer
+        type:
+          members:
+            - id: commands
+              value: 'commands'
+            - id: operations
+              value: 'operations'
+            - id: runtime
+              value: 'runtime'
+            - id: contracts
+              value: 'contracts'
+        brief: Which layer is being validated
+        requirement_level: required
+      
+      - id: validation.concurrent.start_time
+        type: string
+        brief: ISO timestamp when validation started
+        requirement_level: required
+      
+      - id: validation.concurrent.duration_ms
+        type: double
+        brief: Duration of validation in milliseconds
+        requirement_level: required
+      
+      - id: validation.concurrent.files_checked
+        type: int
+        brief: Number of files validated
+        requirement_level: required
+      
+      - id: validation.concurrent.issues_found
+        type: int
+        brief: Number of validation issues found
+        requirement_level: required
+      
+      - id: validation.concurrent.success
+        type: boolean
+        brief: Whether validation passed
+        requirement_level: required
+
+  # Development Team Meeting
+  - id: dev_team.meeting
+    type: span
+    brief: Development team meeting with code analysis
+    attributes:
+      - id: dev_team.meeting.feature_proposed
+        type: string
+        brief: Feature being discussed
+        requirement_level: required
+        examples: ['VS Code Extension for WeaverGen']
+      
+      - id: dev_team.meeting.files_analyzed
+        type: int
+        brief: Total files analyzed by all agents
+        requirement_level: required
+      
+      - id: dev_team.meeting.decisions
+        type: string[]
+        brief: Decisions made during meeting
+        requirement_level: required
+      
+      - id: dev_team.meeting.action_items
+        type: template[string]
+        brief: Action items assigned to agents
+        requirement_level: required
+        note: 'Map of agent_id to action description'
+      
+      - id: dev_team.meeting.otel_spans_created
+        type: int
+        brief: Number of OTel spans created during meeting
+        requirement_level: recommended
+
+  # Scrum at Scale
+  - id: scrum.scale
+    type: span
+    brief: Scrum of Scrums using Roberts Rules
+    attributes:
+      - id: scrum.scale.team_name
+        type: string
+        brief: Name of the scrum team
+        requirement_level: required
+        examples: ['Platform', 'Mobile', 'Web', 'Backend', 'Data']
+      
+      - id: scrum.scale.scrum_master
+        type: string
+        brief: Scrum master agent ID
+        requirement_level: required
+      
+      - id: scrum.scale.sprint_number
+        type: int
+        brief: Current sprint number
+        requirement_level: required
+      
+      - id: scrum.scale.completion_percent
+        type: double
+        brief: Sprint completion percentage
+        requirement_level: required
+      
+      - id: scrum.scale.story_points_complete
+        type: int
+        brief: Story points completed
+        requirement_level: required
+      
+      - id: scrum.scale.story_points_total
+        type: int
+        brief: Total story points in sprint
+        requirement_level: required
+      
+      - id: scrum.scale.impediments
+        type: string[]
+        brief: Current impediments
+        requirement_level: recommended
+      
+      - id: scrum.scale.dependencies
+        type: template[string]
+        brief: Dependencies on other teams
+        requirement_level: recommended
+        note: 'Map of team_name to dependency description'
+
+  # Semantic Quine Validation
+  - id: quine.validation
+    type: span
+    brief: Validation of semantic quine properties
+    attributes:
+      - id: quine.validation.semantic_file
+        type: string
+        brief: Path to semantic convention file
+        requirement_level: required
+        examples: ['weaver-forge.yaml', 'roberts-rules.yaml']
+      
+      - id: quine.validation.generated_files
+        type: string[]
+        brief: Files generated from semantics
+        requirement_level: required
+      
+      - id: quine.validation.can_regenerate
+        type: boolean
+        brief: Whether system can regenerate itself
+        requirement_level: required
+      
+      - id: quine.validation.regeneration_hash
+        type: string
+        brief: Hash of regenerated code for comparison
+        requirement_level: recommended
+      
+      - id: quine.validation.layers_validated
+        type: int
+        brief: Number of architecture layers validated
+        requirement_level: required
+
+  # Performance Benchmarking
+  - id: benchmark.ollama
+    type: span
+    brief: Benchmarking Ollama/LLM performance
+    attributes:
+      - id: benchmark.ollama.model
+        type: string
+        brief: Model being benchmarked
+        requirement_level: required
+        examples: ['qwen3:latest', 'llama3.2:3b']
+      
+      - id: benchmark.ollama.gpu_enabled
+        type: boolean
+        brief: Whether GPU acceleration is active
+        requirement_level: required
+      
+      - id: benchmark.ollama.gpu_layers
+        type: int
+        brief: Number of layers on GPU
+        requirement_level: recommended
+      
+      - id: benchmark.ollama.tokens_generated
+        type: int
+        brief: Total tokens generated
+        requirement_level: required
+      
+      - id: benchmark.ollama.tokens_per_second
+        type: double
+        brief: Token generation speed
+        requirement_level: required
+      
+      - id: benchmark.ollama.response_time_ms
+        type: double
+        brief: Total response time in milliseconds
+        requirement_level: required
+      
+      - id: benchmark.ollama.metal_active
+        type: boolean
+        brief: Whether Metal acceleration is active (macOS)
+        requirement_level: recommended
+        note: 'Specific to Apple Silicon'

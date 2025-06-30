@@ -1,0 +1,108 @@
+{
+  "timestamp": "2025-06-30T12:36:40.993033",
+  "commands_tested": 19,
+  "commands_passed": 18,
+  "failures": [
+    {
+      "command": "benchmark ollama",
+      "error": "Command timed out"
+    }
+  ],
+  "test_results": {
+    "status": {
+      "description": "Show system status",
+      "success": true,
+      "has_output": true
+    },
+    "init": {
+      "description": "Initialize environment",
+      "success": true,
+      "has_output": true
+    },
+    "clean": {
+      "description": "Clean generated files",
+      "success": true,
+      "has_output": true
+    },
+    "generate forge weaver-forge.yaml": {
+      "description": "Generate from semantics",
+      "success": true,
+      "has_output": true
+    },
+    "generate models": {
+      "description": "Generate Pydantic models",
+      "success": true,
+      "has_output": true
+    },
+    "generate roberts": {
+      "description": "Generate Roberts Rules",
+      "success": true,
+      "has_output": true
+    },
+    "validate all": {
+      "description": "Validate entire system",
+      "success": true,
+      "has_output": true
+    },
+    "validate quine": {
+      "description": "Validate semantic quine",
+      "success": true,
+      "has_output": true
+    },
+    "validate otel": {
+      "description": "Validate OTel instrumentation",
+      "success": true,
+      "has_output": true
+    },
+    "agents communicate": {
+      "description": "Agent OTel communication",
+      "success": true,
+      "has_output": true
+    },
+    "agents analyze semantic_quine_demo_v2.py": {
+      "description": "Agent file analysis",
+      "success": true,
+      "has_output": true
+    },
+    "meeting roberts": {
+      "description": "Roberts Rules meeting",
+      "success": true,
+      "has_output": true
+    },
+    "meeting scrum": {
+      "description": "Scrum of Scrums",
+      "success": true,
+      "has_output": true
+    },
+    "meeting dev": {
+      "description": "Dev team meeting",
+      "success": true,
+      "has_output": true
+    },
+    "benchmark ollama": {
+      "description": "Benchmark Ollama",
+      "success": false,
+      "has_output": true
+    },
+    "benchmark concurrent": {
+      "description": "Benchmark concurrency",
+      "success": true,
+      "has_output": true
+    },
+    "demo quine": {
+      "description": "Semantic quine demo",
+      "success": true,
+      "has_output": true
+    },
+    "demo full": {
+      "description": "Full system demo",
+      "success": true,
+      "has_output": true
+    },
+    "export --format json": {
+      "description": "Export configuration",
+      "success": true,
+      "has_output": true
+    }
+  }
+}

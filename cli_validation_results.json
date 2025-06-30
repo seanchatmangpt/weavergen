@@ -1,0 +1,134 @@
+{
+  "timestamp": "2025-06-30T13:37:05.047344",
+  "total_commands": 21,
+  "passed": 20,
+  "failed": 1,
+  "commands": {
+    "status": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py status",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "version": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py version",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "init": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py init test_project --examples",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "export": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py export --format json --output test_export",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "clean": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py clean --force",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "generate forge": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py generate forge test_semantic.yaml",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "generate models": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py generate models",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "generate roberts": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py generate roberts",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "validate all": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py validate all --no-concurrent",
+      "status": "failed",
+      "return_code": 2,
+      "has_output": false
+    },
+    "validate quine": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py validate quine",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "validate otel": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py validate otel",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "agents communicate": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py agents communicate --mode otel --agents 3",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "agents analyze": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py agents analyze test_semantic.yaml",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "meeting roberts": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py meeting roberts --topic Test Meeting",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "meeting scrum": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py meeting scrum --teams 3",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "meeting dev": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py meeting dev",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "benchmark ollama": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py benchmark ollama --model qwen3:latest",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "benchmark concurrent": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py benchmark concurrent",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "demo quine": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py demo quine",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "demo full": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py demo full",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    },
+    "semantic generate": {
+      "command": "/Users/sac/dev/uvmgr/.venv/bin/python3 src/weavergen/cli_comprehensive_mock.py semantic generate test service --output test_gen.yaml --no-validate",
+      "status": "passed",
+      "return_code": 0,
+      "has_output": true
+    }
+  }
+}

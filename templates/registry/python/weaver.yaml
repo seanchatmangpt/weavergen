@@ -1,0 +1,41 @@
+templates:
+  - template: commands.j2
+    filter: |
+      .groups 
+      | map(select(.type == "span"))
+    application_mode: single
+    file_name: "commands/forge.py"
+  - template: operations.j2
+    filter: |
+      .groups 
+      | map(select(.type == "span"))
+    application_mode: single
+    file_name: "operations/forge.py"
+  - template: runtime.j2
+    filter: |
+      .groups 
+      | map(select(.type == "span"))
+    application_mode: single
+    file_name: "runtime/forge.py"
+  - template: contracts.j2
+    filter: |
+      .groups 
+      | map(select(.type == "span"))
+    application_mode: single
+    file_name: "contracts/forge.py"
+
+params:
+  schema_base_url: "https://opentelemetry.io/schemas"
+  registry_name: "forge-registry"
+  semconv_version: "1.0.0"
+
+text_maps:
+  python_types:
+    string: str
+    "string[]": "List[str]"
+    int: int
+    double: float
+    boolean: bool
+    "int[]": "List[int]"
+    "double[]": "List[float]"
+    "boolean[]": "List[bool]"

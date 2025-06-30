@@ -69,6 +69,14 @@ cache/
 temp/
 *.log
 
+# WeaverGen specific patterns
+*_v1.py
+*_comprehensive.py
+*_mock.py
+*_duplicate.py
+output/
+experimental/
+
 # OTel Weaver
 .weaver/
 weaver-cache/

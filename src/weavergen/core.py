@@ -4,19 +4,37 @@ import json
 import subprocess
 import tempfile
 import time
+import importlib.util
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 import shutil
 
-from .models import (
-    GenerationConfig,
-    GenerationResult,
-    ValidationResult, 
-    TemplateInfo,
-    WeaverConfig,
-    WeaverCommand,
-    FileInfo,
-)
+# Import from original models.py file directly 
+import sys
+from pathlib import Path as PathLib
+models_file = PathLib(__file__).parent / "models.py"
+spec = importlib.util.spec_from_file_location("models", models_file)
+models_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(models_module)
+
+GenerationConfig = models_module.GenerationConfig
+GenerationResult = models_module.GenerationResult
+ValidationResult = models_module.ValidationResult
+TemplateInfo = models_module.TemplateInfo
+FileInfo = models_module.FileInfo
+
+# Define missing classes
+from pydantic import BaseModel
+from typing import List, Optional
+
+class WeaverConfig(BaseModel):
+    """Weaver configuration."""
+    weaver_path: Optional[str] = None
+    
+class WeaverCommand(BaseModel):
+    """Weaver command."""
+    command: str
+    args: List[str] = []
 
 
 class WeaverGenError(Exception):

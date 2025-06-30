@@ -1,0 +1,4 @@
+groups:
+  - id: example.service
+    type: span
+    brief: Example

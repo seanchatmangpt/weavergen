@@ -1,0 +1,18 @@
+groups:
+- id: forge.semantic_generator_with_validation_and_code_generation
+  type: span
+  brief: semantic generator with validation and code generation
+  stability: experimental
+  attributes:
+  - id: forge.semantic_generator_with_validation_and_code_generation.input
+    type: string
+    requirement_level: required
+    brief: Input parameter
+  - id: forge.semantic_generator_with_validation_and_code_generation.output
+    type: string
+    requirement_level: required
+    brief: Output path
+  - id: forge.semantic_generator_with_validation_and_code_generation.success
+    type: boolean
+    requirement_level: required
+    brief: Operation success status

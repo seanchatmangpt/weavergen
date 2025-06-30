@@ -1,0 +1,384 @@
+groups:
+  # Executive Action Team (EAT) - Enterprise Leadership
+  - id: sas.eat
+    type: span
+    brief: Executive Action Team coordinating enterprise transformation
+    attributes:
+      - id: sas.eat.id
+        type: string
+        brief: Unique identifier for EAT session
+        requirement_level: required
+        examples: ["eat-2024-q1", "eat-strategic-001"]
+      
+      - id: sas.eat.type
+        type:
+          allow_custom_values: false
+          members:
+            - id: strategic
+              value: "strategic"
+              brief: Strategic planning session
+            - id: operational
+              value: "operational"
+              brief: Operational review
+            - id: transformation
+              value: "transformation"
+              brief: Transformation initiative
+            - id: impediment
+              value: "impediment"
+              brief: Enterprise impediment resolution
+        brief: Type of EAT session
+        requirement_level: required
+      
+      - id: sas.eat.executives_present
+        type: int
+        brief: Number of executives present
+        requirement_level: required
+        examples: [7, 10, 15]
+      
+      - id: sas.eat.business_units
+        type: string[]
+        brief: Business units represented
+        requirement_level: required
+        examples: [["finance", "engineering", "marketing", "operations"]]
+      
+      - id: sas.eat.strategic_priorities
+        type: string[]
+        brief: Current strategic priorities
+        requirement_level: recommended
+        examples: [["digital_transformation", "market_expansion", "operational_excellence"]]
+
+  # Executive MetaScrum (EMS) - Product Strategy
+  - id: sas.ems
+    type: span
+    brief: Executive MetaScrum for product vision and strategy alignment
+    attributes:
+      - id: sas.ems.id
+        type: string
+        brief: Unique identifier for EMS session
+        requirement_level: required
+        examples: ["ems-2024-01", "ems-product-strategy"]
+      
+      - id: sas.ems.chief_product_owner
+        type: string
+        brief: Chief Product Owner leading the session
+        requirement_level: required
+        examples: ["cpo-sarah-chen", "jane.doe@company.com"]
+      
+      - id: sas.ems.product_owners_count
+        type: int
+        brief: Number of Product Owners present
+        requirement_level: required
+        examples: [15, 25, 40]
+      
+      - id: sas.ems.portfolio_value
+        type: double
+        brief: Total portfolio value under management (millions)
+        requirement_level: recommended
+        examples: [250.5, 1200.0, 5000.0]
+      
+      - id: sas.ems.release_trains
+        type: string[]
+        brief: Release trains being coordinated
+        requirement_level: required
+        examples: [["platform", "mobile", "data", "infrastructure"]]
+      
+      - id: sas.ems.backlog_items_refined
+        type: int
+        brief: Number of backlog items refined
+        requirement_level: optional
+        examples: [50, 100, 200]
+
+  # Scrum of Scrums (SoS) - Team Coordination
+  - id: sas.sos
+    type: span
+    brief: Scrum of Scrums coordinating multiple Scrum teams
+    attributes:
+      - id: sas.sos.id
+        type: string
+        brief: Unique identifier for SoS session
+        requirement_level: required
+        examples: ["sos-platform-001", "sos-mobile-daily"]
+      
+      - id: sas.sos.level
+        type:
+          allow_custom_values: false
+          members:
+            - id: team
+              value: "team"
+              brief: Team-level SoS (5-9 teams)
+            - id: program
+              value: "program"
+              brief: Program-level SoS (25-125 teams)
+            - id: portfolio
+              value: "portfolio"
+              brief: Portfolio-level SoSoS (125+ teams)
+        brief: Level of Scrum of Scrums
+        requirement_level: required
+      
+      - id: sas.sos.teams_count
+        type: int
+        brief: Number of teams represented
+        requirement_level: required
+        examples: [5, 25, 125]
+      
+      - id: sas.sos.scrum_master_facilitator
+        type: string
+        brief: Scrum of Scrums Master facilitating
+        requirement_level: required
+        examples: ["sm-john-doe", "sos-master-001"]
+      
+      - id: sas.sos.impediments_raised
+        type: int
+        brief: Number of impediments raised
+        requirement_level: recommended
+        examples: [3, 7, 15]
+      
+      - id: sas.sos.dependencies_identified
+        type: int
+        brief: Number of cross-team dependencies
+        requirement_level: recommended
+        examples: [5, 12, 30]
+
+  # Product Owner Team
+  - id: sas.po_team
+    type: span
+    brief: Product Owner Team aligning product vision
+    attributes:
+      - id: sas.po_team.id
+        type: string
+        brief: Unique identifier for PO Team session
+        requirement_level: required
+        examples: ["po-team-mobile", "po-team-platform"]
+      
+      - id: sas.po_team.chief_po
+        type: string
+        brief: Chief Product Owner for this team
+        requirement_level: required
+        examples: ["cpo-area-001", "jane.smith"]
+      
+      - id: sas.po_team.product_owners
+        type: string[]
+        brief: Product Owners in this team
+        requirement_level: required
+        examples: [["po-team1", "po-team2", "po-team3"]]
+      
+      - id: sas.po_team.backlog_alignment
+        type: double
+        brief: Percentage of backlog items aligned (0-100)
+        requirement_level: recommended
+        examples: [85.5, 92.0, 98.0]
+
+  # Scrum Team at Scale
+  - id: sas.team
+    type: span
+    brief: Individual Scrum team within scaled framework
+    attributes:
+      - id: sas.team.id
+        type: string
+        brief: Unique team identifier
+        requirement_level: required
+        examples: ["team-phoenix", "team-dragon", "team-eagle"]
+      
+      - id: sas.team.size
+        type: int
+        brief: Number of team members
+        requirement_level: required
+        examples: [5, 7, 9]
+      
+      - id: sas.team.velocity
+        type: int
+        brief: Team velocity (story points per sprint)
+        requirement_level: recommended
+        examples: [21, 34, 55]
+      
+      - id: sas.team.sprint_number
+        type: int
+        brief: Current sprint number
+        requirement_level: required
+        examples: [42, 156, 203]
+      
+      - id: sas.team.release_train
+        type: string
+        brief: Release train this team belongs to
+        requirement_level: required
+        examples: ["platform", "mobile", "infrastructure"]
+      
+      - id: sas.team.scrum_master
+        type: string
+        brief: Team's Scrum Master
+        requirement_level: required
+        examples: ["sm-001", "john.doe"]
+      
+      - id: sas.team.product_owner
+        type: string
+        brief: Team's Product Owner
+        requirement_level: required
+        examples: ["po-001", "jane.smith"]
+
+  # Enterprise Impediment
+  - id: sas.impediment
+    type: span
+    brief: Enterprise-level impediment tracking and resolution
+    attributes:
+      - id: sas.impediment.id
+        type: string
+        brief: Unique impediment identifier
+        requirement_level: required
+        examples: ["imp-001", "blocker-infrastructure"]
+      
+      - id: sas.impediment.level
+        type:
+          allow_custom_values: false
+          members:
+            - id: team
+              value: "team"
+              brief: Team can resolve
+            - id: sos
+              value: "sos"
+              brief: Requires SoS coordination
+            - id: eat
+              value: "eat"
+              brief: Requires EAT intervention
+            - id: external
+              value: "external"
+              brief: External to organization
+        brief: Level where impediment must be resolved
+        requirement_level: required
+      
+      - id: sas.impediment.severity
+        type:
+          allow_custom_values: false
+          members:
+            - id: low
+              value: "low"
+              brief: Minor impact
+            - id: medium
+              value: "medium"
+              brief: Moderate impact
+            - id: high
+              value: "high"
+              brief: Significant impact
+            - id: critical
+              value: "critical"
+              brief: Blocking multiple teams
+        brief: Severity of impediment
+        requirement_level: required
+      
+      - id: sas.impediment.teams_affected
+        type: int
+        brief: Number of teams affected
+        requirement_level: required
+        examples: [1, 5, 25]
+      
+      - id: sas.impediment.cost_of_delay
+        type: double
+        brief: Cost of delay per day (thousands)
+        requirement_level: optional
+        examples: [10.5, 50.0, 250.0]
+      
+      - id: sas.impediment.raised_by
+        type: string
+        brief: Who raised the impediment
+        requirement_level: required
+        examples: ["team-phoenix", "sm-001", "po-002"]
+      
+      - id: sas.impediment.escalated_to
+        type: string
+        brief: Where impediment was escalated
+        requirement_level: optional
+        examples: ["sos-platform", "eat", "ceo"]
+
+  # Release Train
+  - id: sas.release_train
+    type: span
+    brief: Release train coordination and planning
+    attributes:
+      - id: sas.release_train.id
+        type: string
+        brief: Release train identifier
+        requirement_level: required
+        examples: ["rt-platform", "rt-mobile", "rt-infrastructure"]
+      
+      - id: sas.release_train.teams_count
+        type: int
+        brief: Number of teams on this train
+        requirement_level: required
+        examples: [5, 10, 25]
+      
+      - id: sas.release_train.pi_number
+        type: int
+        brief: Program Increment number
+        requirement_level: required
+        examples: [12, 24, 36]
+      
+      - id: sas.release_train.engineer
+        type: string
+        brief: Release Train Engineer
+        requirement_level: required
+        examples: ["rte-001", "alice.johnson"]
+      
+      - id: sas.release_train.objectives_count
+        type: int
+        brief: Number of PI objectives
+        requirement_level: recommended
+        examples: [10, 15, 25]
+      
+      - id: sas.release_train.confidence_vote
+        type: double
+        brief: PI planning confidence vote (1-5)
+        requirement_level: optional
+        examples: [3.5, 4.2, 4.8]
+
+  # Scaling Metrics
+  - id: sas.metrics
+    type: attribute_group
+    brief: Enterprise scaling metrics
+    attributes:
+      - id: sas.metrics.total_teams
+        type: int
+        brief: Total number of Scrum teams
+        requirement_level: required
+        examples: [50, 150, 500]
+      
+      - id: sas.metrics.total_people
+        type: int
+        brief: Total people in Scrum teams
+        requirement_level: required
+        examples: [400, 1200, 4000]
+      
+      - id: sas.metrics.release_trains
+        type: int
+        brief: Number of release trains
+        requirement_level: required
+        examples: [4, 10, 25]
+      
+      - id: sas.metrics.transformation_maturity
+        type:
+          allow_custom_values: false
+          members:
+            - id: forming
+              value: "forming"
+              brief: Just starting transformation
+            - id: developing
+              value: "developing"
+              brief: Developing practices
+            - id: performing
+              value: "performing"
+              brief: Performing well
+            - id: optimizing
+              value: "optimizing"
+              brief: Continuously optimizing
+        brief: Organizational transformation maturity
+        requirement_level: recommended
+      
+      - id: sas.metrics.cycle_time_days
+        type: double
+        brief: Average cycle time in days
+        requirement_level: optional
+        examples: [14.5, 7.2, 3.5]
+      
+      - id: sas.metrics.release_frequency_days
+        type: double
+        brief: Days between releases
+        requirement_level: optional
+        examples: [30.0, 14.0, 1.0]

@@ -1,0 +1,125 @@
+{
+  "timestamp": "2025-06-30T13:41:07.724239",
+  "total_tests": 10,
+  "passed": 10,
+  "failed": 0,
+  "functional_tests": {
+    "Init creates directories": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "directories_created": true,
+        "example_created": true,
+        "stdout_contains_success": true,
+        "output_length": 50
+      }
+    },
+    "Status shows components": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "components_shown": "10/10",
+        "shows_semantic_quine": true,
+        "shows_roberts_rules": true,
+        "shows_4_layer": true,
+        "shows_weaver_status": true,
+        "output_length": 1251
+      }
+    },
+    "Export creates file": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "file_created": true,
+        "file_size": 67,
+        "valid_json": true,
+        "has_version": true,
+        "has_timestamp": true,
+        "output_mentions_exported": true
+      }
+    },
+    "Semantic generate creates YAML": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "file_created": true,
+        "file_size": 237,
+        "valid_yaml": true,
+        "has_groups": true,
+        "has_attributes": true,
+        "output_mentions_generated": true
+      }
+    },
+    "Generate forge mentions layers": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "mentions_commands": true,
+        "mentions_operations": true,
+        "mentions_runtime": true,
+        "mentions_contracts": true,
+        "output_mentions_generated": true
+      }
+    },
+    "Validate quine checks property": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "mentions_semantic_quine": true,
+        "mentions_regeneration": true,
+        "output_length": 83
+      }
+    },
+    "Agents communicate shows output": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "mentions_agents": true,
+        "mentions_communication": true,
+        "has_diagram": true,
+        "output_length": 90
+      }
+    },
+    "Meeting roberts runs meeting": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "mentions_meeting": true,
+        "mentions_roberts": true,
+        "mentions_topic": true,
+        "output_length": 57
+      }
+    },
+    "Benchmark ollama shows metrics": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "mentions_benchmark": true,
+        "mentions_model": true,
+        "mentions_gpu": false,
+        "mentions_performance": false,
+        "output_length": 27
+      }
+    },
+    "Demo quine demonstrates feature": {
+      "status": "passed",
+      "details": {
+        "command_success": true,
+        "exit_code": 0,
+        "mentions_quine": true,
+        "mentions_semantic": true,
+        "mentions_regenerate": true,
+        "output_length": 73
+      }
+    }
+  }
+}

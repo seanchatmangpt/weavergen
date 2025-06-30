@@ -1,0 +1,137 @@
+# Semantic Conventions for Weaver CLI Commands
+# This defines the 80/20 Weaver commands as semantic conventions
+
+groups:
+  # Core registry commands (80% value)
+  - id: weaver.registry.check
+    type: span
+    brief: 'Validate a semantic convention registry for correctness'
+    attributes:
+      - id: registry.check.path
+        type: string
+        requirement_level: required
+        brief: 'Path to the registry to check'
+        examples: ['./registry', '/path/to/registry']
+      - id: registry.check.strict
+        type: boolean
+        requirement_level: recommended
+        brief: 'Enable strict validation mode'
+        examples: [true, false]
+      - id: registry.check.valid
+        type: boolean
+        requirement_level: required
+        brief: 'Whether the registry passed validation'
+      - id: registry.check.errors
+        type: string[]
+        requirement_level:
+          conditionally_required: 'Required when validation fails'
+        brief: 'List of validation errors if validation failed'
+
+  - id: weaver.registry.generate
+    type: span
+    brief: 'Generate code or documentation from a semantic convention registry'
+    attributes:
+      - id: registry.generate.registry_path
+        type: string
+        requirement_level: required
+        brief: 'Path to the semantic convention registry'
+      - id: registry.generate.target
+        type: string
+        requirement_level: required
+        brief: 'Target language or format for generation'
+        examples: ['python', 'go', 'rust', 'markdown', 'html']
+      - id: registry.generate.template_path
+        type: string
+        requirement_level: recommended
+        brief: 'Path to custom templates'
+      - id: registry.generate.output_dir
+        type: string
+        requirement_level: required
+        brief: 'Output directory for generated files'
+      - id: registry.generate.params
+        type: template[string]
+        requirement_level: recommended
+        brief: 'Additional parameters passed to templates'
+      - id: registry.generate.files_count
+        type: int
+        requirement_level: required
+        brief: 'Number of files generated'
+      - id: registry.generate.files
+        type: string[]
+        requirement_level: recommended
+        brief: 'List of generated file paths'
+
+  - id: weaver.registry.resolve
+    type: span
+    brief: 'Resolve references and merge semantic conventions'
+    attributes:
+      - id: registry.resolve.registry_path
+        type: string
+        requirement_level: required
+        brief: 'Path to the registry to resolve'
+      - id: registry.resolve.format
+        type: string
+        requirement_level: recommended
+        brief: 'Output format for resolved registry'
+        examples: ['yaml', 'json']
+      - id: registry.resolve.output_path
+        type: string
+        requirement_level: recommended
+        brief: 'Path to write resolved output'
+      - id: registry.resolve.groups_count
+        type: int
+        requirement_level: required
+        brief: 'Number of groups in resolved registry'
+
+  - id: weaver.registry.stats
+    type: span
+    brief: 'Generate statistics about a semantic convention registry'
+    attributes:
+      - id: registry.stats.registry_path
+        type: string
+        requirement_level: required
+        brief: 'Path to the registry'
+      - id: registry.stats.total_groups
+        type: int
+        requirement_level: required
+        brief: 'Total number of groups'
+      - id: registry.stats.total_attributes
+        type: int
+        requirement_level: required
+        brief: 'Total number of attributes'
+      - id: registry.stats.stable_count
+        type: int
+        requirement_level: recommended
+        brief: 'Number of stable definitions'
+      - id: registry.stats.experimental_count
+        type: int
+        requirement_level: recommended
+        brief: 'Number of experimental definitions'
+
+  # Multi-command operations
+  - id: weaver.multi.generate
+    type: span
+    brief: 'Generate code for multiple languages in parallel'
+    attributes:
+      - id: multi.generate.registry_path
+        type: string
+        requirement_level: required
+        brief: 'Path to the registry'
+      - id: multi.generate.languages
+        type: string[]
+        requirement_level: required
+        brief: 'List of target languages'
+        examples: [['python', 'go', 'rust']]
+      - id: multi.generate.parallel
+        type: boolean
+        requirement_level: recommended
+        brief: 'Whether to generate in parallel'
+        examples: [true]
+      - id: multi.generate.total_files
+        type: int
+        requirement_level: required
+        brief: 'Total files generated across all languages'
+      - id: multi.generate.duration_ms
+        type: int
+        requirement_level: recommended
+        brief: 'Total duration in milliseconds'

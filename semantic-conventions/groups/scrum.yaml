@@ -1,0 +1,286 @@
+groups:
+  - id: scrum.team
+    type: attribute_group
+    brief: Attributes for Scrum team identification and metrics
+    attributes:
+      - id: team.name
+        type: string
+        brief: Name of the Scrum team
+        examples: ['Platform', 'Mobile', 'Web', 'Backend', 'Data']
+        requirement_level: required
+      
+      - id: team.scrum_master
+        type: string
+        brief: Name of the team's Scrum Master
+        examples: ['Alice Chen', 'Bob Kumar']
+        requirement_level: required
+      
+      - id: sprint.number
+        type: int
+        brief: Current sprint number
+        examples: [42, 43]
+        requirement_level: required
+      
+      - id: sprint.status
+        type:
+          members:
+            - id: on_track
+              value: "on_track"
+              brief: Sprint is progressing as planned
+            - id: at_risk
+              value: "at_risk"
+              brief: Sprint has risks but may still complete
+            - id: blocked
+              value: "blocked"
+              brief: Sprint is blocked by impediments
+        brief: Overall sprint health status
+        requirement_level: required
+
+  - id: scrum.metrics
+    type: attribute_group
+    brief: Sprint progress metrics
+    attributes:
+      - id: stories.completed
+        type: int
+        brief: Number of user stories completed
+        requirement_level: required
+      
+      - id: stories.total
+        type: int
+        brief: Total number of user stories in sprint
+        requirement_level: required
+      
+      - id: points.completed
+        type: int
+        brief: Story points completed
+        requirement_level: required
+      
+      - id: points.total
+        type: int
+        brief: Total story points committed
+        requirement_level: required
+      
+      - id: velocity
+        type: double
+        brief: Team velocity (points per sprint)
+        requirement_level: recommended
+      
+      - id: completion.percentage
+        type: double
+        brief: Sprint completion percentage
+        requirement_level: recommended
+
+  - id: scrum.impediment
+    type: attribute_group
+    brief: Impediment tracking attributes
+    attributes:
+      - id: impediment.id
+        type: string
+        brief: Unique impediment identifier
+        examples: ['PLATFORM-IMP-1', 'MOBILE-IMP-2']
+        requirement_level: required
+      
+      - id: impediment.description
+        type: string
+        brief: Description of the impediment
+        requirement_level: required
+      
+      - id: impediment.severity
+        type:
+          members:
+            - id: low
+              value: "low"
+            - id: medium
+              value: "medium"
+            - id: high
+              value: "high"
+            - id: critical
+              value: "critical"
+        brief: Severity level of impediment
+        requirement_level: required
+      
+      - id: impediment.affecting_teams
+        type: string[]
+        brief: Teams affected by this impediment
+        requirement_level: required
+      
+      - id: impediment.owner_team
+        type: string
+        brief: Team responsible for resolving impediment
+        requirement_level: required
+
+  - id: scrum.dependency
+    type: attribute_group
+    brief: Cross-team dependency attributes
+    attributes:
+      - id: dependency.id
+        type: string
+        brief: Unique dependency identifier
+        requirement_level: required
+      
+      - id: dependency.from_team
+        type: string
+        brief: Team that needs the dependency
+        requirement_level: required
+      
+      - id: dependency.to_team
+        type: string
+        brief: Team providing the dependency
+        requirement_level: required
+      
+      - id: dependency.description
+        type: string
+        brief: Description of what is needed
+        requirement_level: required
+      
+      - id: dependency.needed_by
+        type: string
+        brief: Date when dependency is needed (ISO 8601)
+        requirement_level: required
+      
+      - id: dependency.status
+        type:
+          members:
+            - id: pending
+              value: "pending"
+            - id: in_progress
+              value: "in_progress"
+            - id: delivered
+              value: "delivered"
+            - id: blocked
+              value: "blocked"
+        brief: Current status of dependency
+        requirement_level: required
+
+  - id: scrum.ceremony
+    type: span
+    brief: Scrum ceremony execution
+    attributes:
+      - id: ceremony.type
+        type:
+          members:
+            - id: daily_standup
+              value: "daily_standup"
+              brief: Daily team standup
+            - id: sprint_planning
+              value: "sprint_planning"
+              brief: Sprint planning session
+            - id: sprint_review
+              value: "sprint_review"
+              brief: Sprint review/demo
+            - id: retrospective
+              value: "retrospective"
+              brief: Sprint retrospective
+            - id: scrum_of_scrums
+              value: "scrum_of_scrums"
+              brief: Scrum of Scrums coordination
+            - id: backlog_refinement
+              value: "backlog_refinement"
+              brief: Backlog grooming session
+        brief: Type of Scrum ceremony
+        requirement_level: required
+      
+      - id: ceremony.duration_minutes
+        type: int
+        brief: Duration of ceremony in minutes
+        requirement_level: recommended
+      
+      - id: ceremony.attendee_count
+        type: int
+        brief: Number of attendees
+        requirement_level: recommended
+      
+      - id: ceremony.facilitator
+        type: string
+        brief: Person facilitating the ceremony
+        requirement_level: recommended
+
+  - id: scrum.of.scrums
+    type: span
+    brief: Scrum of Scrums specific operations
+    span_kind: internal
+    attributes:
+      - ref: scrum.ceremony.type
+        requirement_level: required
+      - id: participating_teams
+        type: string[]
+        brief: List of teams participating
+        requirement_level: required
+      - id: chief_scrum_master
+        type: string
+        brief: Chief Scrum Master facilitating
+        requirement_level: required
+      - id: impediments_raised
+        type: int
+        brief: Number of impediments raised
+        requirement_level: recommended
+      - id: dependencies_discussed
+        type: int
+        brief: Number of dependencies discussed
+        requirement_level: recommended
+      - id: action_items_created
+        type: int
+        brief: Number of action items created
+        requirement_level: recommended
+
+  - id: scrum.roberts_rules
+    type: span
+    brief: Roberts Rules procedures in Scrum ceremonies
+    extends: scrum.ceremony
+    span_kind: internal
+    attributes:
+      - id: parliamentary.procedure
+        type: string
+        brief: Parliamentary procedure being followed
+        examples: ['call_to_order', 'quorum_check', 'motion', 'vote', 'adjournment']
+        requirement_level: required
+      
+      - id: motion.text
+        type: string
+        brief: Text of motion if applicable
+        requirement_level:
+          conditionally_required: When parliamentary.procedure is 'motion'
+      
+      - id: motion.result
+        type:
+          members:
+            - id: passed
+              value: "passed"
+            - id: failed
+              value: "failed"
+            - id: tabled
+              value: "tabled"
+        brief: Result of motion vote
+        requirement_level:
+          conditionally_required: When parliamentary.procedure is 'vote'
+
+  - id: scrum.metrics.collection
+    type: metric
+    metric_name: scrum.sprint.progress
+    brief: Sprint progress metrics
+    instrument: gauge
+    unit: "percent"
+    attributes:
+      - ref: scrum.team.name
+      - ref: scrum.sprint.number
+      - ref: scrum.sprint.status
+
+  - id: scrum.velocity.metric
+    type: metric
+    metric_name: scrum.team.velocity
+    brief: Team velocity over time
+    instrument: gauge
+    unit: "points"
+    attributes:
+      - ref: scrum.team.name
+      - ref: scrum.sprint.number
+
+  - id: scrum.impediment.metric
+    type: metric
+    metric_name: scrum.impediments.active
+    brief: Number of active impediments
+    instrument: up_down_counter
+    unit: "{impediment}"
+    attributes:
+      - ref: scrum.team.name
+      - ref: scrum.impediment.severity

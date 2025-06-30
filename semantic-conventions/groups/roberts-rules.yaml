@@ -1,0 +1,229 @@
+# Semantic conventions for Robert's Rules of Order
+groups:
+  # Attribute group for meeting operations
+  - id: roberts.meeting
+    type: attribute_group
+    brief: 'Attributes for Robert''s Rules meeting management'
+    stability: experimental
+    attributes:
+      - id: roberts.meeting.id
+        type: string
+        requirement_level: required
+        brief: 'Unique identifier for the meeting'
+        examples: ['mtg-2024-01-15-board', 'annual-general-2024']
+      - id: roberts.meeting.type
+        type: string
+        requirement_level: required
+        brief: 'Type of meeting being conducted'
+        examples: ['board', 'committee', 'general', 'special']
+      - id: roberts.meeting.quorum
+        type: int
+        requirement_level: required
+        brief: 'Number of members required for quorum'
+        examples: [5, 10, 51]
+      - id: roberts.meeting.members_present
+        type: int
+        requirement_level: required
+        brief: 'Current number of members present'
+        examples: [8, 15, 75]
+      - id: roberts.meeting.chair
+        type: string
+        requirement_level: required
+        brief: 'Name or ID of the meeting chair'
+        examples: ['John Smith', 'member-001']
+      - id: roberts.meeting.secretary
+        type: string
+        requirement_level: required
+        brief: 'Name or ID of the meeting secretary'
+        examples: ['Jane Doe', 'member-002']
+
+  # Span definition for starting a meeting
+  - id: roberts.meeting.start
+    type: span
+    brief: 'Start a meeting following Robert''s Rules'
+    extends: roberts.meeting
+    span_kind: internal
+    stability: experimental
+
+  # Attribute group for motion operations
+  - id: roberts.motion
+    type: attribute_group
+    brief: 'Attributes for motion handling'
+    stability: experimental
+    attributes:
+      - id: roberts.motion.id
+        type: string
+        requirement_level: required
+        brief: 'Unique identifier for the motion'
+        examples: ['motion-001', 'amend-budget-2024']
+      - id: roberts.motion.type
+        type: string
+        requirement_level: required
+        brief: 'Type of motion according to Robert''s Rules'
+        examples: ['main', 'subsidiary', 'privileged', 'incidental']
+      - id: roberts.motion.text
+        type: string
+        requirement_level: required
+        brief: 'The full text of the motion'
+        examples: ['I move to approve the budget', 'I move to table the motion']
+      - id: roberts.motion.mover
+        type: string
+        requirement_level: required
+        brief: 'Member who made the motion'
+        examples: ['John Smith', 'member-003']
+      - id: roberts.motion.seconder
+        type: string
+        requirement_level: recommended
+        brief: 'Member who seconded the motion'
+        examples: ['Jane Doe', 'member-004']
+      - id: roberts.motion.requires_second
+        type: boolean
+        requirement_level: required
+        brief: 'Whether this motion requires a second'
+        examples: [true, false]
+      - id: roberts.motion.debatable
+        type: boolean
+        requirement_level: required
+        brief: 'Whether this motion is debatable'
+        examples: [true, false]
+      - id: roberts.motion.vote_required
+        type: string
+        requirement_level: required
+        brief: 'Vote threshold required to pass'
+        examples: ['majority', 'two_thirds', 'unanimous']
+      - id: roberts.motion.status
+        type: string
+        requirement_level: required
+        brief: 'Current status of the motion'
+        examples: ['pending', 'seconded', 'debating', 'voting', 'passed', 'failed']
+
+  # Span for making a motion
+  - id: roberts.motion.make
+    type: span
+    brief: 'Make a motion according to Robert''s Rules'
+    extends: roberts.motion
+    span_kind: internal
+    stability: experimental
+
+  # Span for seconding a motion
+  - id: roberts.motion.second
+    type: span
+    brief: 'Second a motion'
+    extends: roberts.motion
+    span_kind: internal
+    stability: experimental
+
+  # Attribute group for voting
+  - id: roberts.vote
+    type: attribute_group
+    brief: 'Attributes for voting operations'
+    stability: experimental
+    attributes:
+      - id: roberts.vote.motion_id
+        type: string
+        requirement_level: required
+        brief: 'ID of the motion being voted on'
+        examples: ['motion-001', 'motion-002']
+      - id: roberts.vote.method
+        type: string
+        requirement_level: required
+        brief: 'Method of voting'
+        examples: ['voice', 'show_of_hands', 'roll_call', 'ballot']
+      - id: roberts.vote.yes_count
+        type: int
+        requirement_level: required
+        brief: 'Number of yes votes'
+        examples: [15, 8, 42]
+      - id: roberts.vote.no_count
+        type: int
+        requirement_level: required
+        brief: 'Number of no votes'
+        examples: [5, 12, 10]
+      - id: roberts.vote.abstain_count
+        type: int
+        requirement_level: recommended
+        brief: 'Number of abstentions'
+        examples: [0, 2, 5]
+      - id: roberts.vote.result
+        type: string
+        requirement_level: required
+        brief: 'Result of the vote'
+        examples: ['passed', 'failed', 'tied']
+
+  # Span for recording a vote
+  - id: roberts.vote.record
+    type: span
+    brief: 'Record vote on a motion'
+    extends: roberts.vote
+    span_kind: internal
+    stability: experimental
+
+  # Attribute group for points of order
+  - id: roberts.point_of_order
+    type: attribute_group
+    brief: 'Attributes for points of order'
+    stability: experimental
+    attributes:
+      - id: roberts.point_of_order.member
+        type: string
+        requirement_level: required
+        brief: 'Member raising the point of order'
+        examples: ['John Smith', 'member-005']
+      - id: roberts.point_of_order.issue
+        type: string
+        requirement_level: required
+        brief: 'Description of the procedural issue'
+        examples: ['Motion not seconded', 'No quorum present']
+      - id: roberts.point_of_order.ruling
+        type: string
+        requirement_level: recommended
+        brief: 'Chair''s ruling on the point'
+        examples: ['Point well taken', 'Point not well taken']
+      - id: roberts.point_of_order.appealed
+        type: boolean
+        requirement_level: recommended
+        brief: 'Whether the ruling was appealed'
+        examples: [true, false]
+
+  # Span for raising point of order
+  - id: roberts.point_of_order.raise
+    type: span
+    brief: 'Raise a point of order'
+    extends: roberts.point_of_order
+    span_kind: internal
+    stability: experimental
+
+  # Attribute group for recognition
+  - id: roberts.recognition
+    type: attribute_group
+    brief: 'Attributes for member recognition'
+    stability: experimental
+    attributes:
+      - id: roberts.recognition.member
+        type: string
+        requirement_level: required
+        brief: 'Member seeking recognition'
+        examples: ['John Smith', 'member-006']
+      - id: roberts.recognition.purpose
+        type: string
+        requirement_level: required
+        brief: 'Purpose of seeking recognition'
+        examples: ['speak_for', 'speak_against', 'make_motion', 'point_of_order']
+      - id: roberts.recognition.granted
+        type: boolean
+        requirement_level: required
+        brief: 'Whether recognition was granted'
+        examples: [true, false]
+      - id: roberts.recognition.queue_position
+        type: int
+        requirement_level: recommended
+        brief: 'Position in speaking queue'
+        examples: [1, 2, 3]
+
+  # Span for requesting recognition
+  - id: roberts.recognition.request
+    type: span
+    brief: 'Request recognition to speak'
+    extends: roberts.recognition
+    span_kind: internal
+    stability: experimental

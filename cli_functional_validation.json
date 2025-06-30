@@ -1,0 +1,104 @@
+{
+  "timestamp": "2025-06-30T13:39:53.598235",
+  "total_tests": 10,
+  "passed": 0,
+  "failed": 10,
+  "functional_tests": {
+    "Init creates directories": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "directories_created": false,
+        "example_created": false,
+        "roberts_created": false,
+        "stdout_contains_success": false
+      }
+    },
+    "Semantic generate creates YAML": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "file_created": false,
+        "valid_yaml": false,
+        "has_groups": false,
+        "has_attributes": false
+      }
+    },
+    "Generate forge creates layers": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "mentions_commands": false,
+        "mentions_operations": false,
+        "mentions_runtime": false,
+        "mentions_contracts": false
+      }
+    },
+    "Export creates file": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "file_created": false,
+        "valid_json": false,
+        "has_version": false,
+        "has_timestamp": false
+      }
+    },
+    "Validate quine checks property": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "mentions_semantic_quine": false,
+        "mentions_regeneration": false
+      }
+    },
+    "Agents communicate shows output": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "mentions_agents": false,
+        "mentions_communication": false,
+        "has_diagram": false
+      }
+    },
+    "Meeting roberts runs meeting": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "mentions_meeting": false,
+        "mentions_roberts": false,
+        "mentions_topic": false
+      }
+    },
+    "Benchmark ollama shows metrics": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "mentions_benchmark": false,
+        "mentions_model": false,
+        "mentions_gpu": false,
+        "mentions_performance": false
+      }
+    },
+    "Demo quine demonstrates feature": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "mentions_quine": false,
+        "mentions_semantic": false,
+        "mentions_regenerate": false
+      }
+    },
+    "Status shows components": {
+      "status": "failed",
+      "details": {
+        "command_success": false,
+        "components_shown": "0/10",
+        "shows_semantic_quine": false,
+        "shows_roberts_rules": false,
+        "shows_4_layer": false,
+        "shows_weaver_status": false
+      }
+    }
+  }
+}

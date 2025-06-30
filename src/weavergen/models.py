@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from typing import Optional, List, Dict, Any
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class GenerationConfig(BaseModel):
@@ -15,11 +15,13 @@ class GenerationConfig(BaseModel):
     force: bool = Field(default=False, description="Overwrite existing files")
     verbose: bool = Field(default=False, description="Enable verbose output")
     
-    @validator("output_dir", pre=True)
+    @field_validator("output_dir", mode="before")
+    @classmethod
     def ensure_path(cls, v):
         return Path(v) if not isinstance(v, Path) else v
     
-    @validator("template_dir", pre=True)
+    @field_validator("template_dir", mode="before")
+    @classmethod
     def ensure_template_path(cls, v):
         return Path(v) if v and not isinstance(v, Path) else v
 
@@ -76,7 +78,8 @@ class WeaverConfig(BaseModel):
     template_dir: Optional[Path] = None
     cache_dir: Path = Field(default=Path.home() / ".weavergen" / "cache")
     
-    @validator("weaver_path", "template_dir", "cache_dir", pre=True)
+    @field_validator("weaver_path", "template_dir", "cache_dir", mode="before")
+    @classmethod
     def ensure_paths(cls, v):
         return Path(v) if v and not isinstance(v, Path) else v
 

@@ -1,0 +1,62 @@
+# Generated output directories
+output/commands/
+output/contracts/
+output/runtime/
+output/roberts/
+output/roberts_generated/
+output/complete_system/
+generated/
+generated_cli/
+generated_v2/
+test_output/
+otel_test_output/
+
+# Preserve customized operations
+!output/operations/
+
+# Test results and telemetry
+*.csv
+cli_validation_results.json
+concurrent_validation_results.json
+ollama_*.json
+*_telemetry.json
+validation_test.json
+prototype_export.json
+cleanup_report.json
+
+# Temporary directories
+logs/
+telemetry/
+temp/
+temp_*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Keep these customized files
+!roberts_integrated_operations.py
+!complete_pydantic_models.py
+!output/operations/forge.py

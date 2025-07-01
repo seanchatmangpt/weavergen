@@ -20,28 +20,36 @@ make dev
 cargo install otellib-weaver-cli
 ```
 
-### BPMN Workflow Execution (with SpiffWorkflow)
+### CLI-First Workflow Execution (v1.0.0)
 ```bash
-# ALL CLI commands execute BPMN workflows (NO direct function calls)
-uv run weavergen generate test_semantic.yaml  # -> triggers generation.bpmn workflow
-uv run weavergen validate test_semantic.yaml # -> triggers validation.bpmn workflow
-uv run weavergen templates --list           # -> triggers template_list.bpmn workflow
+# CORE PRINCIPLE: Use CLI only - no individual Python files
+# ALL operations via uv run weavergen commands
 
-# Execute BPMN workflows directly with SpiffWorkflow engine
-uv run python -m weavergen.bpmn_first_engine --workflow weavergen_orchestration.bpmn
+# Primary generation workflow
+uv run weavergen generate semantic_conventions/weavergen_system.yaml
 
-# Run full generation pipeline with BPMN orchestration
-uv run run_cli.py full-pipeline test_semantic.yaml --agents 3
+# Validation with span-based testing
+uv run weavergen validate semantic_conventions/weavergen_system.yaml
 
-# Debug and analyze captured spans from BPMN execution
-uv run run_cli.py debug spans --format table
-uv run run_cli.py debug spans --format mermaid
+# BPMN workflow execution (SpiffWorkflow engine)
+uv run weavergen bpmn execute WeaverGenOrchestration --trace
+uv run weavergen bpmn orchestrate --test
 
-# Health check generated components via BPMN workflow
-uv run run_cli.py debug health --deep
+# Multi-agent system operations
+uv run weavergen agents communicate --agents 3
+uv run weavergen agents validate --deep
 
-# Trace live BPMN workflow operations
-uv run run_cli.py debug trace workflow
+# Span-based debugging (NO unit tests)
+uv run weavergen debug spans --format mermaid
+uv run weavergen debug health --components all
+uv run weavergen debug trace communication
+
+# Template operations
+uv run weavergen templates list
+uv run weavergen templates generate --language python
+
+# Full pipeline execution
+uv run weavergen full-pipeline semantic_conventions/weavergen_system.yaml --agents 3
 ```
 
 ### Code Quality
@@ -155,30 +163,38 @@ The project includes custom commands in `claude-code-context/commands/`:
 - Templates use Jinja2 with JQ expressions
 - Performance target: 26x optimization over manual generation
 
-## AI Development Guidelines
+## v1.0.0 Development Guidelines
 
-- **BPMN-First Development**:
-  - ALWAYS use existing SpiffWorkflow library with `uv`
-  - DO NOT create custom workflow engines
-  - DO NOT run Python directly - use BPMN service tasks
-  - ALL workflows must be visual .bpmn files
-  - **ALL CLI COMMANDS MUST BE REFACTORED TO EXECUTE WORKFLOWS INSTEAD OF FUNCTIONS DIRECTLY**
+- **CLI-First Philosophy (v1)**:
+  - **NO individual Python scripts** - use CLI commands only
+  - ALL operations via `uv run weavergen` commands
+  - Use SpiffWorkflow BPMN engine through CLI
+  - NO direct Python execution - everything through CLI interface
+  - CLI commands automatically execute BPMN workflows with SpiffWorkflow
   
-- **CLI Architecture Requirements**:
-  - CLI commands MUST trigger BPMN workflows, not Python functions
-  - Each CLI operation MUST have a corresponding .bpmn workflow file
-  - Direct function calls in CLI are FORBIDDEN - use SpiffWorkflow orchestration
-  - CLI becomes a thin wrapper that launches BPMN workflows with context
+- **v1 Architecture Requirements**:
+  - CLI is the ONLY interface - no direct file execution
+  - Each CLI command triggers SpiffWorkflow BPMN execution
+  - All workflows are visual .bpmn files in `src/weavergen/workflows/bpmn/`
+  - Service tasks handle actual work within BPMN workflows
+  - Context flows through BPMN data objects, not Python variables
   
-- **Testing Philosophy**:
-  - DO NOT WRITE OR RUN UNIT TESTS
-  - USE BPMN WORKFLOWS WITH SPAN VALIDATION
-  - USE SPANS WITH CHAINS OF RUNNING COMMANDS
-  - Validation should be done through OTel spans and observability traces
-
-- **Reporting and Documentation Requirements**:
-  - **ALL SUMMARIES MUST SPECIFICALLY REFERENCE THE SPANS THAT PROVIDED THE INFORMATION**
-  - NO summary or report without explicit span references and trace IDs
-  - Include span attributes, timestamps, and execution context in all reports
-  - Reference specific span names, task IDs, and workflow execution traces
-  - Format: "Based on span `bpmn.service.load_semantics` (trace_id: abc123) at 2024-01-01T10:00:00Z..."
+- **v1 Testing Philosophy**:
+  - NO unit tests - use span-based validation only
+  - ALL validation via OTel spans captured from CLI execution
+  - Test by running CLI commands and analyzing generated spans
+  - Use `uv run weavergen debug spans` for validation
+  - Spans are the source of truth for system behavior
+  
+- **v1 Usage Patterns**:
+  - Development: `uv run weavergen generate <semantic_file>`
+  - Testing: `uv run weavergen debug spans --format mermaid`
+  - Deployment: `uv run weavergen bpmn orchestrate --production`
+  - Debugging: `uv run weavergen debug health --deep`
+  
+- **v1 Reporting Requirements**:
+  - ALL reports must reference specific CLI commands executed
+  - Include span trace IDs from CLI execution
+  - Reference BPMN workflow names and task completion
+  - Format: "Based on `uv run weavergen bpmn execute` (trace_id: abc123) at 2025-01-01T10:00:00Z..."
+  - NO Python file creation for demonstrations - use CLI only

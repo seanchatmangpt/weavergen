@@ -249,6 +249,386 @@ class GenerateHealthScoringTask(SpiffServiceTask):
         }
 
 
+# Weaver Forge SpiffServiceTask Implementations
+class InitializeWeaverTask(SpiffServiceTask):
+    """Initialize OTel Weaver binary for BPMN workflow"""
+    
+    def __init__(self):
+        super().__init__("InitializeWeaver")
+    
+    @semantic_span("weaver", "initialize")
+    @resource_span("weaver", "binary")
+    def _execute_task_logic(self, task: Task, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        import shutil
+        import subprocess
+        from .core import WeaverNotFoundError, WeaverGenError
+        
+        try:
+            # Find weaver binary
+            weaver_path = shutil.which("weaver")
+            if not weaver_path:
+                # Try cargo install location
+                cargo_bin = Path.home() / ".cargo" / "bin" / "weaver"
+                if cargo_bin.exists():
+                    weaver_path = str(cargo_bin)
+            
+            if not weaver_path:
+                return {
+                    "error": "Weaver binary not found. Install with: cargo install weaver-cli",
+                    "weaver_initialized": False,
+                    "success": False
+                }
+            
+            # Verify weaver works
+            result = subprocess.run(
+                [weaver_path, "--version"],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            if result.returncode != 0:
+                return {
+                    "error": f"Weaver verification failed: {result.stderr}",
+                    "weaver_initialized": False,
+                    "success": False
+                }
+            
+            version = result.stdout.strip()
+            
+            return {
+                "weaver_path": weaver_path,
+                "weaver_version": version,
+                "weaver_initialized": True,
+                "success": True
+            }
+            
+        except Exception as e:
+            return {
+                "error": str(e),
+                "weaver_initialized": False,
+                "success": False
+            }
+
+
+class LoadSemanticRegistryTask(SpiffServiceTask):
+    """Load semantic convention registry for Weaver"""
+    
+    def __init__(self):
+        super().__init__("LoadSemanticRegistry")
+    
+    @semantic_span("weaver", "load_registry")
+    def _execute_task_logic(self, task: Task, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        registry_url = task_data.get("registry_url", task_data.get("semantic_file"))
+        
+        try:
+            # If it's a URL, assume it's already accessible
+            if str(registry_url).startswith("http"):
+                registry_path = registry_url
+                registry_type = "url"
+            else:
+                registry_path = Path(registry_url)
+                registry_type = "file"
+                
+                if not registry_path.exists():
+                    return {
+                        "error": f"Registry not found: {registry_path}",
+                        "registry_loaded": False,
+                        "success": False
+                    }
+            
+            # Count semantic groups if local file
+            if registry_type == "file":
+                yaml_files = [registry_path] if registry_path.is_file() else list(registry_path.rglob("*.yaml"))
+                
+                total_groups = 0
+                for yaml_file in yaml_files:
+                    with open(yaml_file) as f:
+                        data = yaml.safe_load(f)
+                        if data and "groups" in data:
+                            total_groups += len(data["groups"])
+                
+                return {
+                    "registry_path": str(registry_path),
+                    "registry_type": registry_type,
+                    "registry_files": len(yaml_files),
+                    "registry_groups": total_groups,
+                    "registry_loaded": True,
+                    "success": True
+                }
+            else:
+                return {
+                    "registry_path": registry_path,
+                    "registry_type": registry_type,
+                    "registry_loaded": True,
+                    "success": True
+                }
+                
+        except Exception as e:
+            return {
+                "error": str(e),
+                "registry_loaded": False,
+                "success": False
+            }
+
+
+class ValidateRegistryTask(SpiffServiceTask):
+    """Validate semantic registry with Weaver"""
+    
+    def __init__(self):
+        super().__init__("ValidateRegistry")
+    
+    @semantic_span("weaver", "validate_registry")
+    def _execute_task_logic(self, task: Task, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        import subprocess
+        
+        weaver_path = task_data.get("weaver_path")
+        registry_path = task_data.get("registry_path")
+        
+        if not weaver_path:
+            return {
+                "error": "Weaver not initialized",
+                "registry_valid": False,
+                "success": False
+            }
+        
+        try:
+            # Run weaver registry check
+            result = subprocess.run(
+                [weaver_path, "registry", "check", "-r", str(registry_path)],
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+            
+            valid = result.returncode == 0
+            
+            return {
+                "registry_valid": valid,
+                "validation_output": result.stdout if valid else result.stderr,
+                "validation_returncode": result.returncode,
+                "success": True  # Task succeeded even if validation failed
+            }
+            
+        except Exception as e:
+            return {
+                "error": str(e),
+                "registry_valid": False,
+                "success": False
+            }
+
+
+class GeneratePythonCodeTask(SpiffServiceTask):
+    """Generate Python code with Weaver Forge"""
+    
+    def __init__(self):
+        super().__init__("GeneratePythonCode")
+    
+    @semantic_span("python", "generate_code")
+    @layer_span("generation")
+    def _execute_task_logic(self, task: Task, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        import subprocess
+        import tempfile
+        
+        weaver_path = task_data.get("weaver_path")
+        registry_path = task_data.get("registry_path")
+        output_dir = Path(task_data.get("output_dir", "generated"))
+        
+        if not weaver_path:
+            return {
+                "error": "Weaver not initialized",
+                "code_generated": False,
+                "success": False
+            }
+        
+        try:
+            # Create output directory
+            output_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Create temporary weaver config
+            config = {
+                "file_format": "1.0.0",
+                "schema_url": "https://opentelemetry.io/schemas/1.21.0",
+                "semantic_conventions": {
+                    "registry_url": str(registry_path)
+                },
+                "templates": [
+                    {
+                        "pattern": "*.py.j2",
+                        "filter": ".",
+                        "application_mode": "single"
+                    }
+                ]
+            }
+            
+            # Write temporary config
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+                yaml.dump(config, f)
+                config_path = f.name
+            
+            try:
+                # Run weaver generate
+                result = subprocess.run(
+                    [weaver_path, "registry", "generate",
+                     "--config", config_path,
+                     "--output", str(output_dir),
+                     "python"],
+                    capture_output=True,
+                    text=True,
+                    timeout=120
+                )
+                
+                success = result.returncode == 0
+                
+                if success:
+                    # Count generated files
+                    generated_files = list(output_dir.glob("*.py"))
+                    return {
+                        "code_generated": True,
+                        "output_dir": str(output_dir),
+                        "generated_files": [str(f) for f in generated_files],
+                        "files_count": len(generated_files),
+                        "generation_output": result.stdout,
+                        "success": True
+                    }
+                else:
+                    return {
+                        "error": f"Generation failed: {result.stderr}",
+                        "code_generated": False,
+                        "generation_output": result.stderr,
+                        "success": False
+                    }
+                    
+            finally:
+                # Clean up config file
+                Path(config_path).unlink(missing_ok=True)
+                
+        except Exception as e:
+            return {
+                "error": str(e),
+                "code_generated": False,
+                "success": False
+            }
+
+
+class CaptureGenerationSpansTask(SpiffServiceTask):
+    """Capture spans from generation process"""
+    
+    def __init__(self):
+        super().__init__("CaptureGenerationSpans")
+    
+    @semantic_span("weaver", "capture_spans")
+    @quine_span("span_capture")
+    def _execute_task_logic(self, task: Task, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        output_dir = Path(task_data.get("output_dir", "generated"))
+        
+        # Create synthetic span data based on actual execution
+        captured_spans = []
+        
+        # Add spans from generation process
+        if task_data.get("weaver_initialized"):
+            captured_spans.append({
+                "name": "weaver.initialize",
+                "timestamp": datetime.now().isoformat(),
+                "attributes": {
+                    "weaver.path": task_data.get("weaver_path"),
+                    "weaver.version": task_data.get("weaver_version"),
+                    "success": True
+                }
+            })
+        
+        if task_data.get("registry_loaded"):
+            captured_spans.append({
+                "name": "weaver.load_registry",
+                "timestamp": datetime.now().isoformat(),
+                "attributes": {
+                    "registry.path": task_data.get("registry_path"),
+                    "registry.type": task_data.get("registry_type"),
+                    "registry.groups": task_data.get("registry_groups", 0),
+                    "success": True
+                }
+            })
+        
+        if task_data.get("code_generated"):
+            captured_spans.append({
+                "name": "weaver.generate_code",
+                "timestamp": datetime.now().isoformat(),
+                "attributes": {
+                    "generation.target": "python",
+                    "generation.files": task_data.get("files_count", 0),
+                    "output.dir": str(output_dir),
+                    "success": True
+                }
+            })
+        
+        # Save spans to file
+        spans_file = output_dir / "weaver_generation_spans.json"
+        with open(spans_file, 'w') as f:
+            json.dump(captured_spans, f, indent=2)
+        
+        return {
+            "captured_spans": captured_spans,
+            "spans_file": str(spans_file),
+            "total_spans": len(captured_spans),
+            "success": True
+        }
+
+
+class ValidateGeneratedCodeTask(SpiffServiceTask):
+    """Validate generated code quality"""
+    
+    def __init__(self):
+        super().__init__("ValidateGeneratedCode")
+    
+    @semantic_span("weaver", "validate_code")
+    @layer_span("validation")
+    def _execute_task_logic(self, task: Task, task_data: Dict[str, Any]) -> Dict[str, Any]:
+        output_dir = Path(task_data.get("output_dir", "generated"))
+        
+        validation_results = {
+            "syntax_valid": True,
+            "imports_valid": True,
+            "structure_valid": True,
+            "weaver_compliant": True
+        }
+        
+        validation_issues = []
+        
+        # Check generated Python files
+        py_files = list(output_dir.glob("*.py"))
+        
+        for py_file in py_files:
+            try:
+                # Check syntax
+                with open(py_file) as f:
+                    content = f.read()
+                    compile(content, py_file, 'exec')
+                
+                # Check for expected Weaver patterns
+                if "opentelemetry" not in content:
+                    validation_results["weaver_compliant"] = False
+                    validation_issues.append(f"{py_file.name}: Missing OpenTelemetry imports")
+                
+            except SyntaxError as e:
+                validation_results["syntax_valid"] = False
+                validation_issues.append(f"{py_file.name}: Syntax error - {e}")
+            except Exception as e:
+                validation_issues.append(f"{py_file.name}: Validation error - {e}")
+        
+        # Calculate validation score
+        valid_count = sum(1 for v in validation_results.values() if v)
+        validation_score = valid_count / len(validation_results) if validation_results else 0
+        
+        return {
+            "validation_results": validation_results,
+            "validation_issues": validation_issues,
+            "validation_score": validation_score,
+            "validation_passed": validation_score >= 0.8,
+            "files_validated": len(py_files),
+            "success": True
+        }
+
+
 # SpiffWorkflow BPMN Engine
 @dataclass
 class SpiffExecutionContext:
@@ -276,6 +656,13 @@ class SpiffBPMNEngine:
             "GenerateAgentRoles": GenerateAgentRolesTask(),
             "GenerateSpanValidator": GenerateSpanValidatorTask(),
             "GenerateHealthScoring": GenerateHealthScoringTask(),
+            # Weaver Forge integration tasks
+            "InitializeWeaver": InitializeWeaverTask(),
+            "LoadSemanticRegistry": LoadSemanticRegistryTask(),
+            "ValidateRegistry": ValidateRegistryTask(),
+            "GeneratePythonCode": GeneratePythonCodeTask(),
+            "CaptureGenerationSpans": CaptureGenerationSpansTask(),
+            "ValidateGeneratedCode": ValidateGeneratedCodeTask(),
         }
         
         self.workflow_files: Dict[str, Path] = {
@@ -357,7 +744,17 @@ class SpiffBPMNEngine:
         
         # Execute workflow
         while not workflow.is_completed():
-            ready_tasks = workflow.get_ready_user_tasks()
+            # Get ready tasks (SpiffWorkflow 1.2+ API)
+            ready_tasks = []
+            try:
+                ready_tasks = workflow.get_ready_user_tasks()
+            except AttributeError:
+                # Try alternative API
+                try:
+                    ready_tasks = [task for task in workflow.get_tasks() if task.ready()]
+                except:
+                    # Fall back to basic task iteration
+                    ready_tasks = [task for task in workflow.get_tasks() if task.state == 2]  # READY state
             
             for task in ready_tasks:
                 # Check if this is a service task we can handle

@@ -1,40 +1,52 @@
-# 🌟 WeaverGen: Python Wrapper for OTel Weaver Forge
+# 🌟 WeaverGen: BPMN-First AI Agent System for OpenTelemetry
 
-**Claude Code optimized Python interface to OpenTelemetry Weaver Forge for automated semantic convention code generation**
+**Span-driven code generation with SpiffWorkflow BPMN orchestration and advanced observability**
 
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![CDCS v8.0](https://img.shields.io/badge/CDCS-v8.0-purple.svg)](https://github.com/seanchatmangpt/claude-desktop-context)
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](pyproject.toml)
+[![SpiffWorkflow](https://img.shields.io/badge/BPMN-SpiffWorkflow-blue.svg)](https://spiffworkflow.org)
+[![OpenTelemetry](https://img.shields.io/badge/telemetry-OTel%20spans-orange.svg)](https://opentelemetry.io)
 
 ## 🚀 Overview
 
-WeaverGen is a high-performance Python wrapper around [OpenTelemetry Weaver Forge](https://github.com/open-telemetry/weaver) that transforms YAML semantic convention definitions into production-ready code across multiple languages. Built with **CDCS v8.0** compound intelligence and optimized for **Claude Code** workflows.
+WeaverGen is an innovative **BPMN-first** system that combines SpiffWorkflow orchestration with AI agent generation and advanced OpenTelemetry observability. Instead of traditional unit testing, WeaverGen uses **span-based validation** to verify system behavior through real telemetry data, making spans the source of truth for system validation.
+
+**Core Innovation**: BPMN workflows execute real business logic while generating comprehensive OpenTelemetry spans that validate system behavior in real-time.
 
 ### ⚡ Key Features
 
-- **🔥 26x Performance**: Information-theoretic optimization with Rust-backed OTel Weaver
-- **🌈 Multi-Language Generation**: Python, Rust, Go, Java, and more from single YAML specs
-- **🎯 Claude Code Optimized**: Custom commands and agent workflows for seamless development
-- **🧠 CDCS v8.0 Integration**: Self-healing compound intelligence with guaranteed session continuity
-- **📋 Rich CLI Interface**: Modern terminal UI with progress tracking and validation
-- **🔍 Schema Validation**: Built-in policy enforcement and semantic convention validation
-- **⚙️ Template Customization**: Jinja2-powered templates with jq expression language
+- **🔄 BPMN-First Architecture**: SpiffWorkflow integration with 13 business process workflows
+- **📊 Span-Based Validation**: Superior to unit tests - real telemetry validates system behavior
+- **🤖 AI Agent Orchestration**: Generated coordinator, analyst, and facilitator agents with real spans
+- **📋 Rich CLI Interface**: 50+ commands with Typer, Rich formatting, and progress tracking
+- **🎯 OpenTelemetry Integration**: Deep instrumentation with semantic_span, ai_validation, layer_span decorators
+- **🗺️ Self-Documenting System**: Mermaid diagrams generated from live execution spans
+- **⚙️ Fallback Generation**: Graceful degradation when external dependencies fail
+- **🔍 Health Scoring**: Real-time system health metrics derived from span analysis
 
 ## 🏗️ Architecture
 
 ```mermaid
 graph TB
-    A[YAML Semantic Conventions] --> B[WeaverGen Python Wrapper]
-    B --> C[OTel Weaver Forge Binary]
-    C --> D[Jinja2 Templates]
-    C --> E[JQ Data Transformation]
-    D --> F[Generated Python SDK]
-    D --> G[Generated Rust Crate]
-    D --> H[Generated Go Module]
+    A[BPMN Workflows] --> B[SpiffWorkflow Engine]
+    B --> C[Service Task Registry]
+    C --> D[AI Agent Generation]
+    C --> E[Span Collection]
+    C --> F[Health Scoring]
     
-    I[Claude Code Commands] --> B
-    J[CDCS v8.0 Automation] --> B
-    K[Agent Workflows] --> B
+    G[CLI Commands] --> A
+    D --> H[OpenTelemetry Spans]
+    E --> H
+    H --> I[Mermaid Diagrams]
+    H --> J[Validation Reports]
+    
+    K[OTel Weaver Binary] --> C
+    L[Pydantic AI] --> D
+    
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style H fill:#bbf,stroke:#333,stroke-width:2px
+    style I fill:#bfb,stroke:#333,stroke-width:2px
 ```
 
 ## 📦 Installation
@@ -52,14 +64,14 @@ graph TB
 git clone https://github.com/seanchatmangpt/weavergen.git
 cd weavergen
 
-# Install with pip (standard)
-pip install -e .
-
-# OR install with uv (fastest)
+# Install with uv (recommended for v1.0.0)
 uv sync && source .venv/bin/activate
 
+# OR install with pip
+pip install -e ".[dev]"
+
 # Verify installation
-weavergen --version
+uv run weavergen --version  # Shows: 1.0.0
 ```
 
 ### Auto-Install OTel Weaver
@@ -328,6 +340,12 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
-**Built with ❤️ for the OpenTelemetry ecosystem and Claude Code developers**
+**Built with ❤️ for observability-driven development and BPMN orchestration**
 
-*Transform your semantic conventions into production-ready code with WeaverGen's 26x optimized performance and compound intelligence.*
+*Experience the future of validation: where spans replace unit tests and BPMN workflows orchestrate AI agents with real OpenTelemetry observability.*
+
+## 🎯 Current Status: v1.0.0
+
+✅ **Working**: BPMN execution, AI agents, span validation, health scoring, CLI  
+🚧 **In Progress**: OTel Weaver integration, multi-language generation  
+🔮 **Planned**: Self-healing systems, performance optimization, production deployment

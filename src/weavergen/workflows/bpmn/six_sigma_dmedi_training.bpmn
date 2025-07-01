@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_1" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:process id="SixSigmaDMEDITraining" name="Six Sigma DMEDI Black Belt Training" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_TrainingBegin" name="Training Session Begins">
+      <bpmn:outgoing>Flow_ToInitialize</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Initialize Training Session -->
+    <bpmn:serviceTask id="Task_InitializeSession" name="Initialize Training Session">
+      <bpmn:incoming>Flow_ToInitialize</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToDefinePhase</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Define Phase -->
+    <bpmn:callActivity id="CallActivity_DefinePhase" name="Execute Define Phase">
+      <bpmn:incoming>Flow_ToDefinePhase</bpmn:incoming>
+      <bpmn:outgoing>Flow_DefineToMeasure</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:property name="calledElement" value="SixSigmaDefinePhase" />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
+    
+    <!-- Define Phase Validation Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_DefineValidation" name="Define Phase Complete?">
+      <bpmn:incoming>Flow_DefineToMeasure</bpmn:incoming>
+      <bpmn:outgoing>Flow_DefinePass</bpmn:outgoing>
+      <bpmn:outgoing>Flow_DefineRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Measure Phase -->
+    <bpmn:callActivity id="CallActivity_MeasurePhase" name="Execute Measure Phase">
+      <bpmn:incoming>Flow_DefinePass</bpmn:incoming>
+      <bpmn:outgoing>Flow_MeasureToExplore</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:property name="calledElement" value="SixSigmaMeasurePhase" />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
+    
+    <!-- Measure Phase Validation Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_MeasureValidation" name="Measure Phase Complete?">
+      <bpmn:incoming>Flow_MeasureToExplore</bpmn:incoming>
+      <bpmn:outgoing>Flow_MeasurePass</bpmn:outgoing>
+      <bpmn:outgoing>Flow_MeasureRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Explore Phase -->
+    <bpmn:callActivity id="CallActivity_ExplorePhase" name="Execute Explore Phase">
+      <bpmn:incoming>Flow_MeasurePass</bpmn:incoming>
+      <bpmn:outgoing>Flow_ExploreToDevelop</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:property name="calledElement" value="SixSigmaExplorePhase" />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
+    
+    <!-- Explore Phase Validation Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_ExploreValidation" name="Explore Phase Complete?">
+      <bpmn:incoming>Flow_ExploreToDevelop</bpmn:incoming>
+      <bpmn:outgoing>Flow_ExplorePass</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ExploreRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Develop Phase -->
+    <bpmn:callActivity id="CallActivity_DevelopPhase" name="Execute Develop Phase">
+      <bpmn:incoming>Flow_ExplorePass</bpmn:incoming>
+      <bpmn:outgoing>Flow_DevelopToImplement</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:property name="calledElement" value="SixSigmaDevelopPhase" />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
+    
+    <!-- Develop Phase Validation Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_DevelopValidation" name="Develop Phase Complete?">
+      <bpmn:incoming>Flow_DevelopToImplement</bpmn:incoming>
+      <bpmn:outgoing>Flow_DevelopPass</bpmn:outgoing>
+      <bpmn:outgoing>Flow_DevelopRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Implement Phase -->
+    <bpmn:callActivity id="CallActivity_ImplementPhase" name="Execute Implement Phase">
+      <bpmn:incoming>Flow_DevelopPass</bpmn:incoming>
+      <bpmn:outgoing>Flow_ImplementToCapstone</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:property name="calledElement" value="SixSigmaImplementPhase" />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
+    
+    <!-- Implement Phase Validation Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_ImplementValidation" name="Implement Phase Complete?">
+      <bpmn:incoming>Flow_ImplementToCapstone</bpmn:incoming>
+      <bpmn:outgoing>Flow_ImplementPass</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ImplementRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Capstone Project -->
+    <bpmn:callActivity id="CallActivity_CapstoneProject" name="Execute DMEDI Capstone">
+      <bpmn:incoming>Flow_ImplementPass</bpmn:incoming>
+      <bpmn:outgoing>Flow_CapstoneToFinal</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:property name="calledElement" value="SixSigmaCapstoneProject" />
+      </bpmn:extensionElements>
+    </bpmn:callActivity>
+    
+    <!-- Final Assessment Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_FinalAssessment" name="Black Belt Certification Achieved?">
+      <bpmn:incoming>Flow_CapstoneToFinal</bpmn:incoming>
+      <bpmn:outgoing>Flow_CertificationAchieved</bpmn:outgoing>
+      <bpmn:outgoing>Flow_CertificationRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Generate Certificate -->
+    <bpmn:serviceTask id="Task_GenerateCertificate" name="Generate Black Belt Certificate">
+      <bpmn:incoming>Flow_CertificationAchieved</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Retry Activities -->
+    <bpmn:serviceTask id="Task_ProvideRemediation" name="Provide Remediation Training">
+      <bpmn:incoming>Flow_DefineRetry</bpmn:incoming>
+      <bpmn:incoming>Flow_MeasureRetry</bpmn:incoming>
+      <bpmn:incoming>Flow_ExploreRetry</bpmn:incoming>
+      <bpmn:incoming>Flow_DevelopRetry</bpmn:incoming>
+      <bpmn:incoming>Flow_ImplementRetry</bpmn:incoming>
+      <bpmn:incoming>Flow_CertificationRetry</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryToDefine</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Complete Training -->
+    <bpmn:endEvent id="EndEvent_TrainingComplete" name="Training Complete">
+      <bpmn:incoming>Flow_ToComplete</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToInitialize" sourceRef="StartEvent_TrainingBegin" targetRef="Task_InitializeSession" />
+    <bpmn:sequenceFlow id="Flow_ToDefinePhase" sourceRef="Task_InitializeSession" targetRef="CallActivity_DefinePhase" />
+    <bpmn:sequenceFlow id="Flow_DefineToMeasure" sourceRef="CallActivity_DefinePhase" targetRef="Gateway_DefineValidation" />
+    <bpmn:sequenceFlow id="Flow_DefinePass" sourceRef="Gateway_DefineValidation" targetRef="CallActivity_MeasurePhase">
+      <bpmn:conditionExpression>#{define_phase_complete == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_DefineRetry" sourceRef="Gateway_DefineValidation" targetRef="Task_ProvideRemediation">
+      <bpmn:conditionExpression>#{define_phase_complete == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_MeasureToExplore" sourceRef="CallActivity_MeasurePhase" targetRef="Gateway_MeasureValidation" />
+    <bpmn:sequenceFlow id="Flow_MeasurePass" sourceRef="Gateway_MeasureValidation" targetRef="CallActivity_ExplorePhase">
+      <bpmn:conditionExpression>#{measure_phase_complete == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_MeasureRetry" sourceRef="Gateway_MeasureValidation" targetRef="Task_ProvideRemediation">
+      <bpmn:conditionExpression>#{measure_phase_complete == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_ExploreToDevelop" sourceRef="CallActivity_ExplorePhase" targetRef="Gateway_ExploreValidation" />
+    <bpmn:sequenceFlow id="Flow_ExplorePass" sourceRef="Gateway_ExploreValidation" targetRef="CallActivity_DevelopPhase">
+      <bpmn:conditionExpression>#{explore_phase_complete == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ExploreRetry" sourceRef="Gateway_ExploreValidation" targetRef="Task_ProvideRemediation">
+      <bpmn:conditionExpression>#{explore_phase_complete == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_DevelopToImplement" sourceRef="CallActivity_DevelopPhase" targetRef="Gateway_DevelopValidation" />
+    <bpmn:sequenceFlow id="Flow_DevelopPass" sourceRef="Gateway_DevelopValidation" targetRef="CallActivity_ImplementPhase">
+      <bpmn:conditionExpression>#{develop_phase_complete == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_DevelopRetry" sourceRef="Gateway_DevelopValidation" targetRef="Task_ProvideRemediation">
+      <bpmn:conditionExpression>#{develop_phase_complete == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_ImplementToCapstone" sourceRef="CallActivity_ImplementPhase" targetRef="Gateway_ImplementValidation" />
+    <bpmn:sequenceFlow id="Flow_ImplementPass" sourceRef="Gateway_ImplementValidation" targetRef="CallActivity_CapstoneProject">
+      <bpmn:conditionExpression>#{implement_phase_complete == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ImplementRetry" sourceRef="Gateway_ImplementValidation" targetRef="Task_ProvideRemediation">
+      <bpmn:conditionExpression>#{implement_phase_complete == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_CapstoneToFinal" sourceRef="CallActivity_CapstoneProject" targetRef="Gateway_FinalAssessment" />
+    <bpmn:sequenceFlow id="Flow_CertificationAchieved" sourceRef="Gateway_FinalAssessment" targetRef="Task_GenerateCertificate">
+      <bpmn:conditionExpression>#{certification_achieved == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_CertificationRetry" sourceRef="Gateway_FinalAssessment" targetRef="Task_ProvideRemediation">
+      <bpmn:conditionExpression>#{certification_achieved == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_RetryToDefine" sourceRef="Task_ProvideRemediation" targetRef="CallActivity_DefinePhase" />
+    <bpmn:sequenceFlow id="Flow_ToComplete" sourceRef="Task_GenerateCertificate" targetRef="EndEvent_TrainingComplete" />
+    
+  </bpmn:process>
+</bpmn:definitions>

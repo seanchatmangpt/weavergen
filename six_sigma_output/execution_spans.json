@@ -1,0 +1,834 @@
+[
+  {
+    "name": "bpmn.service.task_loadsemantics",
+    "task": "Task_LoadSemantics",
+    "span_id": "mock_0",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.387317",
+    "result": {
+      "semantics": {
+        "groups": [
+          {
+            "id": "six_sigma.training",
+            "type": "span",
+            "brief": "Six Sigma Design for Lean training session telemetry",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "training.session.id",
+                "type": "string",
+                "brief": "Unique training session identifier",
+                "requirement_level": "required",
+                "examples": [
+                  "session_dmedi_001",
+                  "bb_training_202507"
+                ]
+              },
+              {
+                "id": "training.participant.id",
+                "type": "string",
+                "brief": "Unique participant identifier",
+                "requirement_level": "required",
+                "examples": [
+                  "participant_001",
+                  "learner_john_smith"
+                ]
+              },
+              {
+                "id": "training.phase",
+                "type": "string",
+                "brief": "Current DMEDI phase",
+                "requirement_level": "required",
+                "examples": [
+                  "define",
+                  "measure",
+                  "explore",
+                  "develop",
+                  "implement"
+                ]
+              },
+              {
+                "id": "training.module",
+                "type": "string",
+                "brief": "Current training module",
+                "requirement_level": "required",
+                "examples": [
+                  "charter",
+                  "voc",
+                  "triz",
+                  "doe",
+                  "prototype"
+                ]
+              },
+              {
+                "id": "training.completion_percentage",
+                "type": "double",
+                "brief": "Module completion percentage",
+                "requirement_level": "optional",
+                "note": "Percentage between 0.0 and 1.0"
+              },
+              {
+                "id": "training.assessment_score",
+                "type": "double",
+                "brief": "Assessment score for current module",
+                "requirement_level": "optional",
+                "note": "Score between 0.0 and 1.0"
+              }
+            ]
+          },
+          {
+            "id": "six_sigma.dmedi.define",
+            "type": "span",
+            "brief": "Define phase activities and outcomes",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "define.charter.status",
+                "type": "string",
+                "brief": "Project charter completion status",
+                "requirement_level": "required",
+                "examples": [
+                  "draft",
+                  "approved",
+                  "complete"
+                ]
+              },
+              {
+                "id": "define.mgpp.identified",
+                "type": "boolean",
+                "brief": "Whether MGPP (Must Go/Pride Points) are identified",
+                "requirement_level": "required"
+              },
+              {
+                "id": "define.risks.count",
+                "type": "int",
+                "brief": "Number of identified risks",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "define.communication.plan.approved",
+                "type": "boolean",
+                "brief": "Whether communication plan is approved",
+                "requirement_level": "required"
+              }
+            ]
+          },
+          {
+            "id": "six_sigma.dmedi.measure",
+            "type": "span",
+            "brief": "Measure phase activities and data collection",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "measure.voc.sources.count",
+                "type": "int",
+                "brief": "Number of Voice of Customer sources",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "measure.qfd.completed",
+                "type": "boolean",
+                "brief": "Whether Quality Function Deployment is completed",
+                "requirement_level": "required"
+              },
+              {
+                "id": "measure.target.cost.defined",
+                "type": "boolean",
+                "brief": "Whether target cost is defined",
+                "requirement_level": "required"
+              },
+              {
+                "id": "measure.scorecard.metrics.count",
+                "type": "int",
+                "brief": "Number of scorecard metrics defined",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "measure.statistics.tool",
+                "type": "string",
+                "brief": "Statistical analysis tool used",
+                "requirement_level": "optional",
+                "examples": [
+                  "minitab",
+                  "r",
+                  "python",
+                  "excel"
+                ]
+              },
+              {
+                "id": "measure.capability.index",
+                "type": "double",
+                "brief": "Process capability index (Cpk)",
+                "requirement_level": "optional"
+              }
+            ]
+          },
+          {
+            "id": "six_sigma.dmedi.explore",
+            "type": "span",
+            "brief": "Explore phase concept generation and analysis",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "explore.concepts.generated.count",
+                "type": "int",
+                "brief": "Number of concepts generated",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "explore.triz.method.used",
+                "type": "string",
+                "brief": "TRIZ method applied",
+                "requirement_level": "optional",
+                "examples": [
+                  "contradiction_matrix",
+                  "substance_field",
+                  "algorithm"
+                ]
+              },
+              {
+                "id": "explore.concept.selection.method",
+                "type": "string",
+                "brief": "Concept selection method used",
+                "requirement_level": "required",
+                "examples": [
+                  "pugh",
+                  "ahp",
+                  "weighted_matrix"
+                ]
+              },
+              {
+                "id": "explore.tolerance.design.completed",
+                "type": "boolean",
+                "brief": "Whether statistical tolerance design is completed",
+                "requirement_level": "required"
+              },
+              {
+                "id": "explore.monte_carlo.simulations",
+                "type": "int",
+                "brief": "Number of Monte Carlo simulations run",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "explore.fmea.risks.identified",
+                "type": "int",
+                "brief": "Number of risks identified in Design FMEA",
+                "requirement_level": "optional"
+              }
+            ]
+          },
+          {
+            "id": "six_sigma.dmedi.develop",
+            "type": "span",
+            "brief": "Develop phase detailed design and optimization",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "develop.design.detailed.status",
+                "type": "string",
+                "brief": "Detailed design completion status",
+                "requirement_level": "required",
+                "examples": [
+                  "concept",
+                  "preliminary",
+                  "detailed",
+                  "final"
+                ]
+              },
+              {
+                "id": "develop.doe.type",
+                "type": "string",
+                "brief": "Design of Experiments type used",
+                "requirement_level": "optional",
+                "examples": [
+                  "full_factorial",
+                  "fractional_factorial",
+                  "response_surface",
+                  "mixture"
+                ]
+              },
+              {
+                "id": "develop.doe.factors.count",
+                "type": "int",
+                "brief": "Number of DOE factors",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "develop.doe.runs.count",
+                "type": "int",
+                "brief": "Number of DOE experimental runs",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "develop.lean.principles.applied",
+                "type": "string[]",
+                "brief": "Lean principles applied in design",
+                "requirement_level": "optional",
+                "examples": [
+                  "value_stream",
+                  "pull_system",
+                  "continuous_flow",
+                  "mistake_proofing"
+                ]
+              },
+              {
+                "id": "develop.dfma.score",
+                "type": "double",
+                "brief": "Design for Manufacture and Assembly score",
+                "requirement_level": "optional",
+                "note": "Score between 0.0 and 1.0"
+              },
+              {
+                "id": "develop.reliability.target",
+                "type": "double",
+                "brief": "Reliability target (e.g., MTBF hours)",
+                "requirement_level": "optional"
+              }
+            ]
+          },
+          {
+            "id": "six_sigma.dmedi.implement",
+            "type": "span",
+            "brief": "Implement phase pilot and process control",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "implement.prototype.status",
+                "type": "string",
+                "brief": "Prototype development status",
+                "requirement_level": "required",
+                "examples": [
+                  "design",
+                  "build",
+                  "test",
+                  "validated"
+                ]
+              },
+              {
+                "id": "implement.pilot.sample.size",
+                "type": "int",
+                "brief": "Pilot test sample size",
+                "requirement_level": "optional"
+              },
+              {
+                "id": "implement.control.plan.approved",
+                "type": "boolean",
+                "brief": "Whether process control plan is approved",
+                "requirement_level": "required"
+              },
+              {
+                "id": "implement.rollout.percentage",
+                "type": "double",
+                "brief": "Implementation rollout percentage",
+                "requirement_level": "optional",
+                "note": "Percentage between 0.0 and 1.0"
+              }
+            ]
+          },
+          {
+            "id": "six_sigma.ai.agent",
+            "type": "span",
+            "brief": "AI training agent interactions and assessments",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "agent.role",
+                "type": "string",
+                "brief": "AI agent role in training",
+                "requirement_level": "required",
+                "examples": [
+                  "instructor",
+                  "coach",
+                  "assessor",
+                  "facilitator"
+                ]
+              },
+              {
+                "id": "agent.interaction.type",
+                "type": "string",
+                "brief": "Type of agent interaction",
+                "requirement_level": "required",
+                "examples": [
+                  "explanation",
+                  "assessment",
+                  "feedback",
+                  "guidance",
+                  "simulation"
+                ]
+              },
+              {
+                "id": "agent.model.used",
+                "type": "string",
+                "brief": "AI model used for training",
+                "requirement_level": "optional",
+                "examples": [
+                  "gpt-4",
+                  "claude-3",
+                  "gemini-pro"
+                ]
+              },
+              {
+                "id": "agent.confidence.score",
+                "type": "double",
+                "brief": "Agent confidence in response/assessment",
+                "requirement_level": "optional",
+                "note": "Confidence score between 0.0 and 1.0"
+              },
+              {
+                "id": "agent.feedback.quality",
+                "type": "string",
+                "brief": "Quality of agent feedback",
+                "requirement_level": "optional",
+                "examples": [
+                  "excellent",
+                  "good",
+                  "adequate",
+                  "needs_improvement"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "six_sigma.capstone",
+            "type": "span",
+            "brief": "DMEDI capstone project execution and outcomes",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "capstone.project.id",
+                "type": "string",
+                "brief": "Unique capstone project identifier",
+                "requirement_level": "required"
+              },
+              {
+                "id": "capstone.industry.domain",
+                "type": "string",
+                "brief": "Industry domain of capstone project",
+                "requirement_level": "optional",
+                "examples": [
+                  "manufacturing",
+                  "healthcare",
+                  "financial",
+                  "software",
+                  "service"
+                ]
+              },
+              {
+                "id": "capstone.phases.completed",
+                "type": "string[]",
+                "brief": "Completed DMEDI phases in capstone",
+                "requirement_level": "required",
+                "examples": [
+                  "define",
+                  "measure",
+                  "explore",
+                  "develop",
+                  "implement"
+                ]
+              },
+              {
+                "id": "capstone.final.score",
+                "type": "double",
+                "brief": "Final capstone project score",
+                "requirement_level": "optional",
+                "note": "Score between 0.0 and 1.0"
+              },
+              {
+                "id": "capstone.certification.achieved",
+                "type": "boolean",
+                "brief": "Whether Black Belt certification was achieved",
+                "requirement_level": "required"
+              }
+            ]
+          }
+        ]
+      },
+      "loaded": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_loadsemantics",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_LoadSemantics",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_validateinput",
+    "task": "Task_ValidateInput",
+    "span_id": "mock_1",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.404895",
+    "result": {
+      "valid": true,
+      "errors": [],
+      "warnings": [
+        "Created output directory: six_sigma_output"
+      ]
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_validateinput",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_ValidateInput",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_generatemodels",
+    "task": "Task_GenerateModels",
+    "span_id": "mock_2",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.404972",
+    "result": {
+      "models": [
+        {
+          "id": "model_ff1effa4",
+          "name": "MockPydanticModels",
+          "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+          "timestamp": "2025-07-01T07:57:33.404958"
+        }
+      ],
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_generatemodels",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_GenerateModels",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_generateagents",
+    "task": "Task_GenerateAgents",
+    "span_id": "mock_3",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.405032",
+    "result": {
+      "agents": [
+        {
+          "id": "agent_coordinator_46c5383d",
+          "role": "coordinator",
+          "model": "gpt-4o-mini",
+          "system_prompt": "You are a coordinator agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "coordinator_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass CoordinatorAgent:\n    \"\"\"Generated coordinator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a coordinator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"coordinator\"\n        self.capabilities = [\"coordinator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"coordinator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by coordinator agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T07:57:33.405000"
+        },
+        {
+          "id": "agent_analyst_2ca09203",
+          "role": "analyst",
+          "model": "gpt-4o-mini",
+          "system_prompt": "You are a analyst agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "analyst_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass AnalystAgent:\n    \"\"\"Generated analyst agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a analyst agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"analyst\"\n        self.capabilities = [\"analyst_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"analyst\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by analyst agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T07:57:33.405009"
+        },
+        {
+          "id": "agent_facilitator_2402430d",
+          "role": "facilitator",
+          "model": "gpt-4o-mini",
+          "system_prompt": "You are a facilitator agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "facilitator_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass FacilitatorAgent:\n    \"\"\"Generated facilitator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a facilitator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"facilitator\"\n        self.capabilities = [\"facilitator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"facilitator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by facilitator agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T07:57:33.405016"
+        },
+        {
+          "id": "agent_validator_a42ca2ff",
+          "role": "validator",
+          "model": "gpt-4o-mini",
+          "system_prompt": "You are a validator agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "validator_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass ValidatorAgent:\n    \"\"\"Generated validator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a validator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"validator\"\n        self.capabilities = [\"validator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"validator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by validator agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T07:57:33.405022"
+        }
+      ],
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_generateagents",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_GenerateAgents",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_generatevalidators",
+    "task": "Task_GenerateValidators",
+    "span_id": "mock_4",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.405057",
+    "result": {
+      "validator": {
+        "id": "validator_b18cd6e7",
+        "type": "comprehensive",
+        "code": "\nfrom pydantic import BaseModel, ValidationError\nfrom typing import Dict, Any, List\n\nclass ComprehensiveValidator:\n    \"\"\"Generated comprehensive validation logic\"\"\"\n    \n    def validate_model(self, model_data: Dict[str, Any]) -> Dict[str, Any]:\n        \"\"\"Validate Pydantic model structure\"\"\"\n        return {\n            \"valid\": True,\n            \"errors\": [],\n            \"quality_score\": 0.95\n        }\n    \n    def validate_agent_response(self, response: Any) -> Dict[str, Any]:\n        \"\"\"Validate AI agent response\"\"\"\n        return {\n            \"structured\": True,\n            \"complete\": True,\n            \"quality_score\": 0.9\n        }\n    \n    def validate_spans(self, spans: List[Dict]) -> Dict[str, Any]:\n        \"\"\"Validate OpenTelemetry spans\"\"\"\n        return {\n            \"span_count\": len(spans),\n            \"valid_spans\": len(spans),\n            \"health_score\": 0.95\n        }\n",
+        "timestamp": "2025-07-01T07:57:33.405050"
+      },
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_generatevalidators",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_GenerateValidators",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_validatemodels",
+    "task": "Task_ValidateModels",
+    "span_id": "mock_5",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.405081",
+    "result": {
+      "results": [
+        {
+          "model_id": "model_ff1effa4",
+          "valid": true,
+          "score": 0.9,
+          "issues": [],
+          "timestamp": "2025-07-01T07:57:33.405070"
+        }
+      ],
+      "average_score": 0.9
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_validatemodels",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_ValidateModels",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_testagents",
+    "task": "Task_TestAgents",
+    "span_id": "mock_6",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.405106",
+    "result": {
+      "results": [
+        {
+          "agent_id": "agent_coordinator_46c5383d",
+          "role": "coordinator",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T07:57:33.405092"
+        },
+        {
+          "agent_id": "agent_analyst_2ca09203",
+          "role": "analyst",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T07:57:33.405095"
+        },
+        {
+          "agent_id": "agent_facilitator_2402430d",
+          "role": "facilitator",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T07:57:33.405097"
+        },
+        {
+          "agent_id": "agent_validator_a42ca2ff",
+          "role": "validator",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T07:57:33.405098"
+        }
+      ],
+      "average_success_rate": 0.8
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_testagents",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_TestAgents",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_testvalidators",
+    "task": "Task_TestValidators",
+    "span_id": "mock_7",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.405124",
+    "result": {
+      "tests_passed": 15,
+      "tests_total": 16,
+      "success_rate": 0.9375,
+      "coverage": 0.95,
+      "timestamp": "2025-07-01T07:57:33.405117"
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_testvalidators",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_TestValidators",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_integration",
+    "task": "Task_Integration",
+    "span_id": "mock_8",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.405191",
+    "result": {
+      "quality_score": 0.9236,
+      "passed": true,
+      "components_tested": 5,
+      "timestamp": "2025-07-01T07:57:33.405167"
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_integration",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_Integration",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_generateoutput",
+    "task": "Task_GenerateOutput",
+    "span_id": "mock_9",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T07:57:33.408211",
+    "result": {
+      "output_files": [
+        "six_sigma_output/generated_models.py",
+        "six_sigma_output/generated_agents.py",
+        "six_sigma_output/execution_report.json"
+      ],
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_generateoutput",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_GenerateOutput",
+      "bpmn.task.type": "service",
+      "bpmn.workflow.name": "pydantic_ai_generation",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  },
+  {
+    "name": "bpmn.service.task_capturespans",
+    "task": "Task_CaptureSpans",
+    "span_id": "mock_10",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:57:33.408281",
+    "result": {
+      "spans_count": 11,
+      "validation_in_progress": true
+    },
+    "mock": true,
+    "duration_ms": 5.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_capturespans",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_CaptureSpans",
+      "bpmn.task.type": "service",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  }
+]

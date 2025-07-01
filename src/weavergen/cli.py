@@ -47,6 +47,7 @@ conversation_app = typer.Typer(help="💬 Generated conversation systems")
 debug_app = typer.Typer(help="🐛 Debugging and diagnostics")
 spiff_app = typer.Typer(help="🔗 Command chaining and workflow orchestration")
 bpmn_app = typer.Typer(help="📋 BPMN-first workflow execution")
+mining_app = typer.Typer(help="⛏️ Process mining and XES conversion")
 
 app.add_typer(semantic_app, name="semantic")
 app.add_typer(validate_app, name="validate")
@@ -58,6 +59,7 @@ app.add_typer(conversation_app, name="conversation")
 app.add_typer(debug_app, name="debug")
 app.add_typer(spiff_app, name="spiff")
 app.add_typer(bpmn_app, name="bpmn")
+app.add_typer(mining_app, name="mining")
 
 
 @app.command()
@@ -2696,6 +2698,233 @@ def ai_generate(
     
     # Run the async workflow
     asyncio.run(run_pydantic_ai_workflow())
+
+
+# ===== PROCESS MINING COMMANDS =====
+
+@mining_app.command()
+def spans_to_xes(
+    spans_file: str = typer.Argument(..., help="Path to spans JSON file"),
+    output: str = typer.Option("output.xes", "--output", "-o", help="Output XES file path"),
+    case_field: str = typer.Option("trace_id", "--case-field", help="Field to use as case ID"),
+    activity_field: str = typer.Option("task", "--activity-field", help="Field to use as activity name"),
+    timestamp_field: str = typer.Option("timestamp", "--timestamp-field", help="Field to use as timestamp")
+):
+    """🔄 Convert OpenTelemetry spans to XES format for process mining"""
+    
+    from .xes_converter import XESConverter
+    
+    console.print(f"\n[bold blue]🔄 Converting Spans to XES[/bold blue]")
+    console.print(f"Input: {spans_file}")
+    console.print(f"Output: {output}\n")
+    
+    # Load spans
+    try:
+        with open(spans_file) as f:
+            spans = json.load(f)
+            
+        if not isinstance(spans, list):
+            console.print("[red]❌ Spans file must contain a list of spans[/red]")
+            raise typer.Exit(1)
+            
+    except Exception as e:
+        console.print(f"[red]❌ Error loading spans: {e}[/red]")
+        raise typer.Exit(1)
+    
+    # Convert to XES
+    converter = XESConverter()
+    result_file = converter.spans_to_xes(
+        spans=spans,
+        output_path=output,
+        case_id_field=case_field,
+        activity_field=activity_field,
+        timestamp_field=timestamp_field
+    )
+    
+    console.print(f"\n[green]✅ Conversion complete![/green]")
+    console.print(f"XES file saved: {result_file}")
+    console.print("\n[dim]You can now import this file into process mining tools like ProM, Celonis, or Disco.[/dim]")
+
+
+@mining_app.command()
+def analyze_xes(
+    xes_file: str = typer.Argument(..., help="Path to XES file"),
+    generate_models: bool = typer.Option(True, "--models/--no-models", help="Generate process models"),
+    output_dir: str = typer.Option("process_analysis", "--output", "-o", help="Output directory for analysis")
+):
+    """📊 Analyze XES file and generate process insights"""
+    
+    from .xes_converter import XESConverter
+    
+    console.print(f"\n[bold blue]📊 Analyzing XES File[/bold blue]")
+    console.print(f"Input: {xes_file}\n")
+    
+    if not Path(xes_file).exists():
+        console.print(f"[red]❌ XES file not found: {xes_file}[/red]")
+        raise typer.Exit(1)
+    
+    # Analyze XES
+    converter = XESConverter()
+    analysis = converter.analyze_xes(xes_file)
+    
+    # Generate process models if requested
+    if generate_models:
+        console.print(f"\n[cyan]🏗️  Generating process models...[/cyan]")
+        models = converter.generate_process_model(xes_file, output_dir)
+        
+        if models:
+            console.print(f"\n[green]✅ Generated {len(models)} process models:[/green]")
+            for model_type, file_path in models.items():
+                console.print(f"  {model_type}: {file_path}")
+    
+    # Save analysis results
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
+    analysis_file = output_path / "analysis.json"
+    with open(analysis_file, 'w') as f:
+        json.dump(analysis, f, indent=2)
+    
+    console.print(f"\n[green]✅ Analysis saved: {analysis_file}[/green]")
+
+
+@mining_app.command()
+def mine_patterns(
+    spans_file: str = typer.Argument(..., help="Path to spans JSON file"),
+    output_dir: str = typer.Option("mined_patterns", "--output", "-o", help="Output directory"),
+    workflow_name: str = typer.Option("MinedWorkflow", "--name", help="Name for discovered workflow"),
+    generate_bpmn: bool = typer.Option(True, "--bpmn/--no-bpmn", help="Generate BPMN from patterns")
+):
+    """⛏️  Mine process patterns from execution spans"""
+    
+    from .bpmn_process_miner import BPMNProcessMiner
+    
+    console.print(f"\n[bold blue]⛏️  Mining Process Patterns[/bold blue]")
+    console.print(f"Input: {spans_file}")
+    console.print(f"Output: {output_dir}\n")
+    
+    # Load spans
+    try:
+        with open(spans_file) as f:
+            spans = json.load(f)
+            
+        if not isinstance(spans, list):
+            console.print("[red]❌ Spans file must contain a list of spans[/red]")
+            raise typer.Exit(1)
+            
+    except Exception as e:
+        console.print(f"[red]❌ Error loading spans: {e}[/red]")
+        raise typer.Exit(1)
+    
+    # Mine workflow
+    miner = BPMNProcessMiner()
+    discovered = miner.mine_workflow(spans, workflow_name)
+    
+    # Create output directory
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    
+    # Save discovered patterns
+    patterns_file = output_path / "patterns.json"
+    patterns_data = {
+        "workflow_name": discovered.name,
+        "patterns": [
+            {
+                "type": p.pattern_type,
+                "tasks": p.tasks,
+                "frequency": p.frequency,
+                "confidence": p.confidence,
+                "performance_impact": p.performance_impact
+            }
+            for p in discovered.patterns
+        ],
+        "quality_metrics": discovered.quality_metrics,
+        "start_tasks": list(discovered.start_tasks),
+        "end_tasks": list(discovered.end_tasks)
+    }
+    
+    with open(patterns_file, 'w') as f:
+        json.dump(patterns_data, f, indent=2)
+    
+    console.print(f"[green]✅ Patterns saved: {patterns_file}[/green]")
+    
+    # Generate BPMN if requested
+    if generate_bpmn:
+        bpmn_file = output_path / f"{workflow_name.lower()}.bpmn"
+        miner.generate_bpmn(discovered, str(bpmn_file))
+        console.print(f"[green]✅ BPMN generated: {bpmn_file}[/green]")
+
+
+@mining_app.command()
+def adaptive_demo(
+    semantic_file: str = typer.Argument(..., help="Semantic convention file"),
+    runs: int = typer.Option(10, "--runs", "-r", help="Number of execution runs"),
+    output_dir: str = typer.Option("adaptive_demo", "--output", "-o", help="Output directory")
+):
+    """🧠 Demonstrate adaptive BPMN learning"""
+    
+    from .bpmn_adaptive_engine import AdaptiveBPMNEngine
+    from .pydantic_ai_bpmn_engine import PydanticAIContext
+    
+    console.print(f"\n[bold blue]🧠 Adaptive BPMN Learning Demo[/bold blue]")
+    console.print(f"Semantic file: {semantic_file}")
+    console.print(f"Execution runs: {runs}")
+    console.print(f"Output: {output_dir}\n")
+    
+    async def run_adaptive_demo():
+        # Create adaptive engine
+        engine = AdaptiveBPMNEngine(use_mock=True)
+        
+        # Run multiple executions
+        for i in range(runs):
+            console.print(f"\n[dim]Execution {i+1}/{runs}[/dim]")
+            
+            context = PydanticAIContext(
+                semantic_file=semantic_file,
+                output_dir=f"{output_dir}/run_{i}"
+            )
+            
+            # Enable optimization after 30% of runs
+            enable_opt = i >= (runs * 0.3)
+            
+            result = await engine.execute_adaptive(
+                workflow_name="AdaptiveDemo",
+                context=context,
+                enable_optimization=enable_opt
+            )
+            
+            if enable_opt and i == int(runs * 0.3):
+                console.print("\n[yellow]🎯 Adaptive optimization enabled![/yellow]")
+        
+        # Show results
+        console.print("\n[bold green]📊 Adaptive Learning Results:[/bold green]")
+        console.print(engine.get_performance_report())
+        
+        console.print("\n[bold]📈 Learning Curve:[/bold]")
+        console.print(engine.visualize_learning_curve())
+        
+        # Save execution history
+        output_path = Path(output_dir)
+        output_path.mkdir(parents=True, exist_ok=True)
+        
+        history_file = output_path / "execution_history.json"
+        with open(history_file, 'w') as f:
+            history_data = [
+                {
+                    "execution_id": m.execution_id,
+                    "duration_ms": m.duration_ms,
+                    "quality_score": m.quality_score,
+                    "success": m.success,
+                    "task_durations": m.task_durations
+                }
+                for m in engine.execution_history
+            ]
+            json.dump(history_data, f, indent=2)
+        
+        console.print(f"\n[green]✅ Execution history saved: {history_file}[/green]")
+    
+    # Run the demo
+    asyncio.run(run_adaptive_demo())
 
 
 if __name__ == "__main__":

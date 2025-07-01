@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_1" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:process id="SixSigmaDefinePhase" name="Six Sigma Define Phase Training" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_DefinePhase" name="Define Phase Begins">
+      <bpmn:outgoing>Flow_ToIntroduction</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Introduction to Define Phase -->
+    <bpmn:serviceTask id="Task_IntroductionDefine" name="Introduction to Define Phase">
+      <bpmn:incoming>Flow_ToIntroduction</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToParallelGateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for Define Activities -->
+    <bpmn:parallelGateway id="Gateway_DefineActivities" name="Define Phase Activities">
+      <bpmn:incoming>Flow_ToParallelGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCharter</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToMGPP</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToRiskMgmt</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToCommPlan</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Charter Development -->
+    <bpmn:serviceTask id="Task_ProjectCharter" name="Develop Project Charter">
+      <bpmn:incoming>Flow_ToCharter</bpmn:incoming>
+      <bpmn:outgoing>Flow_CharterComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- MGPP Identification -->
+    <bpmn:serviceTask id="Task_MGPP" name="Identify MGPP (Must Go/Pride Points)">
+      <bpmn:incoming>Flow_ToMGPP</bpmn:incoming>
+      <bpmn:outgoing>Flow_MGPPComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Risk Management -->
+    <bpmn:serviceTask id="Task_RiskManagement" name="Conduct Risk Management">
+      <bpmn:incoming>Flow_ToRiskMgmt</bpmn:incoming>
+      <bpmn:outgoing>Flow_RiskComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Communication Plan -->
+    <bpmn:serviceTask id="Task_CommunicationPlan" name="Create Communication Plan">
+      <bpmn:incoming>Flow_ToCommPlan</bpmn:incoming>
+      <bpmn:outgoing>Flow_CommPlanComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Converging Parallel Gateway -->
+    <bpmn:parallelGateway id="Gateway_DefineComplete" name="All Define Activities Complete">
+      <bpmn:incoming>Flow_CharterComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_MGPPComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_RiskComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_CommPlanComplete</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToAssessment</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Define Phase Assessment -->
+    <bpmn:serviceTask id="Task_DefineAssessment" name="Define Phase Assessment">
+      <bpmn:incoming>Flow_ToAssessment</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Assessment Validation -->
+    <bpmn:exclusiveGateway id="Gateway_DefineValidation" name="Assessment Passed?">
+      <bpmn:incoming>Flow_ToValidation</bpmn:incoming>
+      <bpmn:outgoing>Flow_DefineSuccess</bpmn:outgoing>
+      <bpmn:outgoing>Flow_DefineRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Remediation Task -->
+    <bpmn:serviceTask id="Task_DefineRemediation" name="Provide Define Phase Remediation">
+      <bpmn:incoming>Flow_DefineRetry</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryAssessment</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_DefineComplete" name="Define Phase Complete">
+      <bpmn:incoming>Flow_DefineSuccess</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToIntroduction" sourceRef="StartEvent_DefinePhase" targetRef="Task_IntroductionDefine" />
+    <bpmn:sequenceFlow id="Flow_ToParallelGateway" sourceRef="Task_IntroductionDefine" targetRef="Gateway_DefineActivities" />
+    
+    <bpmn:sequenceFlow id="Flow_ToCharter" sourceRef="Gateway_DefineActivities" targetRef="Task_ProjectCharter" />
+    <bpmn:sequenceFlow id="Flow_ToMGPP" sourceRef="Gateway_DefineActivities" targetRef="Task_MGPP" />
+    <bpmn:sequenceFlow id="Flow_ToRiskMgmt" sourceRef="Gateway_DefineActivities" targetRef="Task_RiskManagement" />
+    <bpmn:sequenceFlow id="Flow_ToCommPlan" sourceRef="Gateway_DefineActivities" targetRef="Task_CommunicationPlan" />
+    
+    <bpmn:sequenceFlow id="Flow_CharterComplete" sourceRef="Task_ProjectCharter" targetRef="Gateway_DefineComplete" />
+    <bpmn:sequenceFlow id="Flow_MGPPComplete" sourceRef="Task_MGPP" targetRef="Gateway_DefineComplete" />
+    <bpmn:sequenceFlow id="Flow_RiskComplete" sourceRef="Task_RiskManagement" targetRef="Gateway_DefineComplete" />
+    <bpmn:sequenceFlow id="Flow_CommPlanComplete" sourceRef="Task_CommunicationPlan" targetRef="Gateway_DefineComplete" />
+    
+    <bpmn:sequenceFlow id="Flow_ToAssessment" sourceRef="Gateway_DefineComplete" targetRef="Task_DefineAssessment" />
+    <bpmn:sequenceFlow id="Flow_ToValidation" sourceRef="Task_DefineAssessment" targetRef="Gateway_DefineValidation" />
+    
+    <bpmn:sequenceFlow id="Flow_DefineSuccess" sourceRef="Gateway_DefineValidation" targetRef="EndEvent_DefineComplete">
+      <bpmn:conditionExpression>#{assessment_score >= 0.8}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_DefineRetry" sourceRef="Gateway_DefineValidation" targetRef="Task_DefineRemediation">
+      <bpmn:conditionExpression>#{assessment_score < 0.8}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_RetryAssessment" sourceRef="Task_DefineRemediation" targetRef="Task_DefineAssessment" />
+    
+  </bpmn:process>
+</bpmn:definitions>

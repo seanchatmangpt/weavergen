@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_1" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:process id="SixSigmaMeasurePhase" name="Six Sigma Measure Phase Training" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_MeasurePhase" name="Measure Phase Begins">
+      <bpmn:outgoing>Flow_ToVOC</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Voice of Customer -->
+    <bpmn:serviceTask id="Task_VoiceOfCustomer" name="Voice of the Customer Analysis">
+      <bpmn:incoming>Flow_ToVOC</bpmn:incoming>
+      <bpmn:outgoing>Flow_VOCToQFD</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Quality Function Deployment -->
+    <bpmn:serviceTask id="Task_QualityFunctionDeployment" name="Quality Function Deployment">
+      <bpmn:incoming>Flow_VOCToQFD</bpmn:incoming>
+      <bpmn:outgoing>Flow_QFDToTargetCost</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Target Costing -->
+    <bpmn:serviceTask id="Task_TargetCosting" name="Target Costing Analysis">
+      <bpmn:incoming>Flow_QFDToTargetCost</bpmn:incoming>
+      <bpmn:outgoing>Flow_TargetCostToScorecard</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Scorecards -->
+    <bpmn:serviceTask id="Task_Scorecards" name="Develop Performance Scorecards">
+      <bpmn:incoming>Flow_TargetCostToScorecard</bpmn:incoming>
+      <bpmn:outgoing>Flow_ScorecardToStats</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for Statistics Modules -->
+    <bpmn:parallelGateway id="Gateway_StatisticsModules" name="Statistics Training Modules">
+      <bpmn:incoming>Flow_ScorecardToStats</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToMinitab</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToBasicStats</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToVariation</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToMSA</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToCapability</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Intro to Minitab -->
+    <bpmn:serviceTask id="Task_IntroMinitab" name="Introduction to Minitab">
+      <bpmn:incoming>Flow_ToMinitab</bpmn:incoming>
+      <bpmn:outgoing>Flow_MinitabComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Basic Statistics -->
+    <bpmn:serviceTask id="Task_BasicStatistics" name="Basic Statistics Training">
+      <bpmn:incoming>Flow_ToBasicStats</bpmn:incoming>
+      <bpmn:outgoing>Flow_BasicStatsComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Understanding Variation and Control Charts -->
+    <bpmn:serviceTask id="Task_VariationControlCharts" name="Understanding Variation and Control Charts">
+      <bpmn:incoming>Flow_ToVariation</bpmn:incoming>
+      <bpmn:outgoing>Flow_VariationComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Measurement Systems Analysis -->
+    <bpmn:serviceTask id="Task_MSA" name="Measurement Systems Analysis">
+      <bpmn:incoming>Flow_ToMSA</bpmn:incoming>
+      <bpmn:outgoing>Flow_MSAComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Process Capability -->
+    <bpmn:serviceTask id="Task_ProcessCapability" name="Process Capability Assessment">
+      <bpmn:incoming>Flow_ToCapability</bpmn:incoming>
+      <bpmn:outgoing>Flow_CapabilityComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Converging Parallel Gateway -->
+    <bpmn:parallelGateway id="Gateway_MeasureComplete" name="All Measure Activities Complete">
+      <bpmn:incoming>Flow_MinitabComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_BasicStatsComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_VariationComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_MSAComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_CapabilityComplete</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToMeasureAssessment</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Measure Phase Assessment -->
+    <bpmn:serviceTask id="Task_MeasureAssessment" name="Measure Phase Assessment">
+      <bpmn:incoming>Flow_ToMeasureAssessment</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToMeasureValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Assessment Validation -->
+    <bpmn:exclusiveGateway id="Gateway_MeasureValidation" name="Assessment Passed?">
+      <bpmn:incoming>Flow_ToMeasureValidation</bpmn:incoming>
+      <bpmn:outgoing>Flow_MeasureSuccess</bpmn:outgoing>
+      <bpmn:outgoing>Flow_MeasureRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Remediation Task -->
+    <bpmn:serviceTask id="Task_MeasureRemediation" name="Provide Measure Phase Remediation">
+      <bpmn:incoming>Flow_MeasureRetry</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryMeasureAssessment</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_MeasureComplete" name="Measure Phase Complete">
+      <bpmn:incoming>Flow_MeasureSuccess</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToVOC" sourceRef="StartEvent_MeasurePhase" targetRef="Task_VoiceOfCustomer" />
+    <bpmn:sequenceFlow id="Flow_VOCToQFD" sourceRef="Task_VoiceOfCustomer" targetRef="Task_QualityFunctionDeployment" />
+    <bpmn:sequenceFlow id="Flow_QFDToTargetCost" sourceRef="Task_QualityFunctionDeployment" targetRef="Task_TargetCosting" />
+    <bpmn:sequenceFlow id="Flow_TargetCostToScorecard" sourceRef="Task_TargetCosting" targetRef="Task_Scorecards" />
+    <bpmn:sequenceFlow id="Flow_ScorecardToStats" sourceRef="Task_Scorecards" targetRef="Gateway_StatisticsModules" />
+    
+    <bpmn:sequenceFlow id="Flow_ToMinitab" sourceRef="Gateway_StatisticsModules" targetRef="Task_IntroMinitab" />
+    <bpmn:sequenceFlow id="Flow_ToBasicStats" sourceRef="Gateway_StatisticsModules" targetRef="Task_BasicStatistics" />
+    <bpmn:sequenceFlow id="Flow_ToVariation" sourceRef="Gateway_StatisticsModules" targetRef="Task_VariationControlCharts" />
+    <bpmn:sequenceFlow id="Flow_ToMSA" sourceRef="Gateway_StatisticsModules" targetRef="Task_MSA" />
+    <bpmn:sequenceFlow id="Flow_ToCapability" sourceRef="Gateway_StatisticsModules" targetRef="Task_ProcessCapability" />
+    
+    <bpmn:sequenceFlow id="Flow_MinitabComplete" sourceRef="Task_IntroMinitab" targetRef="Gateway_MeasureComplete" />
+    <bpmn:sequenceFlow id="Flow_BasicStatsComplete" sourceRef="Task_BasicStatistics" targetRef="Gateway_MeasureComplete" />
+    <bpmn:sequenceFlow id="Flow_VariationComplete" sourceRef="Task_VariationControlCharts" targetRef="Gateway_MeasureComplete" />
+    <bpmn:sequenceFlow id="Flow_MSAComplete" sourceRef="Task_MSA" targetRef="Gateway_MeasureComplete" />
+    <bpmn:sequenceFlow id="Flow_CapabilityComplete" sourceRef="Task_ProcessCapability" targetRef="Gateway_MeasureComplete" />
+    
+    <bpmn:sequenceFlow id="Flow_ToMeasureAssessment" sourceRef="Gateway_MeasureComplete" targetRef="Task_MeasureAssessment" />
+    <bpmn:sequenceFlow id="Flow_ToMeasureValidation" sourceRef="Task_MeasureAssessment" targetRef="Gateway_MeasureValidation" />
+    
+    <bpmn:sequenceFlow id="Flow_MeasureSuccess" sourceRef="Gateway_MeasureValidation" targetRef="EndEvent_MeasureComplete">
+      <bpmn:conditionExpression>#{assessment_score >= 0.8}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_MeasureRetry" sourceRef="Gateway_MeasureValidation" targetRef="Task_MeasureRemediation">
+      <bpmn:conditionExpression>#{assessment_score < 0.8}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_RetryMeasureAssessment" sourceRef="Task_MeasureRemediation" targetRef="Task_MeasureAssessment" />
+    
+  </bpmn:process>
+</bpmn:definitions>

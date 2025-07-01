@@ -1,0 +1,279 @@
+groups:
+  - id: six_sigma.training
+    type: span
+    brief: "Six Sigma Design for Lean training session telemetry"
+    stability: stable
+    attributes:
+      - id: training.session.id
+        type: string
+        brief: "Unique training session identifier"
+        requirement_level: required
+        examples: ["session_dmedi_001", "bb_training_202507"]
+      
+      - id: training.participant.id
+        type: string
+        brief: "Unique participant identifier"
+        requirement_level: required
+        examples: ["participant_001", "learner_john_smith"]
+      
+      - id: training.phase
+        type: string
+        brief: "Current DMEDI phase"
+        requirement_level: required
+        examples: ["define", "measure", "explore", "develop", "implement"]
+      
+      - id: training.module
+        type: string
+        brief: "Current training module"
+        requirement_level: required
+        examples: ["charter", "voc", "triz", "doe", "prototype"]
+      
+      - id: training.completion_percentage
+        type: double
+        brief: "Module completion percentage"
+        requirement_level: optional
+        note: "Percentage between 0.0 and 1.0"
+      
+      - id: training.assessment_score
+        type: double
+        brief: "Assessment score for current module"
+        requirement_level: optional
+        note: "Score between 0.0 and 1.0"
+
+  - id: six_sigma.dmedi.define
+    type: span
+    brief: "Define phase activities and outcomes"
+    stability: stable
+    attributes:
+      - id: define.charter.status
+        type: string
+        brief: "Project charter completion status"
+        requirement_level: required
+        examples: ["draft", "approved", "complete"]
+      
+      - id: define.mgpp.identified
+        type: boolean
+        brief: "Whether MGPP (Must Go/Pride Points) are identified"
+        requirement_level: required
+      
+      - id: define.risks.count
+        type: int
+        brief: "Number of identified risks"
+        requirement_level: optional
+      
+      - id: define.communication.plan.approved
+        type: boolean
+        brief: "Whether communication plan is approved"
+        requirement_level: required
+
+  - id: six_sigma.dmedi.measure
+    type: span
+    brief: "Measure phase activities and data collection"
+    stability: stable
+    attributes:
+      - id: measure.voc.sources.count
+        type: int
+        brief: "Number of Voice of Customer sources"
+        requirement_level: optional
+      
+      - id: measure.qfd.completed
+        type: boolean
+        brief: "Whether Quality Function Deployment is completed"
+        requirement_level: required
+      
+      - id: measure.target.cost.defined
+        type: boolean
+        brief: "Whether target cost is defined"
+        requirement_level: required
+      
+      - id: measure.scorecard.metrics.count
+        type: int
+        brief: "Number of scorecard metrics defined"
+        requirement_level: optional
+      
+      - id: measure.statistics.tool
+        type: string
+        brief: "Statistical analysis tool used"
+        requirement_level: optional
+        examples: ["minitab", "r", "python", "excel"]
+      
+      - id: measure.capability.index
+        type: double
+        brief: "Process capability index (Cpk)"
+        requirement_level: optional
+
+  - id: six_sigma.dmedi.explore
+    type: span
+    brief: "Explore phase concept generation and analysis"
+    stability: stable
+    attributes:
+      - id: explore.concepts.generated.count
+        type: int
+        brief: "Number of concepts generated"
+        requirement_level: optional
+      
+      - id: explore.triz.method.used
+        type: string
+        brief: "TRIZ method applied"
+        requirement_level: optional
+        examples: ["contradiction_matrix", "substance_field", "algorithm"]
+      
+      - id: explore.concept.selection.method
+        type: string
+        brief: "Concept selection method used"
+        requirement_level: required
+        examples: ["pugh", "ahp", "weighted_matrix"]
+      
+      - id: explore.tolerance.design.completed
+        type: boolean
+        brief: "Whether statistical tolerance design is completed"
+        requirement_level: required
+      
+      - id: explore.monte_carlo.simulations
+        type: int
+        brief: "Number of Monte Carlo simulations run"
+        requirement_level: optional
+      
+      - id: explore.fmea.risks.identified
+        type: int
+        brief: "Number of risks identified in Design FMEA"
+        requirement_level: optional
+
+  - id: six_sigma.dmedi.develop
+    type: span
+    brief: "Develop phase detailed design and optimization"
+    stability: stable
+    attributes:
+      - id: develop.design.detailed.status
+        type: string
+        brief: "Detailed design completion status"
+        requirement_level: required
+        examples: ["concept", "preliminary", "detailed", "final"]
+      
+      - id: develop.doe.type
+        type: string
+        brief: "Design of Experiments type used"
+        requirement_level: optional
+        examples: ["full_factorial", "fractional_factorial", "response_surface", "mixture"]
+      
+      - id: develop.doe.factors.count
+        type: int
+        brief: "Number of DOE factors"
+        requirement_level: optional
+      
+      - id: develop.doe.runs.count
+        type: int
+        brief: "Number of DOE experimental runs"
+        requirement_level: optional
+      
+      - id: develop.lean.principles.applied
+        type: string[]
+        brief: "Lean principles applied in design"
+        requirement_level: optional
+        examples: ["value_stream", "pull_system", "continuous_flow", "mistake_proofing"]
+      
+      - id: develop.dfma.score
+        type: double
+        brief: "Design for Manufacture and Assembly score"
+        requirement_level: optional
+        note: "Score between 0.0 and 1.0"
+      
+      - id: develop.reliability.target
+        type: double
+        brief: "Reliability target (e.g., MTBF hours)"
+        requirement_level: optional
+
+  - id: six_sigma.dmedi.implement
+    type: span
+    brief: "Implement phase pilot and process control"
+    stability: stable
+    attributes:
+      - id: implement.prototype.status
+        type: string
+        brief: "Prototype development status"
+        requirement_level: required
+        examples: ["design", "build", "test", "validated"]
+      
+      - id: implement.pilot.sample.size
+        type: int
+        brief: "Pilot test sample size"
+        requirement_level: optional
+      
+      - id: implement.control.plan.approved
+        type: boolean
+        brief: "Whether process control plan is approved"
+        requirement_level: required
+      
+      - id: implement.rollout.percentage
+        type: double
+        brief: "Implementation rollout percentage"
+        requirement_level: optional
+        note: "Percentage between 0.0 and 1.0"
+
+  - id: six_sigma.ai.agent
+    type: span
+    brief: "AI training agent interactions and assessments"
+    stability: stable
+    attributes:
+      - id: agent.role
+        type: string
+        brief: "AI agent role in training"
+        requirement_level: required
+        examples: ["instructor", "coach", "assessor", "facilitator"]
+      
+      - id: agent.interaction.type
+        type: string
+        brief: "Type of agent interaction"
+        requirement_level: required
+        examples: ["explanation", "assessment", "feedback", "guidance", "simulation"]
+      
+      - id: agent.model.used
+        type: string
+        brief: "AI model used for training"
+        requirement_level: optional
+        examples: ["gpt-4", "claude-3", "gemini-pro"]
+      
+      - id: agent.confidence.score
+        type: double
+        brief: "Agent confidence in response/assessment"
+        requirement_level: optional
+        note: "Confidence score between 0.0 and 1.0"
+      
+      - id: agent.feedback.quality
+        type: string
+        brief: "Quality of agent feedback"
+        requirement_level: optional
+        examples: ["excellent", "good", "adequate", "needs_improvement"]
+
+  - id: six_sigma.capstone
+    type: span
+    brief: "DMEDI capstone project execution and outcomes"
+    stability: stable
+    attributes:
+      - id: capstone.project.id
+        type: string
+        brief: "Unique capstone project identifier"
+        requirement_level: required
+      
+      - id: capstone.industry.domain
+        type: string
+        brief: "Industry domain of capstone project"
+        requirement_level: optional
+        examples: ["manufacturing", "healthcare", "financial", "software", "service"]
+      
+      - id: capstone.phases.completed
+        type: string[]
+        brief: "Completed DMEDI phases in capstone"
+        requirement_level: required
+        examples: ["define", "measure", "explore", "develop", "implement"]
+      
+      - id: capstone.final.score
+        type: double
+        brief: "Final capstone project score"
+        requirement_level: optional
+        note: "Score between 0.0 and 1.0"
+      
+      - id: capstone.certification.achieved
+        type: boolean
+        brief: "Whether Black Belt certification was achieved"
+        requirement_level: required

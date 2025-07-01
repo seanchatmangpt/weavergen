@@ -1,0 +1,70 @@
+{
+  "command": "generate",
+  "context": {
+    "cli.command": "generate",
+    "cli.module": "weavergen.cli",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli_dod_enforcer.py",
+    "cli.timestamp": "2025-07-01T01:03:51.002932",
+    "cli.args": [
+      "generate",
+      "https://github.com/open-telemetry/semantic-conventions.git",
+      "--language",
+      "python",
+      "--output",
+      "./generated/python-sdk",
+      "--verbose"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.5,
+    "is_done": false,
+    "total_spans": 1,
+    "level1_pass": 1,
+    "level2_pass": 0,
+    "level3_pass": 1,
+    "lies_detected": [
+      {
+        "claim": "Executed BPMN workflow workflows/bpmn/code_generation.bpmn",
+        "reality": "BPMN file does not exist",
+        "span_id": "0xb9955da82b3cbd8e",
+        "type": "fake_bpmn"
+      }
+    ],
+    "violations": [
+      {
+        "level": "L2",
+        "rule": "BPMN Must Match",
+        "description": "BPMN file does not exist: workflows/bpmn/code_generation.bpmn",
+        "severity": "critical"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "name": "cli.generate",
+      "trace_id": "0x1255af17b25c5e11680cb67dec789826",
+      "span_id": "0xb9955da82b3cbd8e",
+      "parent_id": "0x40fce75639b4de67",
+      "start_time": 1751357031003156000,
+      "end_time": 1751357033356789000,
+      "duration_ns": 2353633000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+        "code.lineno": 65,
+        "code.function": "generate",
+        "code.module": "weavergen.cli",
+        "bpmn.workflow.file": "workflows/bpmn/code_generation.bpmn",
+        "bpmn.workflow.id": "code_generation",
+        "bpmn.task.id": "Task_Generate",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-07-01T01:03:51.004025",
+        "execution.success": false,
+        "execution.error": "1"
+      },
+      "status": {
+        "status_code": "ERROR",
+        "description": "Exit: 1"
+      }
+    }
+  ]
+}

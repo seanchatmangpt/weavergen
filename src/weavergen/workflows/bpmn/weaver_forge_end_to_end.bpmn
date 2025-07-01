@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="Definitions_WeaverForge" 
+                   targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="WeaverForgeEndToEnd" name="Weaver Forge End-to-End Generation" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartWeaverForge" name="Start Weaver Forge Generation">
+      <bpmn:outgoing>Flow_LoadRegistry</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Load Semantic Registry -->
+    <bpmn:serviceTask id="Task_LoadRegistry" name="Load Semantic Registry">
+      <bpmn:incoming>Flow_LoadRegistry</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateRegistry</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Registry -->
+    <bpmn:serviceTask id="Task_ValidateRegistry" name="Validate Registry Structure">
+      <bpmn:incoming>Flow_ValidateRegistry</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckWeaver</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Check Weaver Binary -->
+    <bpmn:serviceTask id="Task_CheckWeaver" name="Check Weaver Binary">
+      <bpmn:incoming>Flow_CheckWeaver</bpmn:incoming>
+      <bpmn:outgoing>Flow_PrepareGeneration</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Prepare Generation Context -->
+    <bpmn:serviceTask id="Task_PrepareGeneration" name="Prepare Generation Context">
+      <bpmn:incoming>Flow_PrepareGeneration</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParallelGeneration</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway - Split for multi-language generation -->
+    <bpmn:parallelGateway id="Gateway_ParallelGeneration" name="Parallel Generation">
+      <bpmn:incoming>Flow_ParallelGeneration</bpmn:incoming>
+      <bpmn:outgoing>Flow_GeneratePython</bpmn:outgoing>
+      <bpmn:outgoing>Flow_GenerateRust</bpmn:outgoing>
+      <bpmn:outgoing>Flow_GenerateGo</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Generate Python Code -->
+    <bpmn:serviceTask id="Task_GeneratePython" name="Generate Python Code">
+      <bpmn:incoming>Flow_GeneratePython</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidatePython</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Rust Code -->
+    <bpmn:serviceTask id="Task_GenerateRust" name="Generate Rust Code">
+      <bpmn:incoming>Flow_GenerateRust</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateRust</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Go Code -->
+    <bpmn:serviceTask id="Task_GenerateGo" name="Generate Go Code">
+      <bpmn:incoming>Flow_GenerateGo</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateGo</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated Python -->
+    <bpmn:serviceTask id="Task_ValidatePython" name="Validate Python Output">
+      <bpmn:incoming>Flow_ValidatePython</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated Rust -->
+    <bpmn:serviceTask id="Task_ValidateRust" name="Validate Rust Output">
+      <bpmn:incoming>Flow_ValidateRust</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated Go -->
+    <bpmn:serviceTask id="Task_ValidateGo" name="Validate Go Output">
+      <bpmn:incoming>Flow_ValidateGo</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway - Join after validation -->
+    <bpmn:parallelGateway id="Gateway_JoinValidation" name="Join Validation">
+      <bpmn:incoming>Flow_JoinValidation</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinValidation</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinValidation</bpmn:incoming>
+      <bpmn:outgoing>Flow_CompileCheck</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Compile Check -->
+    <bpmn:serviceTask id="Task_CompileCheck" name="Run Compile Checks">
+      <bpmn:incoming>Flow_CompileCheck</bpmn:incoming>
+      <bpmn:outgoing>Flow_QualityGateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Quality Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_Quality" name="Quality Check">
+      <bpmn:incoming>Flow_QualityGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_QualityPassed</bpmn:outgoing>
+      <bpmn:outgoing>Flow_QualityFailed</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Regenerate Task -->
+    <bpmn:serviceTask id="Task_Regenerate" name="Regenerate Failed Components">
+      <bpmn:incoming>Flow_QualityFailed</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryLoop</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Package Artifacts -->
+    <bpmn:serviceTask id="Task_PackageArtifacts" name="Package Generated Artifacts">
+      <bpmn:incoming>Flow_QualityPassed</bpmn:incoming>
+      <bpmn:outgoing>Flow_RunTests</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Run Integration Tests -->
+    <bpmn:serviceTask id="Task_RunTests" name="Run Integration Tests">
+      <bpmn:incoming>Flow_RunTests</bpmn:incoming>
+      <bpmn:outgoing>Flow_GenerateReport</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Report -->
+    <bpmn:serviceTask id="Task_GenerateReport" name="Generate Generation Report">
+      <bpmn:incoming>Flow_GenerateReport</bpmn:incoming>
+      <bpmn:outgoing>Flow_CaptureSpans</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Capture Spans -->
+    <bpmn:serviceTask id="Task_CaptureSpans" name="Capture Execution Spans">
+      <bpmn:incoming>Flow_CaptureSpans</bpmn:incoming>
+      <bpmn:outgoing>Flow_End</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndWeaverForge" name="Weaver Forge Generation Complete">
+      <bpmn:incoming>Flow_End</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_LoadRegistry" sourceRef="StartWeaverForge" targetRef="Task_LoadRegistry" />
+    <bpmn:sequenceFlow id="Flow_ValidateRegistry" sourceRef="Task_LoadRegistry" targetRef="Task_ValidateRegistry" />
+    <bpmn:sequenceFlow id="Flow_CheckWeaver" sourceRef="Task_ValidateRegistry" targetRef="Task_CheckWeaver" />
+    <bpmn:sequenceFlow id="Flow_PrepareGeneration" sourceRef="Task_CheckWeaver" targetRef="Task_PrepareGeneration" />
+    <bpmn:sequenceFlow id="Flow_ParallelGeneration" sourceRef="Task_PrepareGeneration" targetRef="Gateway_ParallelGeneration" />
+    
+    <bpmn:sequenceFlow id="Flow_GeneratePython" sourceRef="Gateway_ParallelGeneration" targetRef="Task_GeneratePython" />
+    <bpmn:sequenceFlow id="Flow_GenerateRust" sourceRef="Gateway_ParallelGeneration" targetRef="Task_GenerateRust" />
+    <bpmn:sequenceFlow id="Flow_GenerateGo" sourceRef="Gateway_ParallelGeneration" targetRef="Task_GenerateGo" />
+    
+    <bpmn:sequenceFlow id="Flow_ValidatePython" sourceRef="Task_GeneratePython" targetRef="Task_ValidatePython" />
+    <bpmn:sequenceFlow id="Flow_ValidateRust" sourceRef="Task_GenerateRust" targetRef="Task_ValidateRust" />
+    <bpmn:sequenceFlow id="Flow_ValidateGo" sourceRef="Task_GenerateGo" targetRef="Task_ValidateGo" />
+    
+    <bpmn:sequenceFlow id="Flow_JoinValidation" sourceRef="Task_ValidatePython" targetRef="Gateway_JoinValidation" />
+    <bpmn:sequenceFlow id="Flow_JoinValidation" sourceRef="Task_ValidateRust" targetRef="Gateway_JoinValidation" />
+    <bpmn:sequenceFlow id="Flow_JoinValidation" sourceRef="Task_ValidateGo" targetRef="Gateway_JoinValidation" />
+    
+    <bpmn:sequenceFlow id="Flow_CompileCheck" sourceRef="Gateway_JoinValidation" targetRef="Task_CompileCheck" />
+    <bpmn:sequenceFlow id="Flow_QualityGateway" sourceRef="Task_CompileCheck" targetRef="Gateway_Quality" />
+    
+    <bpmn:sequenceFlow id="Flow_QualityPassed" sourceRef="Gateway_Quality" targetRef="Task_PackageArtifacts">
+      <bpmn:conditionExpression>#{quality_score >= 0.8}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_QualityFailed" sourceRef="Gateway_Quality" targetRef="Task_Regenerate">
+      <bpmn:conditionExpression>#{quality_score < 0.8}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_RetryLoop" sourceRef="Task_Regenerate" targetRef="Gateway_ParallelGeneration" />
+    
+    <bpmn:sequenceFlow id="Flow_RunTests" sourceRef="Task_PackageArtifacts" targetRef="Task_RunTests" />
+    <bpmn:sequenceFlow id="Flow_GenerateReport" sourceRef="Task_RunTests" targetRef="Task_GenerateReport" />
+    <bpmn:sequenceFlow id="Flow_CaptureSpans" sourceRef="Task_GenerateReport" targetRef="Task_CaptureSpans" />
+    <bpmn:sequenceFlow id="Flow_End" sourceRef="Task_CaptureSpans" targetRef="EndWeaverForge" />
+    
+  </bpmn:process>
+  
+</bpmn:definitions>

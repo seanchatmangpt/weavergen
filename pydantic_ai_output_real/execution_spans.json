@@ -1,0 +1,335 @@
+[
+  {
+    "name": "bpmn.service.task_loadsemantics",
+    "task": "Task_LoadSemantics",
+    "span_id": "mock_0",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958276",
+    "result": {
+      "semantics": {
+        "groups": [
+          {
+            "id": "test.agent",
+            "type": "span",
+            "brief": "Test AI agent for complete forge testing",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "agent.id",
+                "type": "string",
+                "brief": "Unique agent identifier",
+                "requirement_level": "required"
+              },
+              {
+                "id": "agent.role",
+                "type": "string",
+                "brief": "Agent role in the system",
+                "requirement_level": "required",
+                "examples": [
+                  "coordinator",
+                  "analyst",
+                  "facilitator"
+                ]
+              },
+              {
+                "id": "agent.status",
+                "type": "string",
+                "brief": "Current agent status",
+                "requirement_level": "optional",
+                "examples": [
+                  "active",
+                  "idle",
+                  "busy"
+                ],
+                "note": "Current operational status of the agent"
+              }
+            ]
+          },
+          {
+            "id": "test.conversation",
+            "type": "span",
+            "brief": "Test conversation for agent communication",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "conversation.id",
+                "type": "string",
+                "brief": "Unique conversation identifier",
+                "requirement_level": "required"
+              },
+              {
+                "id": "conversation.topic",
+                "type": "string",
+                "brief": "Conversation topic",
+                "requirement_level": "required"
+              },
+              {
+                "id": "conversation.participants",
+                "type": "int",
+                "brief": "Number of participants",
+                "requirement_level": "required"
+              },
+              {
+                "id": "conversation.mode",
+                "type": "string",
+                "brief": "Conversation mode",
+                "requirement_level": "optional",
+                "examples": [
+                  "structured",
+                  "freeform",
+                  "debate"
+                ],
+                "note": "Mode of conversation execution"
+              }
+            ]
+          },
+          {
+            "id": "test.decision",
+            "type": "span",
+            "brief": "Test decision making process",
+            "stability": "stable",
+            "attributes": [
+              {
+                "id": "decision.id",
+                "type": "string",
+                "brief": "Unique decision identifier",
+                "requirement_level": "required"
+              },
+              {
+                "id": "decision.type",
+                "type": "string",
+                "brief": "Type of decision",
+                "requirement_level": "required",
+                "examples": [
+                  "strategic",
+                  "tactical",
+                  "operational"
+                ]
+              },
+              {
+                "id": "decision.confidence",
+                "type": "double",
+                "brief": "Confidence level in the decision",
+                "requirement_level": "optional",
+                "note": "Confidence score between 0.0 and 1.0"
+              },
+              {
+                "id": "decision.reasoning",
+                "type": "string",
+                "brief": "Reasoning behind the decision",
+                "requirement_level": "optional",
+                "note": "Detailed explanation of decision rationale"
+              }
+            ]
+          }
+        ]
+      },
+      "loaded": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_validateinput",
+    "task": "Task_ValidateInput",
+    "span_id": "mock_1",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958519",
+    "result": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_generatemodels",
+    "task": "Task_GenerateModels",
+    "span_id": "mock_2",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958565",
+    "result": {
+      "models": [
+        {
+          "id": "model_b62f2689",
+          "name": "MockPydanticModels",
+          "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+          "timestamp": "2025-07-01T07:01:51.958560"
+        }
+      ],
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_generateagents",
+    "task": "Task_GenerateAgents",
+    "span_id": "mock_3",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958593",
+    "result": {
+      "agents": [
+        {
+          "id": "agent_analyst_d7c16f75",
+          "role": "analyst",
+          "model": "qwen3:latest",
+          "system_prompt": "You are a analyst agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "analyst_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass AnalystAgent:\n    \"\"\"Generated analyst agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a analyst agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"analyst\"\n        self.capabilities = [\"analyst_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"analyst\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by analyst agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T07:01:51.958581"
+        },
+        {
+          "id": "agent_coordinator_4eeea9c6",
+          "role": "coordinator",
+          "model": "qwen3:latest",
+          "system_prompt": "You are a coordinator agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "coordinator_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass CoordinatorAgent:\n    \"\"\"Generated coordinator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a coordinator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"coordinator\"\n        self.capabilities = [\"coordinator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"coordinator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by coordinator agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T07:01:51.958589"
+        }
+      ],
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_generatevalidators",
+    "task": "Task_GenerateValidators",
+    "span_id": "mock_4",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958607",
+    "result": {
+      "validator": {
+        "id": "validator_19822291",
+        "type": "comprehensive",
+        "code": "\nfrom pydantic import BaseModel, ValidationError\nfrom typing import Dict, Any, List\n\nclass ComprehensiveValidator:\n    \"\"\"Generated comprehensive validation logic\"\"\"\n    \n    def validate_model(self, model_data: Dict[str, Any]) -> Dict[str, Any]:\n        \"\"\"Validate Pydantic model structure\"\"\"\n        return {\n            \"valid\": True,\n            \"errors\": [],\n            \"quality_score\": 0.95\n        }\n    \n    def validate_agent_response(self, response: Any) -> Dict[str, Any]:\n        \"\"\"Validate AI agent response\"\"\"\n        return {\n            \"structured\": True,\n            \"complete\": True,\n            \"quality_score\": 0.9\n        }\n    \n    def validate_spans(self, spans: List[Dict]) -> Dict[str, Any]:\n        \"\"\"Validate OpenTelemetry spans\"\"\"\n        return {\n            \"span_count\": len(spans),\n            \"valid_spans\": len(spans),\n            \"health_score\": 0.95\n        }\n",
+        "timestamp": "2025-07-01T07:01:51.958603"
+      },
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_validatemodels",
+    "task": "Task_ValidateModels",
+    "span_id": "mock_5",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958619",
+    "result": {
+      "results": [
+        {
+          "model_id": "model_b62f2689",
+          "valid": true,
+          "score": 0.9,
+          "issues": [],
+          "timestamp": "2025-07-01T07:01:51.958610"
+        }
+      ],
+      "average_score": 0.9
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_testagents",
+    "task": "Task_TestAgents",
+    "span_id": "mock_6",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958627",
+    "result": {
+      "results": [
+        {
+          "agent_id": "agent_analyst_d7c16f75",
+          "role": "analyst",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T07:01:51.958622"
+        },
+        {
+          "agent_id": "agent_coordinator_4eeea9c6",
+          "role": "coordinator",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T07:01:51.958624"
+        }
+      ],
+      "average_success_rate": 0.8
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_testvalidators",
+    "task": "Task_TestValidators",
+    "span_id": "mock_7",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958635",
+    "result": {
+      "tests_passed": 15,
+      "tests_total": 16,
+      "success_rate": 0.9375,
+      "coverage": 0.95,
+      "timestamp": "2025-07-01T07:01:51.958632"
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_integration",
+    "task": "Task_Integration",
+    "span_id": "mock_8",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.958690",
+    "result": {
+      "quality_score": 0.7366666666666667,
+      "passed": false,
+      "components_tested": 3,
+      "timestamp": "2025-07-01T07:01:51.958663"
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  },
+  {
+    "name": "bpmn.service.task_generateoutput",
+    "task": "Task_GenerateOutput",
+    "span_id": "mock_9",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:01:51.959512",
+    "result": {
+      "output_files": [
+        "pydantic_ai_output_real/generated_models.py",
+        "pydantic_ai_output_real/generated_agents.py",
+        "pydantic_ai_output_real/execution_report.json"
+      ],
+      "success": true
+    },
+    "mock": true,
+    "duration_ms": 10.0,
+    "status": "OK"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "span_id": "4160e07a65286d3",
+    "trace_id": "76d611bb7baebd3a3ba609d1bc812efa",
+    "operation_name": "demo.load_test_data",
+    "timestamp": "2025-07-01T00:01:35.356521",
+    "duration_ms": 0.002,
+    "llm_used": false,
+    "success": true,
+    "attributes": {
+      "step.name": "Load Test Data",
+      "step.llm_model": "none",
+      "step.tokens_used": 0
+    }
+  },
+  {
+    "span_id": "276ad7e38ac7c98b",
+    "trace_id": "76d611bb7baebd3a3ba609d1bc812efa",
+    "operation_name": "demo.llm_semantic_analysis",
+    "timestamp": "2025-07-01T00:01:35.458644",
+    "duration_ms": 5257.899,
+    "llm_used": true,
+    "success": true,
+    "attributes": {
+      "step.name": "LLM Semantic Analysis",
+      "step.llm_model": "mock",
+      "step.tokens_used": 19
+    }
+  },
+  {
+    "span_id": "6230bb68806a7263",
+    "trace_id": "76d611bb7baebd3a3ba609d1bc812efa",
+    "operation_name": "demo.llm_code_generation",
+    "timestamp": "2025-07-01T00:01:40.817989",
+    "duration_ms": 5002.045,
+    "llm_used": true,
+    "success": true,
+    "attributes": {
+      "step.name": "LLM Code Generation",
+      "step.llm_model": "mock",
+      "step.tokens_used": 22
+    }
+  },
+  {
+    "span_id": "10129dfe4c12a2db",
+    "trace_id": "76d611bb7baebd3a3ba609d1bc812efa",
+    "operation_name": "demo.llm_validation",
+    "timestamp": "2025-07-01T00:01:45.921388",
+    "duration_ms": 5001.876,
+    "llm_used": true,
+    "success": true,
+    "attributes": {
+      "step.name": "LLM Validation",
+      "step.llm_model": "mock",
+      "step.tokens_used": 22
+    }
+  }
+]

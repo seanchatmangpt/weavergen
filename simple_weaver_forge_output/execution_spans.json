@@ -1,0 +1,181 @@
+[
+  {
+    "task": "Load Registry",
+    "span_id": "fdf62d329c383249",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:44.651505+00:00",
+    "result": {
+      "success": true,
+      "output": "Registry loaded: accessible",
+      "registry_accessible": true
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Validate Registry",
+    "span_id": "85273add5f2a218c",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:44.862137+00:00",
+    "result": {
+      "success": true,
+      "output": "Registry validation passed (real Weaver)",
+      "validation_type": "real"
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Check Weaver Binary",
+    "span_id": "8baea70a16040def",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:45.073768+00:00",
+    "result": {
+      "success": true,
+      "output": "Weaver binary found: weaver 0.15.3",
+      "binary_path": "/Users/sac/.cargo/bin/weaver",
+      "version": "weaver 0.15.3"
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Prepare Generation",
+    "span_id": "54db3e42e11dc2b4",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:45.276398+00:00",
+    "result": {
+      "success": true,
+      "output": "Generation prepared for 3 languages",
+      "output_dir": "simple_weaver_forge_output"
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Generate Python",
+    "span_id": "dab909120d8af5e4",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:45.478485+00:00",
+    "result": {
+      "success": true,
+      "output": "python generation completed (real Weaver)",
+      "files": [
+        "python_semantic_attributes.py",
+        "python_semantic_conventions.py",
+        "python_telemetry.py",
+        "python_metrics.py",
+        "python_traces.py"
+      ],
+      "generation_type": "real"
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Generate Rust",
+    "span_id": "d1a69394c0a02c99",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:45.680566+00:00",
+    "result": {
+      "success": true,
+      "output": "rust generation completed (real Weaver)",
+      "files": [
+        "rust_semantic_attributes.rust",
+        "rust_semantic_conventions.rust",
+        "rust_telemetry.rust",
+        "rust_metrics.rust",
+        "rust_traces.rust"
+      ],
+      "generation_type": "real"
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Generate Go",
+    "span_id": "8b2d6365911e2488",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:45.882506+00:00",
+    "result": {
+      "success": true,
+      "output": "go generation completed (real Weaver)",
+      "files": [
+        "go_semantic_attributes.go",
+        "go_semantic_conventions.go",
+        "go_telemetry.go",
+        "go_metrics.go",
+        "go_traces.go"
+      ],
+      "generation_type": "real"
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Validate Outputs",
+    "span_id": "bc97f1b0a015b083",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:46.084219+00:00",
+    "result": {
+      "success": true,
+      "output": "Validation: 15/15 files valid",
+      "validation_score": 1.0
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Compile Check",
+    "span_id": "7b6f8eb0c44bddb0",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:46.285604+00:00",
+    "result": {
+      "success": true,
+      "output": "Compilation check: 90.0% passed",
+      "quality_score": 0.9
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Package Artifacts",
+    "span_id": "b99fdbcfac003ab2",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:46.487429+00:00",
+    "result": {
+      "success": true,
+      "output": "Artifacts packaged: simple_weaver_forge_output/package_manifest.json",
+      "manifest_file": "simple_weaver_forge_output/package_manifest.json"
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Run Tests",
+    "span_id": "f7900f6a68f4245b",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:46.688854+00:00",
+    "result": {
+      "success": true,
+      "output": "Tests: 7/9 passed",
+      "tests_run": 9,
+      "tests_passed": 7
+    },
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Generate Report",
+    "span_id": "d3d0bc50fe9d2a19",
+    "trace_id": "2741d98382fbf5a10317e15ad23c3059",
+    "timestamp": "2025-07-01T06:00:46.890601+00:00",
+    "result": {
+      "success": true,
+      "output": "Report generated: simple_weaver_forge_output/execution_report.json",
+      "report_file": "simple_weaver_forge_output/execution_report.json"
+    },
+    "weaver_used": true,
+    "success": true
+  }
+]

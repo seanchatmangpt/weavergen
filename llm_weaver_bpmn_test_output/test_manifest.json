@@ -1,0 +1,14 @@
+{
+  "test_run": "llm_weaver_bpmn_integration",
+  "generated_at": "2025-07-01T06:24:18.008928+00:00",
+  "ollama_model": "llama3.2:latest",
+  "registry_url": "https://github.com/open-telemetry/semantic-conventions",
+  "languages": [
+    "python",
+    "rust"
+  ],
+  "weaver_binary": "/Users/sac/.cargo/bin/weaver",
+  "quality_score": 0.75,
+  "llm_interactions": 4,
+  "spans_captured": 12
+}

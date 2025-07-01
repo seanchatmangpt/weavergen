@@ -1,0 +1,25 @@
+{
+  "summary": "Analyzed 1 semantic convention groups with 2 total attributes",
+  "quality_assessment": {
+    "naming_consistency": 0.85,
+    "completeness": 0.9,
+    "documentation": 0.75,
+    "examples_coverage": 0.6
+  },
+  "insights": [
+    "Attribute naming follows OpenTelemetry conventions well",
+    "Most attributes have proper type definitions",
+    "Brief descriptions are comprehensive",
+    "Some attributes could benefit from more examples",
+    "Found 2 attributes across 1 groups"
+  ],
+  "recommendations": [
+    "Add more examples to attributes with examples: []",
+    "Consider adding stability markers to all attributes",
+    "Ensure all requirement_level values are specified",
+    "Add note fields for complex attributes"
+  ],
+  "quality_score": 0.87,
+  "insights_count": 5,
+  "analysis_timestamp": "2025-07-01T07:02:20.783321"
+}

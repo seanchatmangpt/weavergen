@@ -1,0 +1,112 @@
+{
+  "context": {
+    "semantic_file": "semantic_conventions/test_valid.yaml",
+    "output_dir": "demo_8020_output",
+    "agent_roles": [
+      "analyst",
+      "coordinator",
+      "validator",
+      "facilitator"
+    ],
+    "quality_threshold": 0.8,
+    "max_retries": 3,
+    "current_retry": 0,
+    "quality_score": 0.9285714285714287,
+    "generated_models": [
+      {
+        "id": "model_3419c281",
+        "name": "MockPydanticModels",
+        "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+        "timestamp": "2025-07-01T07:37:43.476888"
+      }
+    ],
+    "generated_agents": [
+      {
+        "id": "agent_analyst_a69580d1",
+        "role": "analyst",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a analyst agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "analyst_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass AnalystAgent:\n    \"\"\"Generated analyst agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a analyst agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"analyst\"\n        self.capabilities = [\"analyst_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"analyst\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by analyst agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:37:43.477091"
+      },
+      {
+        "id": "agent_coordinator_2a72b4b6",
+        "role": "coordinator",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a coordinator agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "coordinator_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass CoordinatorAgent:\n    \"\"\"Generated coordinator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a coordinator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"coordinator\"\n        self.capabilities = [\"coordinator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"coordinator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by coordinator agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:37:43.477100"
+      },
+      {
+        "id": "agent_validator_114744e5",
+        "role": "validator",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a validator agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "validator_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass ValidatorAgent:\n    \"\"\"Generated validator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a validator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"validator\"\n        self.capabilities = [\"validator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"validator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by validator agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:37:43.477106"
+      },
+      {
+        "id": "agent_facilitator_3efb9e98",
+        "role": "facilitator",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a facilitator agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "facilitator_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass FacilitatorAgent:\n    \"\"\"Generated facilitator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a facilitator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"facilitator\"\n        self.capabilities = [\"facilitator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"facilitator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by facilitator agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:37:43.477111"
+      }
+    ],
+    "validation_results": [
+      {
+        "model_id": "model_3419c281",
+        "valid": true,
+        "score": 0.9,
+        "issues": [],
+        "timestamp": "2025-07-01T07:37:43.477169"
+      }
+    ],
+    "spans": [],
+    "execution_trace": [
+      "Enhanced: Task_LoadSemantics",
+      "Enhanced: Task_ValidateInput",
+      "Enhanced: Task_GenerateModels",
+      "Enhanced: Task_GenerateAgents",
+      "Enhanced: Task_GenerateValidators",
+      "Enhanced: Task_ValidateModels",
+      "Enhanced: Task_TestAgents",
+      "Enhanced: Task_TestValidators",
+      "Enhanced: Task_Integration"
+    ]
+  },
+  "quality_score": 0.9285714285714287,
+  "execution_trace": [
+    "Enhanced: Task_LoadSemantics",
+    "Enhanced: Task_ValidateInput",
+    "Enhanced: Task_GenerateModels",
+    "Enhanced: Task_GenerateAgents",
+    "Enhanced: Task_GenerateValidators",
+    "Enhanced: Task_ValidateModels",
+    "Enhanced: Task_TestAgents",
+    "Enhanced: Task_TestValidators",
+    "Enhanced: Task_Integration"
+  ],
+  "timestamp": "2025-07-01T07:37:43.477589"
+}

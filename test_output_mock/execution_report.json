@@ -1,0 +1,329 @@
+{
+  "context": {
+    "semantic_file": "/Users/sac/.cache/tmp/tmpxqiv27tx.yaml",
+    "output_dir": "test_output_mock",
+    "agent_roles": [
+      "coordinator",
+      "analyst"
+    ],
+    "quality_threshold": 0.8,
+    "max_retries": 3,
+    "current_retry": 0,
+    "quality_score": 0.7366666666666667,
+    "generated_models": [
+      {
+        "id": "model_c6f5e9c6",
+        "name": "MockPydanticModels",
+        "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+        "timestamp": "2025-07-01T07:00:48.154443"
+      }
+    ],
+    "generated_agents": [
+      {
+        "id": "agent_coordinator_260d8bd4",
+        "role": "coordinator",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a coordinator agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "coordinator_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass CoordinatorAgent:\n    \"\"\"Generated coordinator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a coordinator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"coordinator\"\n        self.capabilities = [\"coordinator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"coordinator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by coordinator agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:00:48.154461"
+      },
+      {
+        "id": "agent_analyst_64f7806a",
+        "role": "analyst",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a analyst agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "analyst_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass AnalystAgent:\n    \"\"\"Generated analyst agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a analyst agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"analyst\"\n        self.capabilities = [\"analyst_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"analyst\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by analyst agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:00:48.154469"
+      }
+    ],
+    "validation_results": [
+      {
+        "model_id": "model_c6f5e9c6",
+        "valid": true,
+        "score": 0.9,
+        "issues": [],
+        "timestamp": "2025-07-01T07:00:48.154486"
+      }
+    ],
+    "spans": [
+      {
+        "name": "bpmn.service.task_loadsemantics",
+        "task": "Task_LoadSemantics",
+        "span_id": "mock_0",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154221",
+        "result": {
+          "semantics": {
+            "groups": [
+              {
+                "id": "weavergen.test.agent",
+                "type": "span",
+                "brief": "Test AI agent semantic conventions",
+                "stability": "stable",
+                "attributes": [
+                  {
+                    "id": "agent.role",
+                    "type": "string",
+                    "brief": "Agent role in the system",
+                    "requirement_level": "required",
+                    "examples": [
+                      "coordinator",
+                      "analyst",
+                      "facilitator"
+                    ]
+                  },
+                  {
+                    "id": "agent.response_quality",
+                    "type": "double",
+                    "brief": "Quality score of agent response",
+                    "requirement_level": "optional",
+                    "note": "Score between 0.0 and 1.0"
+                  },
+                  {
+                    "id": "llm.model",
+                    "type": "string",
+                    "brief": "LLM model used",
+                    "requirement_level": "recommended",
+                    "examples": [
+                      "gpt-4o-mini",
+                      "claude-3",
+                      "ollama"
+                    ]
+                  },
+                  {
+                    "id": "execution.timestamp",
+                    "type": "string",
+                    "brief": "Execution timestamp",
+                    "requirement_level": "required"
+                  }
+                ]
+              }
+            ]
+          },
+          "loaded": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_validateinput",
+        "task": "Task_ValidateInput",
+        "span_id": "mock_1",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154421",
+        "result": {
+          "valid": true,
+          "errors": [],
+          "warnings": []
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_generatemodels",
+        "task": "Task_GenerateModels",
+        "span_id": "mock_2",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154448",
+        "result": {
+          "models": [
+            {
+              "id": "model_c6f5e9c6",
+              "name": "MockPydanticModels",
+              "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+              "timestamp": "2025-07-01T07:00:48.154443"
+            }
+          ],
+          "success": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_generateagents",
+        "task": "Task_GenerateAgents",
+        "span_id": "mock_3",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154473",
+        "result": {
+          "agents": [
+            {
+              "id": "agent_coordinator_260d8bd4",
+              "role": "coordinator",
+              "model": "gpt-4o-mini",
+              "system_prompt": "You are a coordinator agent specialized in semantic analysis and code generation.",
+              "capabilities": [
+                "coordinator_analysis",
+                "structured_output",
+                "validation"
+              ],
+              "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass CoordinatorAgent:\n    \"\"\"Generated coordinator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a coordinator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"coordinator\"\n        self.capabilities = [\"coordinator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"coordinator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by coordinator agent\",\n            \"quality_score\": 0.9\n        }\n",
+              "timestamp": "2025-07-01T07:00:48.154461"
+            },
+            {
+              "id": "agent_analyst_64f7806a",
+              "role": "analyst",
+              "model": "gpt-4o-mini",
+              "system_prompt": "You are a analyst agent specialized in semantic analysis and code generation.",
+              "capabilities": [
+                "analyst_analysis",
+                "structured_output",
+                "validation"
+              ],
+              "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass AnalystAgent:\n    \"\"\"Generated analyst agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a analyst agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"analyst\"\n        self.capabilities = [\"analyst_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"analyst\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by analyst agent\",\n            \"quality_score\": 0.9\n        }\n",
+              "timestamp": "2025-07-01T07:00:48.154469"
+            }
+          ],
+          "success": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_generatevalidators",
+        "task": "Task_GenerateValidators",
+        "span_id": "mock_4",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154483",
+        "result": {
+          "validator": {
+            "id": "validator_9467d8db",
+            "type": "comprehensive",
+            "code": "\nfrom pydantic import BaseModel, ValidationError\nfrom typing import Dict, Any, List\n\nclass ComprehensiveValidator:\n    \"\"\"Generated comprehensive validation logic\"\"\"\n    \n    def validate_model(self, model_data: Dict[str, Any]) -> Dict[str, Any]:\n        \"\"\"Validate Pydantic model structure\"\"\"\n        return {\n            \"valid\": True,\n            \"errors\": [],\n            \"quality_score\": 0.95\n        }\n    \n    def validate_agent_response(self, response: Any) -> Dict[str, Any]:\n        \"\"\"Validate AI agent response\"\"\"\n        return {\n            \"structured\": True,\n            \"complete\": True,\n            \"quality_score\": 0.9\n        }\n    \n    def validate_spans(self, spans: List[Dict]) -> Dict[str, Any]:\n        \"\"\"Validate OpenTelemetry spans\"\"\"\n        return {\n            \"span_count\": len(spans),\n            \"valid_spans\": len(spans),\n            \"health_score\": 0.95\n        }\n",
+            "timestamp": "2025-07-01T07:00:48.154479"
+          },
+          "success": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_validatemodels",
+        "task": "Task_ValidateModels",
+        "span_id": "mock_5",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154491",
+        "result": {
+          "results": [
+            {
+              "model_id": "model_c6f5e9c6",
+              "valid": true,
+              "score": 0.9,
+              "issues": [],
+              "timestamp": "2025-07-01T07:00:48.154486"
+            }
+          ],
+          "average_score": 0.9
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_testagents",
+        "task": "Task_TestAgents",
+        "span_id": "mock_6",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154500",
+        "result": {
+          "results": [
+            {
+              "agent_id": "agent_coordinator_260d8bd4",
+              "role": "coordinator",
+              "tests_passed": 8,
+              "tests_total": 10,
+              "success_rate": 0.8,
+              "response_time": 0.5,
+              "timestamp": "2025-07-01T07:00:48.154494"
+            },
+            {
+              "agent_id": "agent_analyst_64f7806a",
+              "role": "analyst",
+              "tests_passed": 8,
+              "tests_total": 10,
+              "success_rate": 0.8,
+              "response_time": 0.5,
+              "timestamp": "2025-07-01T07:00:48.154496"
+            }
+          ],
+          "average_success_rate": 0.8
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_testvalidators",
+        "task": "Task_TestValidators",
+        "span_id": "mock_7",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154505",
+        "result": {
+          "tests_passed": 15,
+          "tests_total": 16,
+          "success_rate": 0.9375,
+          "coverage": 0.95,
+          "timestamp": "2025-07-01T07:00:48.154503"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_integration",
+        "task": "Task_Integration",
+        "span_id": "mock_8",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.154545",
+        "result": {
+          "quality_score": 0.7366666666666667,
+          "passed": false,
+          "components_tested": 3,
+          "timestamp": "2025-07-01T07:00:48.154532"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      }
+    ],
+    "execution_trace": [
+      "Mock completed: Task_LoadSemantics",
+      "Mock completed: Task_ValidateInput",
+      "Mock completed: Task_GenerateModels",
+      "Mock completed: Task_GenerateAgents",
+      "Mock completed: Task_GenerateValidators",
+      "Mock completed: Task_ValidateModels",
+      "Mock completed: Task_TestAgents",
+      "Mock completed: Task_TestValidators",
+      "Mock completed: Task_Integration"
+    ]
+  },
+  "quality_score": 0.7366666666666667,
+  "execution_trace": [
+    "Mock completed: Task_LoadSemantics",
+    "Mock completed: Task_ValidateInput",
+    "Mock completed: Task_GenerateModels",
+    "Mock completed: Task_GenerateAgents",
+    "Mock completed: Task_GenerateValidators",
+    "Mock completed: Task_ValidateModels",
+    "Mock completed: Task_TestAgents",
+    "Mock completed: Task_TestValidators",
+    "Mock completed: Task_Integration"
+  ],
+  "timestamp": "2025-07-01T07:00:48.154892"
+}

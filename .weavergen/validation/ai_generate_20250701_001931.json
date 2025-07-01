@@ -1,0 +1,612 @@
+{
+  "command": "ai_generate",
+  "context": {
+    "cli.command": "ai_generate",
+    "cli.module": "weavergen.cli",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli_dod_enforcer.py",
+    "cli.timestamp": "2025-07-01T00:19:31.863261",
+    "cli.args": [
+      "ai-generate",
+      "semantic_conventions/test_valid.yaml",
+      "--output",
+      "improved_output",
+      "--verbose"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.50625,
+    "is_done": false,
+    "total_spans": 16,
+    "level1_pass": 16,
+    "level2_pass": 1,
+    "level3_pass": 14,
+    "lies_detected": [],
+    "violations": [
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "name": "pydantic_ai.workflow_initialization",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x9d44e2f1706ef37e",
+      "parent_id": "0xd7dec84a852d8f2e",
+      "start_time": 1751354371977146000,
+      "end_time": 1751354371977499000,
+      "duration_ns": 353000,
+      "attributes": {
+        "semantic_file": "semantic_conventions/test_valid.yaml",
+        "output_dir": "improved_output",
+        "model": "gpt-4o-mini",
+        "workflow": "pydantic_ai_generation"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.load_semantics",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x8200da7d5a99980e",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371978206000,
+      "end_time": 1751354371980865000,
+      "duration_ns": 2659000,
+      "attributes": {
+        "semantics.loaded": true,
+        "semantics.groups_count": 3,
+        "semantics.format": "otel"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.validate_input",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x84b1e69739f2b4a9",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981060000,
+      "end_time": 1751354371981209000,
+      "duration_ns": 149000,
+      "attributes": {
+        "validation.valid": true,
+        "validation.errors_count": 0,
+        "validation.warnings_count": 1
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.generate_models",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x4c53fa3c61bc1bae",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981240000,
+      "end_time": 1751354371981270000,
+      "duration_ns": 30000,
+      "attributes": {
+        "models.generated_count": 1,
+        "models.total_count": 1
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.generate_agents",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x215aeda398acf405",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981286000,
+      "end_time": 1751354371981324000,
+      "duration_ns": 38000,
+      "attributes": {
+        "agents.generated_count": 4,
+        "agents.total_count": 4
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.generate_validators",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x6165b77effdc31a4",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981340000,
+      "end_time": 1751354371981350000,
+      "duration_ns": 10000,
+      "attributes": {
+        "validators.generated": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.validate_models",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x8593ea2913f1f20d",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981364000,
+      "end_time": 1751354371981373000,
+      "duration_ns": 9000,
+      "attributes": {
+        "validation.models_count": 1,
+        "validation.average_score": 0.9
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.test_agents",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x222fda113b325793",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981386000,
+      "end_time": 1751354371981398000,
+      "duration_ns": 12000,
+      "attributes": {
+        "testing.agents_count": 4,
+        "testing.average_success_rate": 0.8
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.test_validators",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x3a858a2d22786013",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981410000,
+      "end_time": 1751354371981416000,
+      "duration_ns": 6000,
+      "attributes": {
+        "validation.tests_passed": 15,
+        "validation.success_rate": 0.9375,
+        "validation.coverage": 0.95
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.integration_test",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x3bab097623416ecc",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981427000,
+      "end_time": 1751354371981474000,
+      "duration_ns": 47000,
+      "attributes": {
+        "integration.quality_score": 0.9236,
+        "integration.passed": true,
+        "integration.components_tested": 5
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.generate_output",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x72b56b6d23c26369",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371981487000,
+      "end_time": 1751354371982476000,
+      "duration_ns": 989000,
+      "attributes": {
+        "output.files_generated": 3
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.capture_spans",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x68a0df848887654b",
+      "parent_id": "0xb0ad0ad13dfbbda8",
+      "start_time": 1751354371982499000,
+      "end_time": 1751354371983048000,
+      "duration_ns": 549000,
+      "attributes": {
+        "spans.captured_count": 10,
+        "spans.validation_score": 0.76
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.mock_execution",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0xb0ad0ad13dfbbda8",
+      "parent_id": "0xa3e7f023d110161c",
+      "start_time": 1751354371978027000,
+      "end_time": 1751354371983065000,
+      "duration_ns": 5038000,
+      "attributes": {
+        "workflow.name": "pydantic_ai_generation",
+        "execution.type": "mock",
+        "mock.tasks_executed": 11,
+        "mock.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai_bpmn.execute_workflow",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0xa3e7f023d110161c",
+      "parent_id": "0x2aa89df525089904",
+      "start_time": 1751354371977806000,
+      "end_time": 1751354371983074000,
+      "duration_ns": 5268000,
+      "attributes": {
+        "workflow.name": "pydantic_ai_generation",
+        "context.semantic_file": "semantic_conventions/test_valid.yaml",
+        "context.output_dir": "improved_output"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.bpmn_execution",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0x2aa89df525089904",
+      "parent_id": "0xd7dec84a852d8f2e",
+      "start_time": 1751354371977791000,
+      "end_time": 1751354371983083000,
+      "duration_ns": 5292000,
+      "attributes": {
+        "execution.success": true,
+        "models.generated": 1,
+        "agents.generated": 4,
+        "quality.score": 0.935
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.bpmn_execution",
+      "trace_id": "0xdac57153207bdc4821c7f523e0860356",
+      "span_id": "0xd7dec84a852d8f2e",
+      "parent_id": "0x8cceef34d98164e9",
+      "start_time": 1751354371863492000,
+      "end_time": 1751354371986961000,
+      "duration_ns": 123469000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+        "code.lineno": 2577,
+        "code.function": "ai_generate",
+        "code.module": "weavergen.cli",
+        "bpmn.workflow.file": "src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "bpmn.workflow.id": "pydantic_ai_generation",
+        "bpmn.task.id": "Task_GenerateModels",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-07-01T00:19:31.864582",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    }
+  ]
+}

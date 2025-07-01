@@ -1,0 +1,224 @@
+{
+  "context": {
+    "semantic_file": "/Users/sac/.cache/tmp/tmpxqiv27tx.yaml",
+    "output_dir": "test_output_real",
+    "agent_roles": [
+      "coordinator"
+    ],
+    "quality_threshold": 0.7,
+    "max_retries": 3,
+    "current_retry": 0,
+    "quality_score": 0.46,
+    "generated_models": [],
+    "generated_agents": [],
+    "validation_results": [],
+    "spans": [
+      {
+        "name": "bpmn.service.task_loadsemantics",
+        "task": "Task_LoadSemantics",
+        "span_id": "mock_0",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.449291",
+        "result": {
+          "semantics": {
+            "groups": [
+              {
+                "id": "weavergen.test.agent",
+                "type": "span",
+                "brief": "Test AI agent semantic conventions",
+                "stability": "stable",
+                "attributes": [
+                  {
+                    "id": "agent.role",
+                    "type": "string",
+                    "brief": "Agent role in the system",
+                    "requirement_level": "required",
+                    "examples": [
+                      "coordinator",
+                      "analyst",
+                      "facilitator"
+                    ]
+                  },
+                  {
+                    "id": "agent.response_quality",
+                    "type": "double",
+                    "brief": "Quality score of agent response",
+                    "requirement_level": "optional",
+                    "note": "Score between 0.0 and 1.0"
+                  },
+                  {
+                    "id": "llm.model",
+                    "type": "string",
+                    "brief": "LLM model used",
+                    "requirement_level": "recommended",
+                    "examples": [
+                      "gpt-4o-mini",
+                      "claude-3",
+                      "ollama"
+                    ]
+                  },
+                  {
+                    "id": "execution.timestamp",
+                    "type": "string",
+                    "brief": "Execution timestamp",
+                    "requirement_level": "required"
+                  }
+                ]
+              }
+            ]
+          },
+          "loaded": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_validateinput",
+        "task": "Task_ValidateInput",
+        "span_id": "mock_1",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.449439",
+        "result": {
+          "valid": true,
+          "errors": [],
+          "warnings": [
+            "Created output directory: test_output_real"
+          ]
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_generatemodels",
+        "task": "Task_GenerateModels",
+        "span_id": "mock_2",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.716474",
+        "result": {
+          "models": [],
+          "success": false,
+          "error": "status_code: 400, model_name: claude-3, body: {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}}"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_generateagents",
+        "task": "Task_GenerateAgents",
+        "span_id": "mock_3",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:48.936926",
+        "result": {
+          "agents": [],
+          "success": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_generatevalidators",
+        "task": "Task_GenerateValidators",
+        "span_id": "mock_4",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:49.091614",
+        "result": {
+          "validator": null,
+          "success": false,
+          "error": "status_code: 400, model_name: claude-3, body: {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}}"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_validatemodels",
+        "task": "Task_ValidateModels",
+        "span_id": "mock_5",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:49.091636",
+        "result": {
+          "results": [],
+          "average_score": 0
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_testagents",
+        "task": "Task_TestAgents",
+        "span_id": "mock_6",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:49.091642",
+        "result": {
+          "results": [],
+          "average_success_rate": 0
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_testvalidators",
+        "task": "Task_TestValidators",
+        "span_id": "mock_7",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:49.091655",
+        "result": {
+          "tests_passed": 15,
+          "tests_total": 16,
+          "success_rate": 0.9375,
+          "coverage": 0.95,
+          "timestamp": "2025-07-01T07:00:49.091651"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      },
+      {
+        "name": "bpmn.service.task_integration",
+        "task": "Task_Integration",
+        "span_id": "mock_8",
+        "trace_id": "mock_trace_pydantic_ai_generation",
+        "timestamp": "2025-07-01T07:00:49.091699",
+        "result": {
+          "quality_score": 0.46,
+          "passed": false,
+          "components_tested": 0,
+          "timestamp": "2025-07-01T07:00:49.091692"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK"
+      }
+    ],
+    "execution_trace": [
+      "Mock completed: Task_LoadSemantics",
+      "Mock completed: Task_ValidateInput",
+      "Mock completed: Task_GenerateModels",
+      "Mock completed: Task_GenerateAgents",
+      "Mock completed: Task_GenerateValidators",
+      "Mock completed: Task_ValidateModels",
+      "Mock completed: Task_TestAgents",
+      "Mock completed: Task_TestValidators",
+      "Mock completed: Task_Integration"
+    ]
+  },
+  "quality_score": 0.46,
+  "execution_trace": [
+    "Mock completed: Task_LoadSemantics",
+    "Mock completed: Task_ValidateInput",
+    "Mock completed: Task_GenerateModels",
+    "Mock completed: Task_GenerateAgents",
+    "Mock completed: Task_GenerateValidators",
+    "Mock completed: Task_ValidateModels",
+    "Mock completed: Task_TestAgents",
+    "Mock completed: Task_TestValidators",
+    "Mock completed: Task_Integration"
+  ],
+  "timestamp": "2025-07-01T07:00:49.091952"
+}

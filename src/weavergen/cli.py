@@ -2115,18 +2115,18 @@ def execute(
 ):
     """📋 Execute BPMN workflow with full span tracking"""
     import asyncio
-    from .bpmn_first_engine import BPMNFirstEngine, BPMNExecutionContext
+    from .spiff_bpmn_engine import SpiffBPMNEngine, SpiffExecutionContext
     
     rprint(f"[bold cyan]📋 BPMN-FIRST EXECUTION[/bold cyan]")
     rprint(f"[cyan]🔄 Workflow: {workflow}[/cyan]")
     rprint(f"[cyan]📄 Semantics: {semantic_file}[/cyan]")
     rprint(f"[cyan]📁 Output: {output_dir}[/cyan]")
     
-    # Create engine
-    engine = BPMNFirstEngine()
+    # Create SpiffWorkflow engine
+    engine = SpiffBPMNEngine()
     
     # Create context
-    context = BPMNExecutionContext()
+    context = SpiffExecutionContext()
     context.set("semantic_file", str(semantic_file))
     context.set("output_dir", str(output_dir))
     
@@ -2138,13 +2138,13 @@ def execute(
     ) as progress:
         task = progress.add_task(f"[cyan]Executing {workflow}...", total=None)
         
-        result = asyncio.run(engine.execute_workflow(workflow, context))
+        result = engine.execute_workflow(workflow, context)
         
         progress.update(task, completed=True)
     
     # Show results
     rprint(f"[green]✅ Workflow completed[/green]")
-    rprint(f"[cyan]📊 Spans generated: {len(result.spans)}[/cyan]")
+    rprint(f"[cyan]📊 Tasks executed: {len(result.execution_log)}[/cyan]")
     
     # Show execution report
     report = engine.generate_execution_report(result)
@@ -2230,16 +2230,16 @@ def orchestrate(
 ):
     """🎯 Run full BPMN orchestration workflow"""
     import asyncio
-    from .bpmn_first_engine import run_bpmn_first_generation
+    from .spiff_bpmn_engine import run_spiff_bpmn_generation
     
     rprint("[bold cyan]🎯 BPMN-FIRST ORCHESTRATION[/bold cyan]")
     
     try:
-        result = asyncio.run(run_bpmn_first_generation(semantic_file, output_dir))
+        result = asyncio.run(run_spiff_bpmn_generation(semantic_file, output_dir))
         
         if result["success"]:
             rprint(f"[green]✅ Orchestration successful[/green]")
-            rprint(f"[cyan]📊 Total spans: {result['spans_generated']}[/cyan]")
+            rprint(f"[cyan]📊 Tasks executed: {result['tasks_executed']}[/cyan]")
             
             if test:
                 # Run generated agent test
@@ -2572,6 +2572,130 @@ def test_dod_valid():
     
     rprint("[green]This command should PASS DoD validation![/green]")
     return "Success"
+
+
+@app.command()
+@enforce_dod(require_bpmn=True, min_trust_score=0.8)
+@cli_span("pydantic_ai.bpmn_execution", 
+          bpmn_file="src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn", 
+          bpmn_task="Task_GenerateModels")
+def ai_generate(
+    semantic_file: str = typer.Argument(..., help="Semantic convention file path"),
+    output_dir: str = typer.Option("pydantic_ai_output", "--output", "-o", help="Output directory"),
+    model: str = typer.Option("gpt-4o-mini", "--model", "-m", help="AI model to use"),
+    workflow: str = typer.Option("pydantic_ai_generation", "--workflow", "-w", help="BPMN workflow name"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output")
+):
+    """🤖 Generate Pydantic AI agents using BPMN workflow orchestration
+    
+    This command executes a complete BPMN workflow that:
+    1. Loads semantic conventions
+    2. Generates Pydantic models using AI
+    3. Creates Pydantic AI agents with proper system prompts  
+    4. Validates all generated components
+    5. Captures execution spans for validation
+    
+    The workflow uses real AI models for generation and SpiffWorkflow for orchestration.
+    """
+    rprint(f"[bold cyan]🤖 Starting Pydantic AI + BPMN Generation[/bold cyan]")
+    rprint(f"[cyan]📄 Semantic File: {semantic_file}[/cyan]")
+    rprint(f"[cyan]📁 Output Directory: {output_dir}[/cyan]")
+    rprint(f"[cyan]🧠 AI Model: {model}[/cyan]")
+    rprint(f"[cyan]🔄 BPMN Workflow: {workflow}[/cyan]")
+    
+    async def run_pydantic_ai_workflow():
+        from opentelemetry import trace
+        tracer = trace.get_tracer(__name__)
+        
+        try:
+            # Import Pydantic AI BPMN engine
+            from .pydantic_ai_bpmn_engine import PydanticAIBPMNEngine, PydanticAIContext
+            
+            with tracer.start_as_current_span("pydantic_ai.workflow_initialization") as span:
+                span.set_attribute("semantic_file", semantic_file)
+                span.set_attribute("output_dir", output_dir)
+                span.set_attribute("model", model)
+                span.set_attribute("workflow", workflow)
+                
+                # Initialize engine and context (use mock by default for demo)
+                engine = PydanticAIBPMNEngine(model_name=model, use_mock=True)
+                context = PydanticAIContext(
+                    semantic_file=semantic_file,
+                    output_dir=output_dir,
+                    agent_roles=["coordinator", "analyst", "facilitator", "validator"],
+                    quality_threshold=0.8
+                )
+                
+                rprint("[yellow]⚙️ Initialized Pydantic AI BPMN engine[/yellow]")
+            
+            # Execute BPMN workflow with progress tracking
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console,
+            ) as progress:
+                task = progress.add_task("[cyan]Executing BPMN workflow...", total=None)
+                
+                with tracer.start_as_current_span("pydantic_ai.bpmn_execution") as span:
+                    result = await engine.execute_workflow(workflow, context)
+                    
+                    span.set_attribute("execution.success", result.get("success", False))
+                    span.set_attribute("models.generated", result.get("models_generated", 0))
+                    span.set_attribute("agents.generated", result.get("agents_generated", 0))
+                    span.set_attribute("quality.score", result.get("quality_score", 0))
+                    
+                progress.update(task, completed=True)
+            
+            # Display results
+            if result.get("success", False):
+                rprint(f"[bold green]✅ PYDANTIC AI GENERATION COMPLETED![/bold green]")
+                
+                # Show execution report
+                report_table = engine.generate_execution_report(result)
+                console.print(report_table)
+                
+                # Show output files
+                if result.get("output_files"):
+                    rprint(f"\n[bold cyan]📄 Generated Files:[/bold cyan]")
+                    for file_path in result["output_files"]:
+                        rprint(f"  📝 {file_path}")
+                
+                # Show Mermaid trace
+                if verbose:
+                    rprint(f"\n[bold cyan]🗺️ Execution Trace:[/bold cyan]")
+                    mermaid = engine.generate_mermaid_trace(result)
+                    rprint(f"```mermaid\n{mermaid}\n```")
+                
+                # Performance metrics
+                rprint(f"\n[bold cyan]📊 Performance Metrics:[/bold cyan]")
+                rprint(f"  🤖 AI Agents Generated: {result.get('agents_generated', 0)}")
+                rprint(f"  📋 Pydantic Models Generated: {result.get('models_generated', 0)}")
+                rprint(f"  📡 OTel Spans Captured: {len(result.get('spans', []))}")
+                rprint(f"  🎯 Quality Score: {result.get('quality_score', 0):.1%}")
+                rprint(f"  ✅ Validation Passed: {result.get('validation_passed', False)}")
+                
+                return result
+                
+            else:
+                rprint(f"[bold red]❌ PYDANTIC AI GENERATION FAILED[/bold red]")
+                if "error" in result:
+                    rprint(f"[red]Error: {result['error']}[/red]")
+                raise typer.Exit(1)
+                
+        except Exception as e:
+            with tracer.start_as_current_span("pydantic_ai.error_handling") as span:
+                span.set_attribute("error.type", type(e).__name__)
+                span.set_attribute("error.message", str(e))
+                span.record_exception(e)
+            
+            rprint(f"[bold red]❌ PYDANTIC AI ERROR: {e}[/bold red]")
+            if verbose:
+                import traceback
+                rprint(f"[red]{traceback.format_exc()}[/red]")
+            raise typer.Exit(1)
+    
+    # Run the async workflow
+    asyncio.run(run_pydantic_ai_workflow())
 
 
 if __name__ == "__main__":

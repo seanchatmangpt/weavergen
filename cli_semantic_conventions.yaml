@@ -1,0 +1,26 @@
+{
+  "name": "weavergen_ollama_system",
+  "description": "WeaverGen AI agent system with Ollama integration",
+  "attributes": {
+    "agent.role": "string",
+    "agent.id": "string",
+    "message.content": "string",
+    "message.structured": "boolean",
+    "execution.success": "boolean",
+    "validation.score": "float",
+    "ollama.model": "string",
+    "ollama.calls": "int"
+  },
+  "spans": [
+    "agent_interaction",
+    "ollama_generation",
+    "validation_check",
+    "model_generation"
+  ],
+  "metrics": [
+    "agent_response_time",
+    "validation_accuracy",
+    "generation_quality",
+    "ollama_latency"
+  ]
+}

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  id="Definitions_WeaverGenEnhanced8020"
+                  targetNamespace="http://weavergen.io/bpmn/enhanced8020">
+
+  <bpmn:process id="WeaverGenerateEnhanced" name="Weaver Generate Enhanced 80/20" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="Start" name="Start Enhanced Generation">
+      <bpmn:outgoing>Flow_Start_Load</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Load Semantic File -->
+    <bpmn:serviceTask id="Task_LoadSemantic" name="Load Semantic File">
+      <bpmn:documentation>Load and parse the semantic convention YAML file</bpmn:documentation>
+      <bpmn:incoming>Flow_Start_Load</bpmn:incoming>
+      <bpmn:outgoing>Flow_Load_Validate</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Semantic File -->
+    <bpmn:serviceTask id="Task_ValidateSemantic" name="Validate Semantics">
+      <bpmn:documentation>Validate semantic conventions using weaver</bpmn:documentation>
+      <bpmn:incoming>Flow_Load_Validate</bpmn:incoming>
+      <bpmn:outgoing>Flow_Validate_AICheck</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- AI Enhancement Decision -->
+    <bpmn:exclusiveGateway id="Gateway_AICheck" name="AI Enhancement Enabled?">
+      <bpmn:documentation>Check if AI enhancement is requested and available</bpmn:documentation>
+      <bpmn:incoming>Flow_Validate_AICheck</bpmn:incoming>
+      <bpmn:outgoing>Flow_WithAI</bpmn:outgoing>
+      <bpmn:outgoing>Flow_WithoutAI</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- AI Enhancement Path -->
+    <bpmn:parallelGateway id="Gateway_AIEnhanceSplit" name="Split for AI Tasks">
+      <bpmn:incoming>Flow_WithAI</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEnhanceDesc</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToSuggestAttr</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- AI: Enhance Descriptions -->
+    <bpmn:serviceTask id="Task_EnhanceDescriptions" name="AI: Enhance Descriptions">
+      <bpmn:documentation>Use AI to fill missing descriptions and improve clarity</bpmn:documentation>
+      <bpmn:incoming>Flow_ToEnhanceDesc</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromEnhanceDesc</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- AI: Suggest Attributes -->
+    <bpmn:serviceTask id="Task_SuggestAttributes" name="AI: Suggest Attributes">
+      <bpmn:documentation>Use AI to suggest missing but useful attributes</bpmn:documentation>
+      <bpmn:incoming>Flow_ToSuggestAttr</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromSuggestAttr</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Join AI Enhancement -->
+    <bpmn:parallelGateway id="Gateway_AIEnhanceJoin" name="Join AI Results">
+      <bpmn:incoming>Flow_FromEnhanceDesc</bpmn:incoming>
+      <bpmn:incoming>Flow_FromSuggestAttr</bpmn:incoming>
+      <bpmn:outgoing>Flow_AIToGenerate</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Join Paths -->
+    <bpmn:exclusiveGateway id="Gateway_PathJoin" name="Join Paths">
+      <bpmn:incoming>Flow_WithoutAI</bpmn:incoming>
+      <bpmn:incoming>Flow_AIToGenerate</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToGenerate</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Multi-Language Generation (Same as base) -->
+    <bpmn:subProcess id="SubProcess_Generation" name="Generate for Each Language">
+      <bpmn:incoming>Flow_ToGenerate</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromGeneration</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn:loopDataInputRef>languages</bpmn:loopDataInputRef>
+      </bpmn:multiInstanceLoopCharacteristics>
+      
+      <bpmn:serviceTask id="Task_GenerateCode" name="Generate ${language} Code">
+        <bpmn:documentation>Call weaver generate for specific language</bpmn:documentation>
+      </bpmn:serviceTask>
+    </bpmn:subProcess>
+    
+    <!-- AI: Post-Generation Quality Check (Optional) -->
+    <bpmn:exclusiveGateway id="Gateway_PostGenAICheck" name="AI Quality Check?">
+      <bpmn:incoming>Flow_FromGeneration</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToQualityCheck</bpmn:outgoing>
+      <bpmn:outgoing>Flow_SkipQualityCheck</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <bpmn:serviceTask id="Task_AIQualityCheck" name="AI: Quality Check">
+      <bpmn:documentation>Use AI to validate generated code quality</bpmn:documentation>
+      <bpmn:incoming>Flow_ToQualityCheck</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromQualityCheck</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <bpmn:exclusiveGateway id="Gateway_QualityJoin" name="Join Quality Path">
+      <bpmn:incoming>Flow_FromQualityCheck</bpmn:incoming>
+      <bpmn:incoming>Flow_SkipQualityCheck</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToReport</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Generate Report -->
+    <bpmn:serviceTask id="Task_GenerateReport" name="Generate Report">
+      <bpmn:documentation>Create summary report including AI enhancements</bpmn:documentation>
+      <bpmn:incoming>Flow_ToReport</bpmn:incoming>
+      <bpmn:outgoing>Flow_Report_End</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Success End Event -->
+    <bpmn:endEvent id="End_Success" name="Enhanced Generation Complete">
+      <bpmn:incoming>Flow_Report_End</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_Start_Load" sourceRef="Start" targetRef="Task_LoadSemantic"/>
+    <bpmn:sequenceFlow id="Flow_Load_Validate" sourceRef="Task_LoadSemantic" targetRef="Task_ValidateSemantic"/>
+    <bpmn:sequenceFlow id="Flow_Validate_AICheck" sourceRef="Task_ValidateSemantic" targetRef="Gateway_AICheck"/>
+    
+    <!-- AI Decision Flows -->
+    <bpmn:sequenceFlow id="Flow_WithAI" name="Yes" sourceRef="Gateway_AICheck" targetRef="Gateway_AIEnhanceSplit">
+      <bpmn:conditionExpression>${ai_enhancement_enabled == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_WithoutAI" name="No" sourceRef="Gateway_AICheck" targetRef="Gateway_PathJoin">
+      <bpmn:conditionExpression>${ai_enhancement_enabled == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <!-- AI Enhancement Flows -->
+    <bpmn:sequenceFlow id="Flow_ToEnhanceDesc" sourceRef="Gateway_AIEnhanceSplit" targetRef="Task_EnhanceDescriptions"/>
+    <bpmn:sequenceFlow id="Flow_ToSuggestAttr" sourceRef="Gateway_AIEnhanceSplit" targetRef="Task_SuggestAttributes"/>
+    <bpmn:sequenceFlow id="Flow_FromEnhanceDesc" sourceRef="Task_EnhanceDescriptions" targetRef="Gateway_AIEnhanceJoin"/>
+    <bpmn:sequenceFlow id="Flow_FromSuggestAttr" sourceRef="Task_SuggestAttributes" targetRef="Gateway_AIEnhanceJoin"/>
+    <bpmn:sequenceFlow id="Flow_AIToGenerate" sourceRef="Gateway_AIEnhanceJoin" targetRef="Gateway_PathJoin"/>
+    
+    <!-- Generation Flows -->
+    <bpmn:sequenceFlow id="Flow_ToGenerate" sourceRef="Gateway_PathJoin" targetRef="SubProcess_Generation"/>
+    <bpmn:sequenceFlow id="Flow_FromGeneration" sourceRef="SubProcess_Generation" targetRef="Gateway_PostGenAICheck"/>
+    
+    <!-- Quality Check Flows -->
+    <bpmn:sequenceFlow id="Flow_ToQualityCheck" sourceRef="Gateway_PostGenAICheck" targetRef="Task_AIQualityCheck">
+      <bpmn:conditionExpression>${ai_quality_check_enabled == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_SkipQualityCheck" sourceRef="Gateway_PostGenAICheck" targetRef="Gateway_QualityJoin">
+      <bpmn:conditionExpression>${ai_quality_check_enabled == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_FromQualityCheck" sourceRef="Task_AIQualityCheck" targetRef="Gateway_QualityJoin"/>
+    
+    <!-- Final Flows -->
+    <bpmn:sequenceFlow id="Flow_ToReport" sourceRef="Gateway_QualityJoin" targetRef="Task_GenerateReport"/>
+    <bpmn:sequenceFlow id="Flow_Report_End" sourceRef="Task_GenerateReport" targetRef="End_Success"/>
+    
+  </bpmn:process>
+  
+</bpmn:definitions>

@@ -1,0 +1,140 @@
+{
+  "command": "ai_generate",
+  "context": {
+    "cli.command": "ai_generate",
+    "cli.module": "weavergen.cli",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli_dod_enforcer.py",
+    "cli.timestamp": "2025-06-30T23:45:43.800206",
+    "cli.args": [
+      "ai-generate",
+      "semantic_conventions/weavergen_system.yaml",
+      "--output",
+      "pydantic_ai_test",
+      "--verbose"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.5,
+    "is_done": false,
+    "total_spans": 3,
+    "level1_pass": 3,
+    "level2_pass": 0,
+    "level3_pass": 3,
+    "lies_detected": [
+      {
+        "claim": "Executed BPMN task Task_GenerateModels",
+        "reality": "BPMN file not found: src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "span_id": "0x627bec48aa7054b5",
+        "type": "fake_task"
+      }
+    ],
+    "violations": [
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "BPMN Must Match",
+        "description": "BPMN file not found: src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "severity": "critical"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "name": "pydantic_ai.workflow_initialization",
+      "trace_id": "0x93811e67c91dd7b12b9bc4ccd2f712e3",
+      "span_id": "0xad02e1719c032eb8",
+      "parent_id": "0x627bec48aa7054b5",
+      "start_time": 1751352343941151000,
+      "end_time": 1751352344142309000,
+      "duration_ns": 201158000,
+      "attributes": {
+        "semantic_file": "semantic_conventions/weavergen_system.yaml",
+        "output_dir": "pydantic_ai_test",
+        "model": "gpt-4o-mini",
+        "workflow": "pydantic_ai_generation"
+      },
+      "status": {
+        "status_code": "ERROR",
+        "description": "OpenAIError: The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable"
+      }
+    },
+    {
+      "name": "pydantic_ai.error_handling",
+      "trace_id": "0x93811e67c91dd7b12b9bc4ccd2f712e3",
+      "span_id": "0x1a04bc6e2be579a7",
+      "parent_id": "0x627bec48aa7054b5",
+      "start_time": 1751352344142361000,
+      "end_time": 1751352344142856000,
+      "duration_ns": 495000,
+      "attributes": {
+        "error.type": "OpenAIError",
+        "error.message": "The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.bpmn_execution",
+      "trace_id": "0x93811e67c91dd7b12b9bc4ccd2f712e3",
+      "span_id": "0x627bec48aa7054b5",
+      "parent_id": "0x632ae1ed7624c1ef",
+      "start_time": 1751352343800432000,
+      "end_time": 1751352344150076000,
+      "duration_ns": 349644000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+        "code.lineno": 2577,
+        "code.function": "ai_generate",
+        "code.module": "weavergen.cli",
+        "bpmn.workflow.file": "src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "bpmn.workflow.id": "pydantic_ai_generation",
+        "bpmn.task.id": "Task_GenerateModels",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-06-30T23:45:43.801437",
+        "execution.success": false,
+        "execution.error": "1"
+      },
+      "status": {
+        "status_code": "ERROR",
+        "description": "Exit: 1"
+      }
+    }
+  ]
+}

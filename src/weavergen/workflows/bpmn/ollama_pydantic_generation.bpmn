@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions 
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  id="Definitions_OllamaPydantic" 
+  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="OllamaPydanticGeneration" name="Ollama + Pydantic AI Generation Pipeline" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartGeneration" name="Start Ollama Pydantic Pipeline">
+      <bpmn:outgoing>Flow_LoadSemantics</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Load Semantic Conventions -->
+    <bpmn:serviceTask id="Task_LoadSemantics" name="Load Semantic Conventions">
+      <bpmn:incoming>Flow_LoadSemantics</bpmn:incoming>
+      <bpmn:outgoing>Flow_AnalyzeSemantics</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="loader" />
+          <bpmn:property name="result_type" value="SemanticConvention" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- AI-Powered Semantic Analysis -->
+    <bpmn:serviceTask id="Task_AnalyzeSemantics" name="AI Analyze Semantic Conventions">
+      <bpmn:incoming>Flow_AnalyzeSemantics</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateAnalysis</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="analyzer" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="result_type" value="SemanticConvention" />
+          <bpmn:property name="system_prompt" value="Analyze semantic conventions for completeness, consistency, and quality. Return structured SemanticConvention." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Analysis Quality -->
+    <bpmn:serviceTask id="Task_ValidateAnalysis" name="Validate Analysis Quality">
+      <bpmn:incoming>Flow_ValidateAnalysis</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckQualityGate</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="validator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="result_type" value="ValidationResult" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Quality Gate Decision -->
+    <bpmn:exclusiveGateway id="Gateway_QualityGate" name="Analysis Quality Gate">
+      <bpmn:incoming>Flow_CheckQualityGate</bpmn:incoming>
+      <bpmn:outgoing>Flow_QualityPassed</bpmn:outgoing>
+      <bpmn:outgoing>Flow_QualityFailed</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Retry Analysis (if quality gate fails) -->
+    <bpmn:serviceTask id="Task_RetryAnalysis" name="Retry Analysis with Enhanced Prompt">
+      <bpmn:incoming>Flow_QualityFailed</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryValidation</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="analyzer" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="enhanced_prompt" value="true" />
+          <bpmn:property name="retry_attempt" value="true" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Retry -->
+    <bpmn:serviceTask id="Task_ValidateRetry" name="Validate Retry Analysis">
+      <bpmn:incoming>Flow_RetryValidation</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryJoin</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Join after retry -->
+    <bpmn:exclusiveGateway id="Gateway_RetryJoin">
+      <bpmn:incoming>Flow_QualityPassed</bpmn:incoming>
+      <bpmn:incoming>Flow_RetryJoin</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParallelGeneration</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Parallel Gateway - Split for concurrent AI generation -->
+    <bpmn:parallelGateway id="Gateway_ParallelSplit" name="Parallel AI Generation">
+      <bpmn:incoming>Flow_ParallelGeneration</bpmn:incoming>
+      <bpmn:outgoing>Flow_GeneratePydanticModels</bpmn:outgoing>
+      <bpmn:outgoing>Flow_GenerateAIAgents</bpmn:outgoing>
+      <bpmn:outgoing>Flow_GenerateValidationLogic</bpmn:outgoing>
+      <bpmn:outgoing>Flow_GenerateWeaverTemplates</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Generate Pydantic Models -->
+    <bpmn:serviceTask id="Task_GeneratePydanticModels" name="Generate Pydantic Models">
+      <bpmn:incoming>Flow_GeneratePydanticModels</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidatePydanticModels</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="generator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="generation_type" value="pydantic_models" />
+          <bpmn:property name="result_type" value="GeneratedCode" />
+          <bpmn:property name="system_prompt" value="Generate production-ready Pydantic models with validation, type hints, and OpenTelemetry compliance." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Generate AI Agents -->
+    <bpmn:serviceTask id="Task_GenerateAIAgents" name="Generate AI Agents">
+      <bpmn:incoming>Flow_GenerateAIAgents</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateAIAgents</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="generator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="generation_type" value="ai_agents" />
+          <bpmn:property name="result_type" value="GeneratedAgent" />
+          <bpmn:property name="system_prompt" value="Generate Pydantic AI agents with structured prompts, validation, and tool integration." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Validation Logic -->
+    <bpmn:serviceTask id="Task_GenerateValidationLogic" name="Generate Validation Logic">
+      <bpmn:incoming>Flow_GenerateValidationLogic</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateValidationLogic</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="generator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="generation_type" value="validation_logic" />
+          <bpmn:property name="result_type" value="GeneratedCode" />
+          <bpmn:property name="system_prompt" value="Generate comprehensive validation logic with Pydantic validators and semantic convention compliance checks." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Weaver Templates -->
+    <bpmn:serviceTask id="Task_GenerateWeaverTemplates" name="Generate Weaver Templates">
+      <bpmn:incoming>Flow_GenerateWeaverTemplates</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateWeaverTemplates</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="generator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="generation_type" value="weaver_templates" />
+          <bpmn:property name="result_type" value="GeneratedCode" />
+          <bpmn:property name="system_prompt" value="Generate Weaver Forge templates optimized for Pydantic and AI integration." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated Pydantic Models -->
+    <bpmn:serviceTask id="Task_ValidatePydanticModels" name="Validate Pydantic Models">
+      <bpmn:incoming>Flow_ValidatePydanticModels</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinPydanticValidation</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="validator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="validation_level" value="ai_enhanced" />
+          <bpmn:property name="result_type" value="ValidationResult" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated AI Agents -->
+    <bpmn:serviceTask id="Task_ValidateAIAgents" name="Validate AI Agents">
+      <bpmn:incoming>Flow_ValidateAIAgents</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinAgentValidation</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="validator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="validation_level" value="ai_enhanced" />
+          <bpmn:property name="result_type" value="ValidationResult" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated Validation Logic -->
+    <bpmn:serviceTask id="Task_ValidateValidationLogic" name="Validate Validation Logic">
+      <bpmn:incoming>Flow_ValidateValidationLogic</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinValidationLogicValidation</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="validator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="validation_level" value="ai_enhanced" />
+          <bpmn:property name="result_type" value="ValidationResult" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated Weaver Templates -->
+    <bpmn:serviceTask id="Task_ValidateWeaverTemplates" name="Validate Weaver Templates">
+      <bpmn:incoming>Flow_ValidateWeaverTemplates</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinTemplateValidation</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="validator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="validation_level" value="ai_enhanced" />
+          <bpmn:property name="result_type" value="ValidationResult" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway - Join after validation -->
+    <bpmn:parallelGateway id="Gateway_ParallelJoin" name="Join Validation Results">
+      <bpmn:incoming>Flow_JoinPydanticValidation</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinAgentValidation</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinValidationLogicValidation</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinTemplateValidation</bpmn:incoming>
+      <bpmn:outgoing>Flow_IntegrateResults</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Integrate and Test Generated Components -->
+    <bpmn:serviceTask id="Task_IntegrateComponents" name="Integrate Generated Components">
+      <bpmn:incoming>Flow_IntegrateResults</bpmn:incoming>
+      <bpmn:outgoing>Flow_RunIntegrationTests</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="optimizer" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="result_type" value="Dict[str, Any]" />
+          <bpmn:property name="system_prompt" value="Integrate all generated components and resolve conflicts. Ensure compatibility and optimize performance." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Run Integration Tests -->
+    <bpmn:serviceTask id="Task_RunIntegrationTests" name="Run Integration Tests">
+      <bpmn:incoming>Flow_RunIntegrationTests</bpmn:incoming>
+      <bpmn:outgoing>Flow_EvaluateResults</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="validator" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="result_type" value="ValidationResult" />
+          <bpmn:property name="system_prompt" value="Execute comprehensive integration tests and evaluate component compatibility." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Evaluate Final Results -->
+    <bpmn:serviceTask id="Task_EvaluateResults" name="AI Quality Assessment">
+      <bpmn:incoming>Flow_EvaluateResults</bpmn:incoming>
+      <bpmn:outgoing>Flow_FinalQualityGate</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="reviewer" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="result_type" value="ValidationResult" />
+          <bpmn:property name="system_prompt" value="Provide comprehensive quality assessment of the entire pipeline. Score overall success and identify improvements." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Final Quality Gate -->
+    <bpmn:exclusiveGateway id="Gateway_FinalQualityGate" name="Final Quality Gate">
+      <bpmn:incoming>Flow_FinalQualityGate</bpmn:incoming>
+      <bpmn:outgoing>Flow_QualitySuccess</bpmn:outgoing>
+      <bpmn:outgoing>Flow_QualityRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Generate Final Output -->
+    <bpmn:serviceTask id="Task_GenerateFinalOutput" name="Generate Final Output">
+      <bpmn:incoming>Flow_QualitySuccess</bpmn:incoming>
+      <bpmn:outgoing>Flow_WeaverForgeIntegration</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="generator" />
+          <bpmn:property name="result_type" value="Dict[str, Any]" />
+          <bpmn:property name="system_prompt" value="Package all generated components into final deliverable with documentation." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Weaver Forge Integration -->
+    <bpmn:serviceTask id="Task_WeaverForgeIntegration" name="Weaver Forge Integration">
+      <bpmn:incoming>Flow_WeaverForgeIntegration</bpmn:incoming>
+      <bpmn:outgoing>Flow_CaptureSpans</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="weaver_binary" value="required" />
+          <bpmn:property name="result_type" value="Dict[str, Any]" />
+          <bpmn:property name="system_prompt" value="Integrate generated templates with Weaver Forge for multi-language code generation." />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Capture Execution Spans -->
+    <bpmn:serviceTask id="Task_CaptureSpans" name="Capture Execution Spans">
+      <bpmn:incoming>Flow_CaptureSpans</bpmn:incoming>
+      <bpmn:outgoing>Flow_End</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="span_validation" value="enabled" />
+          <bpmn:property name="result_type" value="Dict[str, Any]" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- Retry Loop (if final quality gate fails) -->
+    <bpmn:serviceTask id="Task_RetryPipeline" name="Retry Pipeline with Improvements">
+      <bpmn:incoming>Flow_QualityRetry</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryLoop</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <bpmn:properties>
+          <bpmn:property name="agent_role" value="optimizer" />
+          <bpmn:property name="ai_model" value="qwen3:latest" />
+          <bpmn:property name="retry_logic" value="enhanced" />
+        </bpmn:properties>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndGeneration" name="Pipeline Complete">
+      <bpmn:incoming>Flow_End</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_LoadSemantics" sourceRef="StartGeneration" targetRef="Task_LoadSemantics" />
+    <bpmn:sequenceFlow id="Flow_AnalyzeSemantics" sourceRef="Task_LoadSemantics" targetRef="Task_AnalyzeSemantics" />
+    <bpmn:sequenceFlow id="Flow_ValidateAnalysis" sourceRef="Task_AnalyzeSemantics" targetRef="Task_ValidateAnalysis" />
+    <bpmn:sequenceFlow id="Flow_CheckQualityGate" sourceRef="Task_ValidateAnalysis" targetRef="Gateway_QualityGate" />
+    
+    <!-- Quality Gate Flows -->
+    <bpmn:sequenceFlow id="Flow_QualityPassed" sourceRef="Gateway_QualityGate" targetRef="Gateway_RetryJoin">
+      <bpmn:conditionExpression><![CDATA[#{analysis_quality_score >= 0.8}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_QualityFailed" sourceRef="Gateway_QualityGate" targetRef="Task_RetryAnalysis">
+      <bpmn:conditionExpression><![CDATA[#{analysis_quality_score < 0.8}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <!-- Retry Flows -->
+    <bpmn:sequenceFlow id="Flow_RetryValidation" sourceRef="Task_RetryAnalysis" targetRef="Task_ValidateRetry" />
+    <bpmn:sequenceFlow id="Flow_RetryJoin" sourceRef="Task_ValidateRetry" targetRef="Gateway_RetryJoin" />
+    
+    <!-- Parallel Generation Flows -->
+    <bpmn:sequenceFlow id="Flow_ParallelGeneration" sourceRef="Gateway_RetryJoin" targetRef="Gateway_ParallelSplit" />
+    <bpmn:sequenceFlow id="Flow_GeneratePydanticModels" sourceRef="Gateway_ParallelSplit" targetRef="Task_GeneratePydanticModels" />
+    <bpmn:sequenceFlow id="Flow_GenerateAIAgents" sourceRef="Gateway_ParallelSplit" targetRef="Task_GenerateAIAgents" />
+    <bpmn:sequenceFlow id="Flow_GenerateValidationLogic" sourceRef="Gateway_ParallelSplit" targetRef="Task_GenerateValidationLogic" />
+    <bpmn:sequenceFlow id="Flow_GenerateWeaverTemplates" sourceRef="Gateway_ParallelSplit" targetRef="Task_GenerateWeaverTemplates" />
+    
+    <!-- Validation Flows -->
+    <bpmn:sequenceFlow id="Flow_ValidatePydanticModels" sourceRef="Task_GeneratePydanticModels" targetRef="Task_ValidatePydanticModels" />
+    <bpmn:sequenceFlow id="Flow_ValidateAIAgents" sourceRef="Task_GenerateAIAgents" targetRef="Task_ValidateAIAgents" />
+    <bpmn:sequenceFlow id="Flow_ValidateValidationLogic" sourceRef="Task_GenerateValidationLogic" targetRef="Task_ValidateValidationLogic" />
+    <bpmn:sequenceFlow id="Flow_ValidateWeaverTemplates" sourceRef="Task_GenerateWeaverTemplates" targetRef="Task_ValidateWeaverTemplates" />
+    
+    <!-- Join Flows -->
+    <bpmn:sequenceFlow id="Flow_JoinPydanticValidation" sourceRef="Task_ValidatePydanticModels" targetRef="Gateway_ParallelJoin" />
+    <bpmn:sequenceFlow id="Flow_JoinAgentValidation" sourceRef="Task_ValidateAIAgents" targetRef="Gateway_ParallelJoin" />
+    <bpmn:sequenceFlow id="Flow_JoinValidationLogicValidation" sourceRef="Task_ValidateValidationLogic" targetRef="Gateway_ParallelJoin" />
+    <bpmn:sequenceFlow id="Flow_JoinTemplateValidation" sourceRef="Task_ValidateWeaverTemplates" targetRef="Gateway_ParallelJoin" />
+    
+    <!-- Integration and Testing Flows -->
+    <bpmn:sequenceFlow id="Flow_IntegrateResults" sourceRef="Gateway_ParallelJoin" targetRef="Task_IntegrateComponents" />
+    <bpmn:sequenceFlow id="Flow_RunIntegrationTests" sourceRef="Task_IntegrateComponents" targetRef="Task_RunIntegrationTests" />
+    <bpmn:sequenceFlow id="Flow_EvaluateResults" sourceRef="Task_RunIntegrationTests" targetRef="Task_EvaluateResults" />
+    
+    <!-- Final Quality Gate Flows -->
+    <bpmn:sequenceFlow id="Flow_FinalQualityGate" sourceRef="Task_EvaluateResults" targetRef="Gateway_FinalQualityGate" />
+    <bpmn:sequenceFlow id="Flow_QualitySuccess" sourceRef="Gateway_FinalQualityGate" targetRef="Task_GenerateFinalOutput">
+      <bpmn:conditionExpression><![CDATA[#{final_quality_score >= 0.85}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_QualityRetry" sourceRef="Gateway_FinalQualityGate" targetRef="Task_RetryPipeline">
+      <bpmn:conditionExpression><![CDATA[#{final_quality_score < 0.85}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <!-- Final Flows -->
+    <bpmn:sequenceFlow id="Flow_WeaverForgeIntegration" sourceRef="Task_GenerateFinalOutput" targetRef="Task_WeaverForgeIntegration" />
+    <bpmn:sequenceFlow id="Flow_CaptureSpans" sourceRef="Task_WeaverForgeIntegration" targetRef="Task_CaptureSpans" />
+    <bpmn:sequenceFlow id="Flow_End" sourceRef="Task_CaptureSpans" targetRef="EndGeneration" />
+    
+    <!-- Retry Loop -->
+    <bpmn:sequenceFlow id="Flow_RetryLoop" sourceRef="Task_RetryPipeline" targetRef="Gateway_ParallelSplit" />
+    
+  </bpmn:process>
+  
+</bpmn:definitions>

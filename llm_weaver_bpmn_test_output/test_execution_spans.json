@@ -1,0 +1,217 @@
+[
+  {
+    "task": "Analyze Registry with LLM",
+    "span_id": "dbfaa6f57abf08ec",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:13.506562+00:00",
+    "result": {
+      "success": false,
+      "output": "LLM registry analysis failed: status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}",
+      "llm_used": true,
+      "error": "status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}"
+    },
+    "llm_used": true,
+    "weaver_used": false,
+    "success": false
+  },
+  {
+    "task": "Generate Templates with LLM",
+    "span_id": "c01f2b6edae1abf",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:13.810820+00:00",
+    "result": {
+      "success": false,
+      "output": "LLM template generation failed: status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}",
+      "llm_used": true,
+      "error": "status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}"
+    },
+    "llm_used": true,
+    "weaver_used": false,
+    "success": false
+  },
+  {
+    "task": "Load Registry",
+    "span_id": "15154f1564410b76",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:14.952406+00:00",
+    "result": {
+      "success": true,
+      "output": "Registry loaded: accessible",
+      "registry_accessible": true
+    },
+    "llm_used": false,
+    "weaver_used": false,
+    "success": true
+  },
+  {
+    "task": "Validate Registry",
+    "span_id": "ba6024d679ae0432",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:15.280659+00:00",
+    "result": {
+      "success": true,
+      "output": "Registry validation passed (real Weaver)",
+      "weaver_used": true
+    },
+    "llm_used": false,
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Check Weaver Binary",
+    "span_id": "d6fdad143dc3f9a8",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:15.589419+00:00",
+    "result": {
+      "success": true,
+      "output": "Weaver binary found: weaver 0.15.3",
+      "weaver_used": true,
+      "version": "weaver 0.15.3"
+    },
+    "llm_used": false,
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Prepare Generation",
+    "span_id": "7698f45a4be40518",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:15.891484+00:00",
+    "result": {
+      "success": true,
+      "output": "Generation prepared for 2 languages"
+    },
+    "llm_used": false,
+    "weaver_used": false,
+    "success": true
+  },
+  {
+    "task": "Generate Python with Weaver",
+    "span_id": "befb23f1273478ec",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:16.192853+00:00",
+    "result": {
+      "success": true,
+      "output": "python generation completed with Weaver",
+      "weaver_used": true,
+      "files": [
+        "python_semantic_attributes.py",
+        "python_semantic_conventions.py",
+        "python_telemetry.py",
+        "python_metrics.py",
+        "python_traces.py"
+      ]
+    },
+    "llm_used": false,
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "Generate Rust with Weaver",
+    "span_id": "17c3f155d8501238",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:16.495004+00:00",
+    "result": {
+      "success": true,
+      "output": "rust generation completed with Weaver",
+      "weaver_used": true,
+      "files": [
+        "rust_semantic_attributes.rust",
+        "rust_semantic_conventions.rust",
+        "rust_telemetry.rust",
+        "rust_metrics.rust",
+        "rust_traces.rust"
+      ]
+    },
+    "llm_used": false,
+    "weaver_used": true,
+    "success": true
+  },
+  {
+    "task": "LLM Code Review",
+    "span_id": "69e9fb25a7672cd9",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:16.800802+00:00",
+    "result": {
+      "success": false,
+      "output": "LLM code review failed: status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}",
+      "llm_used": true,
+      "error": "status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}"
+    },
+    "llm_used": true,
+    "weaver_used": false,
+    "success": false
+  },
+  {
+    "task": "Validate Outputs",
+    "span_id": "c5c5fcde9a2c672a",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:17.102202+00:00",
+    "result": {
+      "success": true,
+      "output": "Validation: 10/10 files valid",
+      "validation_score": 1.0
+    },
+    "llm_used": false,
+    "weaver_used": false,
+    "success": true
+  },
+  {
+    "task": "LLM Quality Assessment",
+    "span_id": "eddcbf7a60f55e81",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:17.406328+00:00",
+    "result": {
+      "success": false,
+      "output": "LLM quality assessment failed: status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}",
+      "llm_used": true,
+      "quality_score": 0.75,
+      "error": "status_code: 404, model_name: llama3.2:latest, body: {'message': 'model \"llama3.2:latest\" not found, try pulling it first', 'type': 'api_error', 'param': None, 'code': None}"
+    },
+    "llm_used": true,
+    "weaver_used": false,
+    "success": false
+  },
+  {
+    "task": "Compile Check",
+    "span_id": "2355981c58148e45",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:17.707650+00:00",
+    "result": {
+      "success": true,
+      "output": "Compilation check: 75.0% passed",
+      "quality_score": 0.75
+    },
+    "llm_used": false,
+    "weaver_used": false,
+    "success": true
+  },
+  {
+    "task": "Package Artifacts",
+    "span_id": "a8acef04b6122d72",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:18.009251+00:00",
+    "result": {
+      "success": true,
+      "output": "Test artifacts packaged: llm_weaver_bpmn_test_output/test_manifest.json",
+      "manifest_file": "llm_weaver_bpmn_test_output/test_manifest.json"
+    },
+    "llm_used": false,
+    "weaver_used": false,
+    "success": true
+  },
+  {
+    "task": "Generate Test Report",
+    "span_id": "67c29feb05fbe79a",
+    "trace_id": "107332a125d17c7557d34f673193c39b",
+    "timestamp": "2025-07-01T06:24:18.310754+00:00",
+    "result": {
+      "success": true,
+      "output": "Test report generated: llm_weaver_bpmn_test_output/test_execution_report.json",
+      "report_file": "llm_weaver_bpmn_test_output/test_execution_report.json"
+    },
+    "llm_used": false,
+    "weaver_used": false,
+    "success": true
+  }
+]

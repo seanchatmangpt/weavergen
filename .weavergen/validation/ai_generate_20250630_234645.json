@@ -1,0 +1,233 @@
+{
+  "command": "ai_generate",
+  "context": {
+    "cli.command": "ai_generate",
+    "cli.module": "weavergen.cli",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli_dod_enforcer.py",
+    "cli.timestamp": "2025-06-30T23:46:45.400692",
+    "cli.args": [
+      "ai-generate",
+      "semantic_conventions/weavergen_system.yaml",
+      "--output",
+      "pydantic_ai_test",
+      "--verbose"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.42,
+    "is_done": false,
+    "total_spans": 5,
+    "level1_pass": 5,
+    "level2_pass": 0,
+    "level3_pass": 3,
+    "lies_detected": [
+      {
+        "claim": "Executed BPMN task Task_GenerateModels",
+        "reality": "BPMN file not found: src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "span_id": "0x341c36a07bcad692",
+        "type": "fake_task"
+      }
+    ],
+    "violations": [
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "BPMN Must Match",
+        "description": "BPMN file not found: src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "severity": "critical"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "name": "pydantic_ai.workflow_initialization",
+      "trace_id": "0x5477091f88ce2179f2a3bbe37535f022",
+      "span_id": "0x3903553409e7f72a",
+      "parent_id": "0x341c36a07bcad692",
+      "start_time": 1751352405507096000,
+      "end_time": 1751352405507442000,
+      "duration_ns": 346000,
+      "attributes": {
+        "semantic_file": "semantic_conventions/weavergen_system.yaml",
+        "output_dir": "pydantic_ai_test",
+        "model": "gpt-4o-mini",
+        "workflow": "pydantic_ai_generation"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai_bpmn.execute_workflow",
+      "trace_id": "0x5477091f88ce2179f2a3bbe37535f022",
+      "span_id": "0xfa3caa590365898a",
+      "parent_id": "0x96658f4e03968332",
+      "start_time": 1751352405507753000,
+      "end_time": 1751352405510166000,
+      "duration_ns": 2413000,
+      "attributes": {
+        "workflow.name": "pydantic_ai_generation",
+        "context.semantic_file": "semantic_conventions/weavergen_system.yaml",
+        "context.output_dir": "pydantic_ai_test",
+        "execution.error": "StartTag: invalid element name, line 135, column 50 (pydantic_ai_generation.bpmn, line 135)"
+      },
+      "status": {
+        "status_code": "ERROR",
+        "description": "XMLSyntaxError: StartTag: invalid element name, line 135, column 50 (pydantic_ai_generation.bpmn, line 135)"
+      }
+    },
+    {
+      "name": "pydantic_ai.bpmn_execution",
+      "trace_id": "0x5477091f88ce2179f2a3bbe37535f022",
+      "span_id": "0x96658f4e03968332",
+      "parent_id": "0x341c36a07bcad692",
+      "start_time": 1751352405507738000,
+      "end_time": 1751352405510642000,
+      "duration_ns": 2904000,
+      "attributes": {},
+      "status": {
+        "status_code": "ERROR",
+        "description": "XMLSyntaxError: StartTag: invalid element name, line 135, column 50 (pydantic_ai_generation.bpmn, line 135)"
+      }
+    },
+    {
+      "name": "pydantic_ai.error_handling",
+      "trace_id": "0x5477091f88ce2179f2a3bbe37535f022",
+      "span_id": "0x97f651628b221484",
+      "parent_id": "0x341c36a07bcad692",
+      "start_time": 1751352405511170000,
+      "end_time": 1751352405511509000,
+      "duration_ns": 339000,
+      "attributes": {
+        "error.type": "XMLSyntaxError",
+        "error.message": "StartTag: invalid element name, line 135, column 50 (pydantic_ai_generation.bpmn, line 135)"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.bpmn_execution",
+      "trace_id": "0x5477091f88ce2179f2a3bbe37535f022",
+      "span_id": "0x341c36a07bcad692",
+      "parent_id": "0x5d3e00a3bb3d0be8",
+      "start_time": 1751352405400901000,
+      "end_time": 1751352405517601000,
+      "duration_ns": 116700000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+        "code.lineno": 2577,
+        "code.function": "ai_generate",
+        "code.module": "weavergen.cli",
+        "bpmn.workflow.file": "src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "bpmn.workflow.id": "pydantic_ai_generation",
+        "bpmn.task.id": "Task_GenerateModels",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-06-30T23:46:45.401925",
+        "execution.success": false,
+        "execution.error": "1"
+      },
+      "status": {
+        "status_code": "ERROR",
+        "description": "Exit: 1"
+      }
+    }
+  ]
+}

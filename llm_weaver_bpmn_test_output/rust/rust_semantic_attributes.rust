@@ -1,0 +1,9 @@
+# Generated rust code by Weaver Forge
+# File: rust_semantic_attributes.rust
+# Generated at: 2025-07-01T06:24:16.494473+00:00
+
+// Rust semantic conventions
+pub const SERVICE_NAME: &str = "service.name";
+pub const SERVICE_VERSION: &str = "service.version";
+pub const HTTP_METHOD: &str = "http.method";
+pub const HTTP_STATUS_CODE: &str = "http.status_code";

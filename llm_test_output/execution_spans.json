@@ -1,0 +1,42 @@
+[
+  {
+    "name": "llm.agent.initialize",
+    "span_id": "init_1751378540.885361",
+    "trace_id": "trace_llm_test_001",
+    "timestamp": "2025-07-01T07:02:20.885371",
+    "duration_ms": 150.0,
+    "attributes": {
+      "agent.role": "semantic_analyst",
+      "agent.type": "mock",
+      "initialization.success": true
+    },
+    "status": "OK"
+  },
+  {
+    "name": "llm.semantic.analysis",
+    "span_id": "analysis_1751378540.885378",
+    "trace_id": "trace_llm_test_001",
+    "timestamp": "2025-07-01T07:02:20.885383",
+    "duration_ms": 2500.0,
+    "attributes": {
+      "analysis.quality_score": 0.87,
+      "analysis.insights_count": 5,
+      "processing.success": true,
+      "agent.role": "semantic_analyst"
+    },
+    "status": "OK"
+  },
+  {
+    "name": "llm.response.validation",
+    "span_id": "validation_1751378540.885388",
+    "trace_id": "trace_llm_test_001",
+    "timestamp": "2025-07-01T07:02:20.885394",
+    "duration_ms": 75.0,
+    "attributes": {
+      "validation.passed": true,
+      "validation.score": 0.92,
+      "validator.type": "semantic_response"
+    },
+    "status": "OK"
+  }
+]

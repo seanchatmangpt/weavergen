@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="Definitions_1" 
+                   targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="PydanticAIGeneration" name="Pydantic AI Agent Generation" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartPydanticAI" name="Start Pydantic AI Generation">
+      <bpmn:outgoing>Flow_LoadSemantics</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Load Semantic Conventions -->
+    <bpmn:serviceTask id="Task_LoadSemantics" name="Load Semantic Conventions">
+      <bpmn:incoming>Flow_LoadSemantics</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateInput</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Input -->
+    <bpmn:serviceTask id="Task_ValidateInput" name="Validate Input Schema">
+      <bpmn:incoming>Flow_ValidateInput</bpmn:incoming>
+      <bpmn:outgoing>Flow_Gateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway - Split for concurrent AI generation -->
+    <bpmn:parallelGateway id="Gateway_Split" name="Split Generation">
+      <bpmn:incoming>Flow_Gateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_GenerateModels</bpmn:outgoing>
+      <bpmn:outgoing>Flow_GenerateAgents</bpmn:outgoing>
+      <bpmn:outgoing>Flow_GenerateValidators</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Generate Pydantic Models -->
+    <bpmn:serviceTask id="Task_GenerateModels" name="Generate Pydantic Models">
+      <bpmn:incoming>Flow_GenerateModels</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateModels</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate AI Agents -->
+    <bpmn:serviceTask id="Task_GenerateAgents" name="Generate Pydantic AI Agents">
+      <bpmn:incoming>Flow_GenerateAgents</bpmn:incoming>
+      <bpmn:outgoing>Flow_TestAgents</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Validators -->
+    <bpmn:serviceTask id="Task_GenerateValidators" name="Generate Validation Logic">
+      <bpmn:incoming>Flow_GenerateValidators</bpmn:incoming>
+      <bpmn:outgoing>Flow_TestValidators</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Generated Models -->
+    <bpmn:serviceTask id="Task_ValidateModels" name="Validate Pydantic Models">
+      <bpmn:incoming>Flow_ValidateModels</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Test AI Agents -->
+    <bpmn:serviceTask id="Task_TestAgents" name="Test AI Agent Behavior">
+      <bpmn:incoming>Flow_TestAgents</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Test Validators -->
+    <bpmn:serviceTask id="Task_TestValidators" name="Test Validation Logic">
+      <bpmn:incoming>Flow_TestValidators</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway - Join after validation -->
+    <bpmn:parallelGateway id="Gateway_Join" name="Join Validation">
+      <bpmn:incoming>Flow_JoinValidation</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinValidation</bpmn:incoming>
+      <bpmn:incoming>Flow_JoinValidation</bpmn:incoming>
+      <bpmn:outgoing>Flow_Integration</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Integration Test -->
+    <bpmn:serviceTask id="Task_Integration" name="Run Integration Tests">
+      <bpmn:incoming>Flow_Integration</bpmn:incoming>
+      <bpmn:outgoing>Flow_Decision</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Decision Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_Decision" name="Quality Check">
+      <bpmn:incoming>Flow_Decision</bpmn:incoming>
+      <bpmn:outgoing>Flow_Success</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Retry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Retry Task -->
+    <bpmn:serviceTask id="Task_Retry" name="Refine Generation">
+      <bpmn:incoming>Flow_Retry</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryLoop</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Output -->
+    <bpmn:serviceTask id="Task_GenerateOutput" name="Generate Final Output">
+      <bpmn:incoming>Flow_Success</bpmn:incoming>
+      <bpmn:outgoing>Flow_CaptureSpans</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Capture Spans -->
+    <bpmn:serviceTask id="Task_CaptureSpans" name="Capture Execution Spans">
+      <bpmn:incoming>Flow_CaptureSpans</bpmn:incoming>
+      <bpmn:outgoing>Flow_End</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndPydanticAI" name="Pydantic AI Generation Complete">
+      <bpmn:incoming>Flow_End</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_LoadSemantics" sourceRef="StartPydanticAI" targetRef="Task_LoadSemantics" />
+    <bpmn:sequenceFlow id="Flow_ValidateInput" sourceRef="Task_LoadSemantics" targetRef="Task_ValidateInput" />
+    <bpmn:sequenceFlow id="Flow_Gateway" sourceRef="Task_ValidateInput" targetRef="Gateway_Split" />
+    <bpmn:sequenceFlow id="Flow_GenerateModels" sourceRef="Gateway_Split" targetRef="Task_GenerateModels" />
+    <bpmn:sequenceFlow id="Flow_GenerateAgents" sourceRef="Gateway_Split" targetRef="Task_GenerateAgents" />
+    <bpmn:sequenceFlow id="Flow_GenerateValidators" sourceRef="Gateway_Split" targetRef="Task_GenerateValidators" />
+    <bpmn:sequenceFlow id="Flow_ValidateModels" sourceRef="Task_GenerateModels" targetRef="Task_ValidateModels" />
+    <bpmn:sequenceFlow id="Flow_TestAgents" sourceRef="Task_GenerateAgents" targetRef="Task_TestAgents" />
+    <bpmn:sequenceFlow id="Flow_TestValidators" sourceRef="Task_GenerateValidators" targetRef="Task_TestValidators" />
+    <bpmn:sequenceFlow id="Flow_JoinValidation" sourceRef="Task_ValidateModels" targetRef="Gateway_Join" />
+    <bpmn:sequenceFlow id="Flow_JoinValidation" sourceRef="Task_TestAgents" targetRef="Gateway_Join" />
+    <bpmn:sequenceFlow id="Flow_JoinValidation" sourceRef="Task_TestValidators" targetRef="Gateway_Join" />
+    <bpmn:sequenceFlow id="Flow_Integration" sourceRef="Gateway_Join" targetRef="Task_Integration" />
+    <bpmn:sequenceFlow id="Flow_Decision" sourceRef="Task_Integration" targetRef="Gateway_Decision" />
+    <bpmn:sequenceFlow id="Flow_Success" sourceRef="Gateway_Decision" targetRef="Task_GenerateOutput">
+      <bpmn:conditionExpression><![CDATA[#{quality_score >= 0.8}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Retry" sourceRef="Gateway_Decision" targetRef="Task_Retry">
+      <bpmn:conditionExpression><![CDATA[#{quality_score < 0.8}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RetryLoop" sourceRef="Task_Retry" targetRef="Gateway_Split" />
+    <bpmn:sequenceFlow id="Flow_CaptureSpans" sourceRef="Task_GenerateOutput" targetRef="Task_CaptureSpans" />
+    <bpmn:sequenceFlow id="Flow_End" sourceRef="Task_CaptureSpans" targetRef="EndPydanticAI" />
+    
+  </bpmn:process>
+  
+</bpmn:definitions>

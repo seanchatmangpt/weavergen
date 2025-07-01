@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_CLIGenerate"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="CLIGenerateWorkflow" name="CLI Generate Command Workflow" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_CLIGenerate" name="CLI Generate Command">
+      <bpmn:outgoing>Flow_ParseArgs</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Parse CLI Arguments -->
+    <bpmn:serviceTask id="Task_ParseArgs" name="Parse CLI Arguments">
+      <bpmn:documentation>Parse and validate CLI arguments for generate command</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ParseGenerateArgsTask</weavergen:class>
+          <weavergen:span>cli.parse_args</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ParseArgs</bpmn:incoming>
+      <bpmn:outgoing>Flow_PrepareConfig</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Prepare Generation Config -->
+    <bpmn:serviceTask id="Task_PrepareConfig" name="Prepare Generation Config">
+      <bpmn:documentation>Create WeaverGen configuration from CLI arguments</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>PrepareGenerationConfigTask</weavergen:class>
+          <weavergen:span>cli.prepare_config</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PrepareConfig</bpmn:incoming>
+      <bpmn:outgoing>Flow_CallOrchestration</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Execute Core Generation -->
+    <bpmn:callActivity id="CallActivity_CoreGeneration" name="Execute Core Generation" calledElement="WeaverGenOrchestration">
+      <bpmn:documentation>Execute the main WeaverGen orchestration workflow</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:span>cli.core_generation</weavergen:span>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CallOrchestration</bpmn:incoming>
+      <bpmn:outgoing>Flow_FormatOutput</bpmn:outgoing>
+    </bpmn:callActivity>
+    
+    <!-- Format CLI Output -->
+    <bpmn:serviceTask id="Task_FormatOutput" name="Format CLI Output">
+      <bpmn:documentation>Format results for CLI display with Rich formatting</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>FormatCLIOutputTask</weavergen:class>
+          <weavergen:span>cli.format_output</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_FormatOutput</bpmn:incoming>
+      <bpmn:outgoing>Flow_End</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_CLIGenerate" name="CLI Generate Complete">
+      <bpmn:incoming>Flow_End</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ParseArgs" sourceRef="StartEvent_CLIGenerate" targetRef="Task_ParseArgs"/>
+    <bpmn:sequenceFlow id="Flow_PrepareConfig" sourceRef="Task_ParseArgs" targetRef="Task_PrepareConfig"/>
+    <bpmn:sequenceFlow id="Flow_CallOrchestration" sourceRef="Task_PrepareConfig" targetRef="CallActivity_CoreGeneration"/>
+    <bpmn:sequenceFlow id="Flow_FormatOutput" sourceRef="CallActivity_CoreGeneration" targetRef="Task_FormatOutput"/>
+    <bpmn:sequenceFlow id="Flow_End" sourceRef="Task_FormatOutput" targetRef="EndEvent_CLIGenerate"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

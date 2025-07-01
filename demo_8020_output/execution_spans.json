@@ -1,0 +1,26 @@
+[
+  {
+    "name": "bpmn.service.task_capturespans",
+    "task": "Task_CaptureSpans",
+    "span_id": "mock_0",
+    "trace_id": "mock_trace_PydanticAIGeneration",
+    "timestamp": "2025-07-01T07:37:43.477903",
+    "result": {
+      "spans_count": 1,
+      "validation_in_progress": true
+    },
+    "mock": true,
+    "duration_ms": 5.0,
+    "status": "OK",
+    "attributes": {
+      "semantic.group.id": "weavergen.bpmn.task",
+      "semantic.operation": "task_capturespans",
+      "semantic.compliance.validated": true,
+      "bpmn.task.name": "Task_CaptureSpans",
+      "bpmn.task.type": "service",
+      "quality.score": 0.95,
+      "validation.passed": true,
+      "execution.success": true
+    }
+  }
+]

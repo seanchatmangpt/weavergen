@@ -1,0 +1,26 @@
+[
+  {
+    "step": "semantic_analysis",
+    "prompt_length": 219,
+    "model": "mock",
+    "success": true,
+    "tokens_used": 19,
+    "response_time_ms": 50.0
+  },
+  {
+    "step": "code_generation",
+    "prompt_length": 225,
+    "model": "mock",
+    "success": true,
+    "tokens_used": 22,
+    "response_time_ms": 50.0
+  },
+  {
+    "step": "validation",
+    "prompt_length": 224,
+    "model": "mock",
+    "success": true,
+    "tokens_used": 22,
+    "response_time_ms": 50.0
+  }
+]

@@ -1,0 +1,7 @@
+# Generated rust code by Weaver Forge
+# File: rust_semantic_attributes.rust
+# Generated at: 2025-07-01T06:00:45.680095+00:00
+
+// Rust semantic conventions
+pub const SERVICE_NAME: &str = "service.name";
+pub const SERVICE_VERSION: &str = "service.version";

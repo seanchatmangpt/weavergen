@@ -1,0 +1,26 @@
+{
+  "execution_summary": {
+    "registry_url": "https://github.com/open-telemetry/semantic-conventions",
+    "languages": [
+      "python",
+      "rust",
+      "go"
+    ],
+    "weaver_binary": "/Users/sac/.cargo/bin/weaver",
+    "quality_score": 0.9,
+    "spans_captured": 11
+  },
+  "execution_trace": [
+    "\u2705 Load Registry",
+    "\u2705 Validate Registry",
+    "\u2705 Check Weaver Binary",
+    "\u2705 Prepare Generation",
+    "\u2705 Generate Python",
+    "\u2705 Generate Rust",
+    "\u2705 Generate Go",
+    "\u2705 Validate Outputs",
+    "\u2705 Compile Check",
+    "\u2705 Package Artifacts",
+    "\u2705 Run Tests"
+  ]
+}

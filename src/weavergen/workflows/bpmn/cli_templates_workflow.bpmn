@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_CLITemplates"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="CLITemplatesWorkflow" name="CLI Templates Command Workflow" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_CLITemplates" name="CLI Templates Command">
+      <bpmn:outgoing>Flow_ParseArgs</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Parse CLI Arguments -->
+    <bpmn:serviceTask id="Task_ParseTemplateArgs" name="Parse Template Arguments">
+      <bpmn:documentation>Parse and validate CLI arguments for templates command</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ParseTemplateArgsTask</weavergen:class>
+          <weavergen:span>cli.parse_template_args</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ParseArgs</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckAction</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Check Action Type -->
+    <bpmn:exclusiveGateway id="Gateway_ActionType" name="Action Type?">
+      <bpmn:incoming>Flow_CheckAction</bpmn:incoming>
+      <bpmn:outgoing>Flow_List</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Info</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Generate</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- List Templates -->
+    <bpmn:serviceTask id="Task_ListTemplates" name="List Available Templates">
+      <bpmn:documentation>List all available templates with metadata</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ListTemplatesTask</weavergen:class>
+          <weavergen:span>cli.list_templates</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_List</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndList</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Template Info -->
+    <bpmn:serviceTask id="Task_TemplateInfo" name="Show Template Information">
+      <bpmn:documentation>Show detailed information about specific template</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>TemplateInfoTask</weavergen:class>
+          <weavergen:span>cli.template_info</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Info</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndInfo</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Templates -->
+    <bpmn:serviceTask id="Task_GenerateTemplates" name="Generate Custom Templates">
+      <bpmn:documentation>Generate custom templates based on semantics</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateTemplatesTask</weavergen:class>
+          <weavergen:span>cli.generate_templates</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Generate</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndGenerate</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Events -->
+    <bpmn:endEvent id="EndEvent_List" name="List Complete">
+      <bpmn:incoming>Flow_EndList</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="EndEvent_Info" name="Info Complete">
+      <bpmn:incoming>Flow_EndInfo</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="EndEvent_Generate" name="Generate Complete">
+      <bpmn:incoming>Flow_EndGenerate</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ParseArgs" sourceRef="StartEvent_CLITemplates" targetRef="Task_ParseTemplateArgs"/>
+    <bpmn:sequenceFlow id="Flow_CheckAction" sourceRef="Task_ParseTemplateArgs" targetRef="Gateway_ActionType"/>
+    <bpmn:sequenceFlow id="Flow_List" sourceRef="Gateway_ActionType" targetRef="Task_ListTemplates">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "list"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Info" sourceRef="Gateway_ActionType" targetRef="Task_TemplateInfo">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "info"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Generate" sourceRef="Gateway_ActionType" targetRef="Task_GenerateTemplates">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "generate"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_EndList" sourceRef="Task_ListTemplates" targetRef="EndEvent_List"/>
+    <bpmn:sequenceFlow id="Flow_EndInfo" sourceRef="Task_TemplateInfo" targetRef="EndEvent_Info"/>
+    <bpmn:sequenceFlow id="Flow_EndGenerate" sourceRef="Task_GenerateTemplates" targetRef="EndEvent_Generate"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_CLIValidate"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="CLIValidateWorkflow" name="CLI Validate Command Workflow" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_CLIValidate" name="CLI Validate Command">
+      <bpmn:outgoing>Flow_ParseArgs</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Parse CLI Arguments -->
+    <bpmn:serviceTask id="Task_ParseValidateArgs" name="Parse Validate Arguments">
+      <bpmn:documentation>Parse and validate CLI arguments for validate command</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ParseValidateArgsTask</weavergen:class>
+          <weavergen:span>cli.parse_validate_args</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ParseArgs</bpmn:incoming>
+      <bpmn:outgoing>Flow_LoadSemantics</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Load Semantic Conventions -->
+    <bpmn:serviceTask id="Task_LoadSemanticsForValidation" name="Load Semantic Conventions">
+      <bpmn:documentation>Load semantic conventions for validation</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>LoadSemanticsTask</weavergen:class>
+          <weavergen:span>cli.load_semantics</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_LoadSemantics</bpmn:incoming>
+      <bpmn:outgoing>Flow_RunValidation</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Execute Validation -->
+    <bpmn:callActivity id="CallActivity_ValidationEngine" name="Execute Validation Engine" calledElement="ValidationGeneration">
+      <bpmn:documentation>Execute comprehensive validation workflow</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:span>cli.validation_engine</weavergen:span>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RunValidation</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckResults</bpmn:outgoing>
+    </bpmn:callActivity>
+    
+    <!-- Check Validation Results -->
+    <bpmn:exclusiveGateway id="Gateway_ValidationResults" name="Validation Passed?">
+      <bpmn:incoming>Flow_CheckResults</bpmn:incoming>
+      <bpmn:outgoing>Flow_Success</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Failure</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Format Success Output -->
+    <bpmn:serviceTask id="Task_FormatSuccessOutput" name="Format Success Output">
+      <bpmn:documentation>Format validation success output for CLI</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>FormatValidationSuccessTask</weavergen:class>
+          <weavergen:span>cli.format_success</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Success</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndSuccess</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Format Failure Output -->
+    <bpmn:serviceTask id="Task_FormatFailureOutput" name="Format Failure Output">
+      <bpmn:documentation>Format validation failure output with detailed issues</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>FormatValidationFailureTask</weavergen:class>
+          <weavergen:span>cli.format_failure</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Failure</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndFailure</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Success End Event -->
+    <bpmn:endEvent id="EndEvent_Success" name="Validation Success">
+      <bpmn:incoming>Flow_EndSuccess</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Failure End Event -->
+    <bpmn:endEvent id="EndEvent_Failure" name="Validation Failure">
+      <bpmn:incoming>Flow_EndFailure</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_ValidationFailed"/>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ParseArgs" sourceRef="StartEvent_CLIValidate" targetRef="Task_ParseValidateArgs"/>
+    <bpmn:sequenceFlow id="Flow_LoadSemantics" sourceRef="Task_ParseValidateArgs" targetRef="Task_LoadSemanticsForValidation"/>
+    <bpmn:sequenceFlow id="Flow_RunValidation" sourceRef="Task_LoadSemanticsForValidation" targetRef="CallActivity_ValidationEngine"/>
+    <bpmn:sequenceFlow id="Flow_CheckResults" sourceRef="CallActivity_ValidationEngine" targetRef="Gateway_ValidationResults"/>
+    <bpmn:sequenceFlow id="Flow_Success" sourceRef="Gateway_ValidationResults" targetRef="Task_FormatSuccessOutput">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">validation_passed == true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Failure" sourceRef="Gateway_ValidationResults" targetRef="Task_FormatFailureOutput">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">validation_passed == false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_EndSuccess" sourceRef="Task_FormatSuccessOutput" targetRef="EndEvent_Success"/>
+    <bpmn:sequenceFlow id="Flow_EndFailure" sourceRef="Task_FormatFailureOutput" targetRef="EndEvent_Failure"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

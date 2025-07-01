@@ -1,0 +1,42 @@
+sequenceDiagram
+    participant U as User
+    participant S as SpiffWorkflow Engine
+    participant T as Service Tasks
+    participant D as Task Data
+    
+    U->>S: Execute LoadSemantics
+    S->>T: LoadSemantics
+    T->>D: Process Data
+    D-->>T: Task Complete
+    T-->>S: Task Result
+    Note over S: Continue to next task
+    U->>S: Execute ValidateSemantics
+    S->>T: ValidateSemantics
+    T->>D: Process Data
+    D-->>T: Task Complete
+    T-->>S: Task Result
+    Note over S: Continue to next task
+    U->>S: Execute ExtractAgentSemantics
+    S->>T: ExtractAgentSemantics
+    T->>D: Process Data
+    D-->>T: Task Complete
+    T-->>S: Task Result
+    Note over S: Continue to next task
+    U->>S: Execute GenerateAgentRoles
+    S->>T: GenerateAgentRoles
+    T->>D: Process Data
+    D-->>T: Task Complete
+    T-->>S: Task Result
+    Note over S: Continue to next task
+    U->>S: Execute GenerateSpanValidator
+    S->>T: GenerateSpanValidator
+    T->>D: Process Data
+    D-->>T: Task Complete
+    T-->>S: Task Result
+    Note over S: Continue to next task
+    U->>S: Execute GenerateHealthScoring
+    S->>T: GenerateHealthScoring
+    T->>D: Process Data
+    D-->>T: Task Complete
+    T-->>S: Task Result
+    S-->>U: Workflow Complete

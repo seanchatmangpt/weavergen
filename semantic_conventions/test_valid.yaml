@@ -1,0 +1,78 @@
+groups:
+  - id: test.agent
+    type: span
+    brief: Test AI agent for complete forge testing
+    stability: stable
+    attributes:
+      - id: agent.id
+        type: string
+        brief: Unique agent identifier
+        requirement_level: required
+        
+      - id: agent.role
+        type: string
+        brief: Agent role in the system
+        requirement_level: required
+        examples: ["coordinator", "analyst", "facilitator"]
+        
+      - id: agent.status
+        type: string
+        brief: Current agent status
+        requirement_level: optional
+        examples: ["active", "idle", "busy"]
+        note: Current operational status of the agent
+        
+  - id: test.conversation
+    type: span
+    brief: Test conversation for agent communication
+    stability: stable
+    attributes:
+      - id: conversation.id
+        type: string
+        brief: Unique conversation identifier
+        requirement_level: required
+        
+      - id: conversation.topic
+        type: string
+        brief: Conversation topic
+        requirement_level: required
+        
+      - id: conversation.participants
+        type: int
+        brief: Number of participants
+        requirement_level: required
+        
+      - id: conversation.mode
+        type: string
+        brief: Conversation mode
+        requirement_level: optional
+        examples: ["structured", "freeform", "debate"]
+        note: Mode of conversation execution
+        
+  - id: test.decision
+    type: span
+    brief: Test decision making process
+    stability: stable
+    attributes:
+      - id: decision.id
+        type: string
+        brief: Unique decision identifier
+        requirement_level: required
+        
+      - id: decision.type
+        type: string
+        brief: Type of decision
+        requirement_level: required
+        examples: ["strategic", "tactical", "operational"]
+        
+      - id: decision.confidence
+        type: double
+        brief: Confidence level in the decision
+        requirement_level: optional
+        note: Confidence score between 0.0 and 1.0
+        
+      - id: decision.reasoning
+        type: string
+        brief: Reasoning behind the decision
+        requirement_level: optional
+        note: Detailed explanation of decision rationale

@@ -1,0 +1,658 @@
+{
+  "context": {
+    "semantic_file": "semantic_conventions/test_valid.yaml",
+    "output_dir": "ultrathink_output",
+    "agent_roles": [
+      "analyst",
+      "coordinator",
+      "validator",
+      "facilitator"
+    ],
+    "quality_threshold": 0.8,
+    "max_retries": 3,
+    "current_retry": 0,
+    "quality_score": 0.902,
+    "generated_models": [
+      {
+        "id": "model_ee60e3f3",
+        "name": "MockPydanticModels",
+        "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+        "timestamp": "2025-07-01T07:35:26.558311"
+      },
+      {
+        "id": "model_intelligent_20250701_073526",
+        "name": "IntelligentDomainModels",
+        "code": "\nfrom pydantic import BaseModel, Field, validator\nfrom typing import List, Optional, Dict, Any\nfrom datetime import datetime\nfrom enum import Enum\n\n# Domain-aware enums based on semantic analysis\n\nclass AgentRole(str, Enum):\n    COORDINATOR = \"coordinator\"\n    ANALYST = \"analyst\"\n    VALIDATOR = \"validator\"\n    FACILITATOR = \"facilitator\"\n\nclass AgentStatus(str, Enum):\n    ACTIVE = \"active\"\n    THINKING = \"thinking\"\n    COLLABORATING = \"collaborating\"\n    IDLE = \"idle\"\n\nclass IntelligentBase(BaseModel):\n    \"\"\"Base model with semantic awareness\"\"\"\n    \n    _metadata: Dict[str, Any] = {}\n    \n    class Config:\n        validate_assignment = True\n        use_enum_values = True\n    \n    def semantic_validate(self) -> List[str]:\n        \"\"\"Validate against semantic conventions\"\"\"\n        issues = []\n        # Intelligent validation based on semantics\n        return issues\n\nclass RelationshipAware(IntelligentBase):\n    \"\"\"Models that understand semantic relationships\"\"\"\n    \n    parent_id: Optional[str] = Field(None, description=\"Parent semantic group\")\n    children_ids: List[str] = Field(default_factory=list)\n    \n    @validator('parent_id')\n    def validate_hierarchy(cls, v, values):\n        # Validate semantic hierarchy\n        return v\n\nclass AgentCollaboration(IntelligentBase):\n    \"\"\"Multi-agent collaboration model\"\"\"\n    \n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: AgentRole\n    status: AgentStatus = AgentStatus.IDLE\n    specializations: List[str] = Field(default_factory=list)\n    collaborators: List[str] = Field(default_factory=list)\n    \n    consensus_votes: Dict[str, float] = Field(default_factory=dict)\n    quality_score: float = Field(0.0, ge=0.0, le=1.0)\n    \n    def collaborate_with(self, other_agent: 'AgentCollaboration') -> Dict[str, Any]:\n        \"\"\"Intelligent collaboration logic\"\"\"\n        return {\n            \"shared_context\": True,\n            \"consensus_possible\": self.role != other_agent.role,\n            \"synergy_score\": 0.85\n        }\n\nclass MultiAgentDecision(IntelligentBase):\n    \"\"\"Collaborative decision making\"\"\"\n    \n    decision_id: str\n    proposer: AgentRole\n    decision_type: str\n    consensus_required: float = Field(0.7, ge=0.5, le=1.0)\n    \n    votes: Dict[AgentRole, float] = Field(default_factory=dict)\n    reasoning: Dict[AgentRole, str] = Field(default_factory=dict)\n    \n    @property\n    def has_consensus(self) -> bool:\n        if not self.votes:\n            return False\n        avg_vote = sum(self.votes.values()) / len(self.votes)\n        return avg_vote >= self.consensus_required\n    \n    def add_vote(self, agent: AgentRole, vote: float, reason: str):\n        self.votes[agent] = vote\n        self.reasoning[agent] = reason\n",
+        "timestamp": "2025-07-01T07:35:26.558329",
+        "semantic_aware": true,
+        "domain_concepts": [
+          "has_agents",
+          "has_communication",
+          "has_decision_making"
+        ],
+        "quality_score": 0.95
+      }
+    ],
+    "generated_agents": [
+      {
+        "id": "agent_analyst_7f0296a8",
+        "role": "analyst",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a analyst agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "analyst_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass AnalystAgent:\n    \"\"\"Generated analyst agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a analyst agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"analyst\"\n        self.capabilities = [\"analyst_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"analyst\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by analyst agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:35:26.558348"
+      },
+      {
+        "id": "agent_coordinator_33bdb704",
+        "role": "coordinator",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a coordinator agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "coordinator_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass CoordinatorAgent:\n    \"\"\"Generated coordinator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a coordinator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"coordinator\"\n        self.capabilities = [\"coordinator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"coordinator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by coordinator agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:35:26.558355"
+      },
+      {
+        "id": "agent_validator_588facd4",
+        "role": "validator",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a validator agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "validator_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass ValidatorAgent:\n    \"\"\"Generated validator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a validator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"validator\"\n        self.capabilities = [\"validator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"validator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by validator agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:35:26.558361"
+      },
+      {
+        "id": "agent_facilitator_8645480b",
+        "role": "facilitator",
+        "model": "gpt-4o-mini",
+        "system_prompt": "You are a facilitator agent specialized in semantic analysis and code generation.",
+        "capabilities": [
+          "facilitator_analysis",
+          "structured_output",
+          "validation"
+        ],
+        "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass FacilitatorAgent:\n    \"\"\"Generated facilitator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a facilitator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"facilitator\"\n        self.capabilities = [\"facilitator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"facilitator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by facilitator agent\",\n            \"quality_score\": 0.9\n        }\n",
+        "timestamp": "2025-07-01T07:35:26.558367"
+      }
+    ],
+    "validation_results": [
+      {
+        "model_id": "model_ee60e3f3",
+        "valid": true,
+        "score": 0.9,
+        "issues": [],
+        "timestamp": "2025-07-01T07:35:26.558411"
+      },
+      {
+        "model_id": "model_intelligent_20250701_073526",
+        "valid": true,
+        "score": 0.9,
+        "issues": [],
+        "timestamp": "2025-07-01T07:35:26.558412"
+      }
+    ],
+    "spans": [
+      {
+        "name": "intelligence.semantic_analysis",
+        "span_id": "intel_073526",
+        "trace_id": "intelligence_trace",
+        "timestamp": "2025-07-01T07:35:26.555280",
+        "duration_ms": 0.1,
+        "status": "OK",
+        "intelligence_data": {
+          "relationships": 1,
+          "patterns": [
+            "test.agent uses ID pattern",
+            "test.conversation uses ID pattern",
+            "test.decision uses ID pattern"
+          ],
+          "concepts": [
+            "has_agents",
+            "has_communication",
+            "has_decision_making"
+          ],
+          "insights": [
+            "Multi-agent system detected - enhance with collaboration patterns"
+          ]
+        }
+      },
+      {
+        "name": "intelligence.workflow_optimization",
+        "span_id": "workflow_073526",
+        "trace_id": "intelligence_trace",
+        "timestamp": "2025-07-01T07:35:26.555302",
+        "duration_ms": 0.1,
+        "status": "OK",
+        "workflow_intelligence": {
+          "parallel_candidates": 3,
+          "bottlenecks": [],
+          "optimizations": [
+            "Parallelize 3 generation tasks for 300ms speedup"
+          ]
+        }
+      },
+      {
+        "name": "bpmn.service.task_loadsemantics",
+        "task": "Task_LoadSemantics",
+        "span_id": "mock_2",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558258",
+        "result": {
+          "semantics": {
+            "groups": [
+              {
+                "id": "test.agent",
+                "type": "span",
+                "brief": "Test AI agent for complete forge testing",
+                "stability": "stable",
+                "attributes": [
+                  {
+                    "id": "agent.id",
+                    "type": "string",
+                    "brief": "Unique agent identifier",
+                    "requirement_level": "required"
+                  },
+                  {
+                    "id": "agent.role",
+                    "type": "string",
+                    "brief": "Agent role in the system",
+                    "requirement_level": "required",
+                    "examples": [
+                      "coordinator",
+                      "analyst",
+                      "facilitator"
+                    ]
+                  },
+                  {
+                    "id": "agent.status",
+                    "type": "string",
+                    "brief": "Current agent status",
+                    "requirement_level": "optional",
+                    "examples": [
+                      "active",
+                      "idle",
+                      "busy"
+                    ],
+                    "note": "Current operational status of the agent"
+                  }
+                ]
+              },
+              {
+                "id": "test.conversation",
+                "type": "span",
+                "brief": "Test conversation for agent communication",
+                "stability": "stable",
+                "attributes": [
+                  {
+                    "id": "conversation.id",
+                    "type": "string",
+                    "brief": "Unique conversation identifier",
+                    "requirement_level": "required"
+                  },
+                  {
+                    "id": "conversation.topic",
+                    "type": "string",
+                    "brief": "Conversation topic",
+                    "requirement_level": "required"
+                  },
+                  {
+                    "id": "conversation.participants",
+                    "type": "int",
+                    "brief": "Number of participants",
+                    "requirement_level": "required"
+                  },
+                  {
+                    "id": "conversation.mode",
+                    "type": "string",
+                    "brief": "Conversation mode",
+                    "requirement_level": "optional",
+                    "examples": [
+                      "structured",
+                      "freeform",
+                      "debate"
+                    ],
+                    "note": "Mode of conversation execution"
+                  }
+                ]
+              },
+              {
+                "id": "test.decision",
+                "type": "span",
+                "brief": "Test decision making process",
+                "stability": "stable",
+                "attributes": [
+                  {
+                    "id": "decision.id",
+                    "type": "string",
+                    "brief": "Unique decision identifier",
+                    "requirement_level": "required"
+                  },
+                  {
+                    "id": "decision.type",
+                    "type": "string",
+                    "brief": "Type of decision",
+                    "requirement_level": "required",
+                    "examples": [
+                      "strategic",
+                      "tactical",
+                      "operational"
+                    ]
+                  },
+                  {
+                    "id": "decision.confidence",
+                    "type": "double",
+                    "brief": "Confidence level in the decision",
+                    "requirement_level": "optional",
+                    "note": "Confidence score between 0.0 and 1.0"
+                  },
+                  {
+                    "id": "decision.reasoning",
+                    "type": "string",
+                    "brief": "Reasoning behind the decision",
+                    "requirement_level": "optional",
+                    "note": "Detailed explanation of decision rationale"
+                  }
+                ]
+              }
+            ]
+          },
+          "loaded": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_loadsemantics",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_LoadSemantics",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_validateinput",
+        "task": "Task_ValidateInput",
+        "span_id": "mock_3",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558295",
+        "result": {
+          "valid": true,
+          "errors": [],
+          "warnings": []
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_validateinput",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_ValidateInput",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_generatemodels",
+        "task": "Task_GenerateModels",
+        "span_id": "mock_4",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558335",
+        "result": {
+          "models": [
+            {
+              "id": "model_ee60e3f3",
+              "name": "MockPydanticModels",
+              "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+              "timestamp": "2025-07-01T07:35:26.558311"
+            },
+            {
+              "id": "model_intelligent_20250701_073526",
+              "name": "IntelligentDomainModels",
+              "code": "\nfrom pydantic import BaseModel, Field, validator\nfrom typing import List, Optional, Dict, Any\nfrom datetime import datetime\nfrom enum import Enum\n\n# Domain-aware enums based on semantic analysis\n\nclass AgentRole(str, Enum):\n    COORDINATOR = \"coordinator\"\n    ANALYST = \"analyst\"\n    VALIDATOR = \"validator\"\n    FACILITATOR = \"facilitator\"\n\nclass AgentStatus(str, Enum):\n    ACTIVE = \"active\"\n    THINKING = \"thinking\"\n    COLLABORATING = \"collaborating\"\n    IDLE = \"idle\"\n\nclass IntelligentBase(BaseModel):\n    \"\"\"Base model with semantic awareness\"\"\"\n    \n    _metadata: Dict[str, Any] = {}\n    \n    class Config:\n        validate_assignment = True\n        use_enum_values = True\n    \n    def semantic_validate(self) -> List[str]:\n        \"\"\"Validate against semantic conventions\"\"\"\n        issues = []\n        # Intelligent validation based on semantics\n        return issues\n\nclass RelationshipAware(IntelligentBase):\n    \"\"\"Models that understand semantic relationships\"\"\"\n    \n    parent_id: Optional[str] = Field(None, description=\"Parent semantic group\")\n    children_ids: List[str] = Field(default_factory=list)\n    \n    @validator('parent_id')\n    def validate_hierarchy(cls, v, values):\n        # Validate semantic hierarchy\n        return v\n\nclass AgentCollaboration(IntelligentBase):\n    \"\"\"Multi-agent collaboration model\"\"\"\n    \n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: AgentRole\n    status: AgentStatus = AgentStatus.IDLE\n    specializations: List[str] = Field(default_factory=list)\n    collaborators: List[str] = Field(default_factory=list)\n    \n    consensus_votes: Dict[str, float] = Field(default_factory=dict)\n    quality_score: float = Field(0.0, ge=0.0, le=1.0)\n    \n    def collaborate_with(self, other_agent: 'AgentCollaboration') -> Dict[str, Any]:\n        \"\"\"Intelligent collaboration logic\"\"\"\n        return {\n            \"shared_context\": True,\n            \"consensus_possible\": self.role != other_agent.role,\n            \"synergy_score\": 0.85\n        }\n\nclass MultiAgentDecision(IntelligentBase):\n    \"\"\"Collaborative decision making\"\"\"\n    \n    decision_id: str\n    proposer: AgentRole\n    decision_type: str\n    consensus_required: float = Field(0.7, ge=0.5, le=1.0)\n    \n    votes: Dict[AgentRole, float] = Field(default_factory=dict)\n    reasoning: Dict[AgentRole, str] = Field(default_factory=dict)\n    \n    @property\n    def has_consensus(self) -> bool:\n        if not self.votes:\n            return False\n        avg_vote = sum(self.votes.values()) / len(self.votes)\n        return avg_vote >= self.consensus_required\n    \n    def add_vote(self, agent: AgentRole, vote: float, reason: str):\n        self.votes[agent] = vote\n        self.reasoning[agent] = reason\n",
+              "timestamp": "2025-07-01T07:35:26.558329",
+              "semantic_aware": true,
+              "domain_concepts": [
+                "has_agents",
+                "has_communication",
+                "has_decision_making"
+              ],
+              "quality_score": 0.95
+            }
+          ],
+          "success": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_generatemodels",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_GenerateModels",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_generateagents",
+        "task": "Task_GenerateAgents",
+        "span_id": "mock_5",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558396",
+        "result": {
+          "agents": [
+            {
+              "id": "agent_coordinator_collaborative",
+              "role": "coordinator",
+              "model": "gpt-4",
+              "system_prompt": "Intelligent coordinator with specializations",
+              "capabilities": [
+                "orchestration",
+                "task_distribution",
+                "consensus_building"
+              ],
+              "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\nfrom typing import Dict, Any, List\nimport asyncio\n\nclass CoordinatorCollaborativeAgent:\n    \"\"\"Intelligent coordinator agent with specializations: orchestration, task_distribution, consensus_building\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4\",  # Use better model for intelligence\n            system_prompt=\"\"\"You are an intelligent coordinator agent specialized in orchestration, task_distribution, consensus_building.\n            You collaborate with other agents to achieve optimal results.\n            You understand semantic conventions and generate high-quality, domain-aware code.\n            You participate in consensus decisions and provide reasoning for your choices.\"\"\"\n        )\n        self.role = \"coordinator\"\n        self.specializations = ['orchestration', 'task_distribution', 'consensus_building']\n        self.collaboration_history = []\n        self.quality_threshold = 0.85\n    \n    async def collaborate(self, task: str, other_agents: List['BaseAgent']) -> Dict[str, Any]:\n        \"\"\"Collaborate with other agents on a task\"\"\"\n        \n        # Gather perspectives from other agents\n        perspectives = []\n        for agent in other_agents:\n            if agent.role != self.role:\n                perspective = await agent.get_perspective(task)\n                perspectives.append(perspective)\n        \n        # Synthesize collaborative response\n        synthesis = await self.agent.run(f\"\"\"\n        Task: {task}\n        \n        Other agent perspectives:\n        {perspectives}\n        \n        As a coordinator specialized in ['orchestration', 'task_distribution', 'consensus_building'], provide your analysis and recommendation.\n        Consider the other perspectives and aim for consensus where possible.\n        \"\"\")\n        \n        return {\n            \"role\": self.role,\n            \"recommendation\": synthesis.data,\n            \"confidence\": 0.9,\n            \"considered_perspectives\": len(perspectives)\n        }\n    \n    async def validate_quality(self, artifact: Any) -> Dict[str, Any]:\n        \"\"\"Validate quality with domain awareness\"\"\"\n        \n        validation = await self.agent.run(f\"\"\"\n        Validate this artifact for:\n        1. Semantic convention compliance\n        2. Domain appropriateness  \n        3. Code quality and best practices\n        4. Integration readiness\n        \n        Artifact: {artifact}\n        \n        Provide a quality score and specific feedback.\n        \"\"\")\n        \n        return {\n            \"quality_score\": 0.92,\n            \"feedback\": validation.data,\n            \"approved\": True\n        }\n    \n    def get_specialization_insights(self) -> List[str]:\n        \"\"\"Get insights based on specializations\"\"\"\n        insights = []\n        \n        for spec in self.specializations:\n            if spec == \"orchestration\":\n                insights.append(\"Optimize parallel task execution\")\n            elif spec == \"pattern_analysis\":\n                insights.append(\"Extract common patterns for reuse\")\n            elif spec == \"quality_assessment\":\n                insights.append(\"Enforce strict validation rules\")\n            elif spec == \"integration\":\n                insights.append(\"Ensure component compatibility\")\n        \n        return insights\n",
+              "collaborative": true,
+              "quality_aware": true,
+              "timestamp": "2025-07-01T07:35:26.558376"
+            },
+            {
+              "id": "agent_analyst_collaborative",
+              "role": "analyst",
+              "model": "gpt-4",
+              "system_prompt": "Intelligent analyst with specializations",
+              "capabilities": [
+                "pattern_analysis",
+                "semantic_extraction",
+                "relationship_mapping"
+              ],
+              "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\nfrom typing import Dict, Any, List\nimport asyncio\n\nclass AnalystCollaborativeAgent:\n    \"\"\"Intelligent analyst agent with specializations: pattern_analysis, semantic_extraction, relationship_mapping\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4\",  # Use better model for intelligence\n            system_prompt=\"\"\"You are an intelligent analyst agent specialized in pattern_analysis, semantic_extraction, relationship_mapping.\n            You collaborate with other agents to achieve optimal results.\n            You understand semantic conventions and generate high-quality, domain-aware code.\n            You participate in consensus decisions and provide reasoning for your choices.\"\"\"\n        )\n        self.role = \"analyst\"\n        self.specializations = ['pattern_analysis', 'semantic_extraction', 'relationship_mapping']\n        self.collaboration_history = []\n        self.quality_threshold = 0.85\n    \n    async def collaborate(self, task: str, other_agents: List['BaseAgent']) -> Dict[str, Any]:\n        \"\"\"Collaborate with other agents on a task\"\"\"\n        \n        # Gather perspectives from other agents\n        perspectives = []\n        for agent in other_agents:\n            if agent.role != self.role:\n                perspective = await agent.get_perspective(task)\n                perspectives.append(perspective)\n        \n        # Synthesize collaborative response\n        synthesis = await self.agent.run(f\"\"\"\n        Task: {task}\n        \n        Other agent perspectives:\n        {perspectives}\n        \n        As a analyst specialized in ['pattern_analysis', 'semantic_extraction', 'relationship_mapping'], provide your analysis and recommendation.\n        Consider the other perspectives and aim for consensus where possible.\n        \"\"\")\n        \n        return {\n            \"role\": self.role,\n            \"recommendation\": synthesis.data,\n            \"confidence\": 0.9,\n            \"considered_perspectives\": len(perspectives)\n        }\n    \n    async def validate_quality(self, artifact: Any) -> Dict[str, Any]:\n        \"\"\"Validate quality with domain awareness\"\"\"\n        \n        validation = await self.agent.run(f\"\"\"\n        Validate this artifact for:\n        1. Semantic convention compliance\n        2. Domain appropriateness  \n        3. Code quality and best practices\n        4. Integration readiness\n        \n        Artifact: {artifact}\n        \n        Provide a quality score and specific feedback.\n        \"\"\")\n        \n        return {\n            \"quality_score\": 0.92,\n            \"feedback\": validation.data,\n            \"approved\": True\n        }\n    \n    def get_specialization_insights(self) -> List[str]:\n        \"\"\"Get insights based on specializations\"\"\"\n        insights = []\n        \n        for spec in self.specializations:\n            if spec == \"orchestration\":\n                insights.append(\"Optimize parallel task execution\")\n            elif spec == \"pattern_analysis\":\n                insights.append(\"Extract common patterns for reuse\")\n            elif spec == \"quality_assessment\":\n                insights.append(\"Enforce strict validation rules\")\n            elif spec == \"integration\":\n                insights.append(\"Ensure component compatibility\")\n        \n        return insights\n",
+              "collaborative": true,
+              "quality_aware": true,
+              "timestamp": "2025-07-01T07:35:26.558381"
+            },
+            {
+              "id": "agent_validator_collaborative",
+              "role": "validator",
+              "model": "gpt-4",
+              "system_prompt": "Intelligent validator with specializations",
+              "capabilities": [
+                "quality_assessment",
+                "constraint_validation",
+                "decision_verification"
+              ],
+              "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\nfrom typing import Dict, Any, List\nimport asyncio\n\nclass ValidatorCollaborativeAgent:\n    \"\"\"Intelligent validator agent with specializations: quality_assessment, constraint_validation, decision_verification\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4\",  # Use better model for intelligence\n            system_prompt=\"\"\"You are an intelligent validator agent specialized in quality_assessment, constraint_validation, decision_verification.\n            You collaborate with other agents to achieve optimal results.\n            You understand semantic conventions and generate high-quality, domain-aware code.\n            You participate in consensus decisions and provide reasoning for your choices.\"\"\"\n        )\n        self.role = \"validator\"\n        self.specializations = ['quality_assessment', 'constraint_validation', 'decision_verification']\n        self.collaboration_history = []\n        self.quality_threshold = 0.85\n    \n    async def collaborate(self, task: str, other_agents: List['BaseAgent']) -> Dict[str, Any]:\n        \"\"\"Collaborate with other agents on a task\"\"\"\n        \n        # Gather perspectives from other agents\n        perspectives = []\n        for agent in other_agents:\n            if agent.role != self.role:\n                perspective = await agent.get_perspective(task)\n                perspectives.append(perspective)\n        \n        # Synthesize collaborative response\n        synthesis = await self.agent.run(f\"\"\"\n        Task: {task}\n        \n        Other agent perspectives:\n        {perspectives}\n        \n        As a validator specialized in ['quality_assessment', 'constraint_validation', 'decision_verification'], provide your analysis and recommendation.\n        Consider the other perspectives and aim for consensus where possible.\n        \"\"\")\n        \n        return {\n            \"role\": self.role,\n            \"recommendation\": synthesis.data,\n            \"confidence\": 0.9,\n            \"considered_perspectives\": len(perspectives)\n        }\n    \n    async def validate_quality(self, artifact: Any) -> Dict[str, Any]:\n        \"\"\"Validate quality with domain awareness\"\"\"\n        \n        validation = await self.agent.run(f\"\"\"\n        Validate this artifact for:\n        1. Semantic convention compliance\n        2. Domain appropriateness  \n        3. Code quality and best practices\n        4. Integration readiness\n        \n        Artifact: {artifact}\n        \n        Provide a quality score and specific feedback.\n        \"\"\")\n        \n        return {\n            \"quality_score\": 0.92,\n            \"feedback\": validation.data,\n            \"approved\": True\n        }\n    \n    def get_specialization_insights(self) -> List[str]:\n        \"\"\"Get insights based on specializations\"\"\"\n        insights = []\n        \n        for spec in self.specializations:\n            if spec == \"orchestration\":\n                insights.append(\"Optimize parallel task execution\")\n            elif spec == \"pattern_analysis\":\n                insights.append(\"Extract common patterns for reuse\")\n            elif spec == \"quality_assessment\":\n                insights.append(\"Enforce strict validation rules\")\n            elif spec == \"integration\":\n                insights.append(\"Ensure component compatibility\")\n        \n        return insights\n",
+              "collaborative": true,
+              "quality_aware": true,
+              "timestamp": "2025-07-01T07:35:26.558385"
+            },
+            {
+              "id": "agent_facilitator_collaborative",
+              "role": "facilitator",
+              "model": "gpt-4",
+              "system_prompt": "Intelligent facilitator with specializations",
+              "capabilities": [
+                "conflict_resolution",
+                "integration",
+                "holistic_view"
+              ],
+              "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\nfrom typing import Dict, Any, List\nimport asyncio\n\nclass FacilitatorCollaborativeAgent:\n    \"\"\"Intelligent facilitator agent with specializations: conflict_resolution, integration, holistic_view\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4\",  # Use better model for intelligence\n            system_prompt=\"\"\"You are an intelligent facilitator agent specialized in conflict_resolution, integration, holistic_view.\n            You collaborate with other agents to achieve optimal results.\n            You understand semantic conventions and generate high-quality, domain-aware code.\n            You participate in consensus decisions and provide reasoning for your choices.\"\"\"\n        )\n        self.role = \"facilitator\"\n        self.specializations = ['conflict_resolution', 'integration', 'holistic_view']\n        self.collaboration_history = []\n        self.quality_threshold = 0.85\n    \n    async def collaborate(self, task: str, other_agents: List['BaseAgent']) -> Dict[str, Any]:\n        \"\"\"Collaborate with other agents on a task\"\"\"\n        \n        # Gather perspectives from other agents\n        perspectives = []\n        for agent in other_agents:\n            if agent.role != self.role:\n                perspective = await agent.get_perspective(task)\n                perspectives.append(perspective)\n        \n        # Synthesize collaborative response\n        synthesis = await self.agent.run(f\"\"\"\n        Task: {task}\n        \n        Other agent perspectives:\n        {perspectives}\n        \n        As a facilitator specialized in ['conflict_resolution', 'integration', 'holistic_view'], provide your analysis and recommendation.\n        Consider the other perspectives and aim for consensus where possible.\n        \"\"\")\n        \n        return {\n            \"role\": self.role,\n            \"recommendation\": synthesis.data,\n            \"confidence\": 0.9,\n            \"considered_perspectives\": len(perspectives)\n        }\n    \n    async def validate_quality(self, artifact: Any) -> Dict[str, Any]:\n        \"\"\"Validate quality with domain awareness\"\"\"\n        \n        validation = await self.agent.run(f\"\"\"\n        Validate this artifact for:\n        1. Semantic convention compliance\n        2. Domain appropriateness  \n        3. Code quality and best practices\n        4. Integration readiness\n        \n        Artifact: {artifact}\n        \n        Provide a quality score and specific feedback.\n        \"\"\")\n        \n        return {\n            \"quality_score\": 0.92,\n            \"feedback\": validation.data,\n            \"approved\": True\n        }\n    \n    def get_specialization_insights(self) -> List[str]:\n        \"\"\"Get insights based on specializations\"\"\"\n        insights = []\n        \n        for spec in self.specializations:\n            if spec == \"orchestration\":\n                insights.append(\"Optimize parallel task execution\")\n            elif spec == \"pattern_analysis\":\n                insights.append(\"Extract common patterns for reuse\")\n            elif spec == \"quality_assessment\":\n                insights.append(\"Enforce strict validation rules\")\n            elif spec == \"integration\":\n                insights.append(\"Ensure component compatibility\")\n        \n        return insights\n",
+              "collaborative": true,
+              "quality_aware": true,
+              "timestamp": "2025-07-01T07:35:26.558392"
+            }
+          ],
+          "success": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_generateagents",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_GenerateAgents",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_generatevalidators",
+        "task": "Task_GenerateValidators",
+        "span_id": "mock_6",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558407",
+        "result": {
+          "validator": {
+            "id": "validator_7d47fc12",
+            "type": "comprehensive",
+            "code": "\nfrom pydantic import BaseModel, ValidationError\nfrom typing import Dict, Any, List\n\nclass ComprehensiveValidator:\n    \"\"\"Generated comprehensive validation logic\"\"\"\n    \n    def validate_model(self, model_data: Dict[str, Any]) -> Dict[str, Any]:\n        \"\"\"Validate Pydantic model structure\"\"\"\n        return {\n            \"valid\": True,\n            \"errors\": [],\n            \"quality_score\": 0.95\n        }\n    \n    def validate_agent_response(self, response: Any) -> Dict[str, Any]:\n        \"\"\"Validate AI agent response\"\"\"\n        return {\n            \"structured\": True,\n            \"complete\": True,\n            \"quality_score\": 0.9\n        }\n    \n    def validate_spans(self, spans: List[Dict]) -> Dict[str, Any]:\n        \"\"\"Validate OpenTelemetry spans\"\"\"\n        return {\n            \"span_count\": len(spans),\n            \"valid_spans\": len(spans),\n            \"health_score\": 0.95\n        }\n",
+            "timestamp": "2025-07-01T07:35:26.558404"
+          },
+          "success": true
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_generatevalidators",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_GenerateValidators",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_validatemodels",
+        "task": "Task_ValidateModels",
+        "span_id": "mock_7",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558416",
+        "result": {
+          "results": [
+            {
+              "model_id": "model_ee60e3f3",
+              "valid": true,
+              "score": 0.9,
+              "issues": [],
+              "timestamp": "2025-07-01T07:35:26.558411"
+            },
+            {
+              "model_id": "model_intelligent_20250701_073526",
+              "valid": true,
+              "score": 0.9,
+              "issues": [],
+              "timestamp": "2025-07-01T07:35:26.558412"
+            }
+          ],
+          "average_score": 0.9
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_validatemodels",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_ValidateModels",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_testagents",
+        "task": "Task_TestAgents",
+        "span_id": "mock_8",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558427",
+        "result": {
+          "results": [
+            {
+              "agent_id": "agent_analyst_7f0296a8",
+              "role": "analyst",
+              "tests_passed": 8,
+              "tests_total": 10,
+              "success_rate": 0.8,
+              "response_time": 0.5,
+              "timestamp": "2025-07-01T07:35:26.558420"
+            },
+            {
+              "agent_id": "agent_coordinator_33bdb704",
+              "role": "coordinator",
+              "tests_passed": 8,
+              "tests_total": 10,
+              "success_rate": 0.8,
+              "response_time": 0.5,
+              "timestamp": "2025-07-01T07:35:26.558421"
+            },
+            {
+              "agent_id": "agent_validator_588facd4",
+              "role": "validator",
+              "tests_passed": 8,
+              "tests_total": 10,
+              "success_rate": 0.8,
+              "response_time": 0.5,
+              "timestamp": "2025-07-01T07:35:26.558423"
+            },
+            {
+              "agent_id": "agent_facilitator_8645480b",
+              "role": "facilitator",
+              "tests_passed": 8,
+              "tests_total": 10,
+              "success_rate": 0.8,
+              "response_time": 0.5,
+              "timestamp": "2025-07-01T07:35:26.558424"
+            }
+          ],
+          "average_success_rate": 0.8
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_testagents",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_TestAgents",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_testvalidators",
+        "task": "Task_TestValidators",
+        "span_id": "mock_9",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558433",
+        "result": {
+          "tests_passed": 15,
+          "tests_total": 16,
+          "success_rate": 0.9375,
+          "coverage": 0.95,
+          "timestamp": "2025-07-01T07:35:26.558430"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_testvalidators",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_TestValidators",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      },
+      {
+        "name": "bpmn.service.task_integration",
+        "task": "Task_Integration",
+        "span_id": "mock_10",
+        "trace_id": "mock_trace_PydanticAIGeneration",
+        "timestamp": "2025-07-01T07:35:26.558464",
+        "result": {
+          "quality_score": 0.902,
+          "passed": true,
+          "components_tested": 6,
+          "timestamp": "2025-07-01T07:35:26.558460"
+        },
+        "mock": true,
+        "duration_ms": 10.0,
+        "status": "OK",
+        "attributes": {
+          "semantic.group.id": "weavergen.bpmn.task",
+          "semantic.operation": "task_integration",
+          "semantic.compliance.validated": true,
+          "bpmn.task.name": "Task_Integration",
+          "bpmn.task.type": "service",
+          "bpmn.workflow.name": "PydanticAIGeneration",
+          "quality.score": 0.95,
+          "validation.passed": true,
+          "execution.success": true
+        }
+      }
+    ],
+    "execution_trace": [
+      "Mock completed: Task_LoadSemantics",
+      "Mock completed: Task_ValidateInput",
+      "Mock completed: Task_GenerateModels",
+      "Mock completed: Task_GenerateAgents",
+      "Mock completed: Task_GenerateValidators",
+      "Mock completed: Task_ValidateModels",
+      "Mock completed: Task_TestAgents",
+      "Mock completed: Task_TestValidators",
+      "Mock completed: Task_Integration"
+    ]
+  },
+  "quality_score": 0.902,
+  "execution_trace": [
+    "Mock completed: Task_LoadSemantics",
+    "Mock completed: Task_ValidateInput",
+    "Mock completed: Task_GenerateModels",
+    "Mock completed: Task_GenerateAgents",
+    "Mock completed: Task_GenerateValidators",
+    "Mock completed: Task_ValidateModels",
+    "Mock completed: Task_TestAgents",
+    "Mock completed: Task_TestValidators",
+    "Mock completed: Task_Integration"
+  ],
+  "timestamp": "2025-07-01T07:35:26.558769"
+}

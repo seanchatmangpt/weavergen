@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_WeaverGen8020"
+                  targetNamespace="http://weavergen.io/bpmn/8020">
+
+  <bpmn:process id="WeaverGenerate" name="Weaver Generate 80/20" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="Start" name="Start Generation">
+      <bpmn:outgoing>Flow_Start_Load</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Load Semantic File -->
+    <bpmn:serviceTask id="Task_LoadSemantic" name="Load Semantic File">
+      <bpmn:documentation>Load and parse the semantic convention YAML file</bpmn:documentation>
+      <bpmn:incoming>Flow_Start_Load</bpmn:incoming>
+      <bpmn:outgoing>Flow_Load_Validate</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Semantic File -->
+    <bpmn:serviceTask id="Task_ValidateSemantic" name="Validate Semantics">
+      <bpmn:documentation>Validate semantic conventions using weaver validate</bpmn:documentation>
+      <bpmn:incoming>Flow_Load_Validate</bpmn:incoming>
+      <bpmn:outgoing>Flow_Validate_Check</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validation Check Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_ValidationCheck" name="Valid?">
+      <bpmn:incoming>Flow_Validate_Check</bpmn:incoming>
+      <bpmn:outgoing>Flow_Valid</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Invalid</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Invalid Path -->
+    <bpmn:endEvent id="End_Invalid" name="Validation Failed">
+      <bpmn:incoming>Flow_Invalid</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_Validation"/>
+    </bpmn:endEvent>
+    
+    <!-- Parallel Generation Gateway -->
+    <bpmn:parallelGateway id="Gateway_Split" name="Split for Languages">
+      <bpmn:documentation>Split execution for parallel language generation</bpmn:documentation>
+      <bpmn:incoming>Flow_Valid</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToGeneration</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Multi-Instance Code Generation -->
+    <bpmn:subProcess id="SubProcess_Generation" name="Generate for Each Language">
+      <bpmn:incoming>Flow_ToGeneration</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromGeneration</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn:loopDataInputRef>languages</bpmn:loopDataInputRef>
+        <bpmn:inputDataItem id="language" name="language"/>
+      </bpmn:multiInstanceLoopCharacteristics>
+      
+      <!-- Generate Code Task -->
+      <bpmn:serviceTask id="Task_GenerateCode" name="Generate ${language} Code">
+        <bpmn:documentation>Call weaver generate for specific language</bpmn:documentation>
+      </bpmn:serviceTask>
+      
+      <!-- Validate Output Task -->
+      <bpmn:serviceTask id="Task_ValidateOutput" name="Validate ${language} Output">
+        <bpmn:documentation>Check that files were generated successfully</bpmn:documentation>
+      </bpmn:serviceTask>
+      
+    </bpmn:subProcess>
+    
+    <!-- Join After Generation -->
+    <bpmn:parallelGateway id="Gateway_Join" name="Join Results">
+      <bpmn:incoming>Flow_FromGeneration</bpmn:incoming>
+      <bpmn:outgoing>Flow_Join_Report</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Generate Report -->
+    <bpmn:serviceTask id="Task_GenerateReport" name="Generate Report">
+      <bpmn:documentation>Create summary report of generation results</bpmn:documentation>
+      <bpmn:incoming>Flow_Join_Report</bpmn:incoming>
+      <bpmn:outgoing>Flow_Report_End</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Success End Event -->
+    <bpmn:endEvent id="End_Success" name="Generation Complete">
+      <bpmn:incoming>Flow_Report_End</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_Start_Load" sourceRef="Start" targetRef="Task_LoadSemantic"/>
+    <bpmn:sequenceFlow id="Flow_Load_Validate" sourceRef="Task_LoadSemantic" targetRef="Task_ValidateSemantic"/>
+    <bpmn:sequenceFlow id="Flow_Validate_Check" sourceRef="Task_ValidateSemantic" targetRef="Gateway_ValidationCheck"/>
+    
+    <bpmn:sequenceFlow id="Flow_Valid" name="Yes" sourceRef="Gateway_ValidationCheck" targetRef="Gateway_Split">
+      <bpmn:conditionExpression>${validation_passed == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_Invalid" name="No" sourceRef="Gateway_ValidationCheck" targetRef="End_Invalid">
+      <bpmn:conditionExpression>${validation_passed == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_ToGeneration" sourceRef="Gateway_Split" targetRef="SubProcess_Generation"/>
+    <bpmn:sequenceFlow id="Flow_FromGeneration" sourceRef="SubProcess_Generation" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_Join_Report" sourceRef="Gateway_Join" targetRef="Task_GenerateReport"/>
+    <bpmn:sequenceFlow id="Flow_Report_End" sourceRef="Task_GenerateReport" targetRef="End_Success"/>
+    
+  </bpmn:process>
+  
+  <!-- Error Definitions -->
+  <bpmn:error id="Error_Validation" name="ValidationError" errorCode="VALIDATION_FAILED"/>
+  
+  <!-- Visual Diagram (Optional - for BPMN editors) -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="WeaverGenerate">
+      <!-- Simplified visual layout hints -->
+      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start">
+        <dc:Bounds x="100" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_LoadSemantic_di" bpmnElement="Task_LoadSemantic">
+        <dc:Bounds x="200" y="80" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <!-- Additional visual elements would go here -->
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn:definitions>

@@ -1,0 +1,200 @@
+[
+  {
+    "task": "Load Semantics",
+    "span_id": "4836a79200c2570d",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:01.695491",
+    "result": {
+      "task": "Load Semantics",
+      "success": true,
+      "mock_data": "Mock result for Load Semantics",
+      "execution_time": 0.1
+    },
+    "attributes": {
+      "task.name": "Load Semantics",
+      "task.index": 0,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Validate Input",
+    "span_id": "74f53bb51459d73f",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:01.996811",
+    "result": {
+      "task": "Validate Input",
+      "success": true,
+      "mock_data": "Mock result for Validate Input",
+      "execution_time": 0.15000000000000002
+    },
+    "attributes": {
+      "task.name": "Validate Input",
+      "task.index": 1,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Generate Models",
+    "span_id": "b7d595e10221905",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:02.297983",
+    "result": {
+      "task": "Generate Models",
+      "success": true,
+      "mock_data": "Mock result for Generate Models",
+      "execution_time": 0.2
+    },
+    "attributes": {
+      "task.name": "Generate Models",
+      "task.index": 2,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Generate Agents",
+    "span_id": "516b32c1352e7bb1",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:02.599128",
+    "result": {
+      "task": "Generate Agents",
+      "success": true,
+      "mock_data": "Mock result for Generate Agents",
+      "execution_time": 0.25
+    },
+    "attributes": {
+      "task.name": "Generate Agents",
+      "task.index": 3,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Generate Validators",
+    "span_id": "164f493c7ff2a22e",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:02.900296",
+    "result": {
+      "task": "Generate Validators",
+      "success": true,
+      "mock_data": "Mock result for Generate Validators",
+      "execution_time": 0.30000000000000004
+    },
+    "attributes": {
+      "task.name": "Generate Validators",
+      "task.index": 4,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Validate Models",
+    "span_id": "6930c10a499135ab",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:03.201463",
+    "result": {
+      "task": "Validate Models",
+      "success": true,
+      "mock_data": "Mock result for Validate Models",
+      "execution_time": 0.35
+    },
+    "attributes": {
+      "task.name": "Validate Models",
+      "task.index": 5,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Test Agents",
+    "span_id": "7036b0fbf9b2b121",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:03.502745",
+    "result": {
+      "task": "Test Agents",
+      "success": true,
+      "mock_data": "Mock result for Test Agents",
+      "execution_time": 0.4
+    },
+    "attributes": {
+      "task.name": "Test Agents",
+      "task.index": 6,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Test Validators",
+    "span_id": "6973f71dbf316439",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:03.803943",
+    "result": {
+      "task": "Test Validators",
+      "success": true,
+      "mock_data": "Mock result for Test Validators",
+      "execution_time": 0.45000000000000007
+    },
+    "attributes": {
+      "task.name": "Test Validators",
+      "task.index": 7,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Integration Test",
+    "span_id": "2476ef13a0272a9",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:04.105108",
+    "result": {
+      "task": "Integration Test",
+      "success": true,
+      "mock_data": "Mock result for Integration Test",
+      "execution_time": 0.5
+    },
+    "attributes": {
+      "task.name": "Integration Test",
+      "task.index": 8,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Generate Output",
+    "span_id": "a25e162d0e1c9201",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:04.406237",
+    "result": {
+      "task": "Generate Output",
+      "success": true,
+      "mock_data": "Mock result for Generate Output",
+      "execution_time": 0.55
+    },
+    "attributes": {
+      "task.name": "Generate Output",
+      "task.index": 9,
+      "task.mock": true,
+      "execution.success": true
+    }
+  },
+  {
+    "task": "Capture Spans",
+    "span_id": "75d2ce1bf3dc59ef",
+    "trace_id": "9a4ee29584c95cf89b2ea12a8680456c",
+    "timestamp": "2025-07-01T04:01:04.707398",
+    "result": {
+      "task": "Capture Spans",
+      "success": true,
+      "mock_data": "Mock result for Capture Spans",
+      "execution_time": 0.6
+    },
+    "attributes": {
+      "task.name": "Capture Spans",
+      "task.index": 10,
+      "task.mock": true,
+      "execution.success": true
+    }
+  }
+]

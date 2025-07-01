@@ -1,0 +1,169 @@
+[
+  {
+    "task": "Task_ValidateInput",
+    "span_id": "mock_0",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T06:46:49.282802",
+    "result": {
+      "valid": true,
+      "errors": [],
+      "warnings": [
+        "Created output directory: test_pydantic_spans"
+      ]
+    },
+    "mock": true
+  },
+  {
+    "task": "Task_GenerateModels",
+    "span_id": "mock_1",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T06:46:49.283001",
+    "result": {
+      "models": [
+        {
+          "id": "model_8c43b163",
+          "name": "MockPydanticModels",
+          "code": "\nfrom pydantic import BaseModel, Field\nfrom typing import List, Optional\nfrom datetime import datetime\n\nclass AgentInteraction(BaseModel):\n    \"\"\"Generated agent interaction model\"\"\"\n    agent_id: str = Field(..., description=\"Unique agent identifier\")\n    role: str = Field(..., description=\"Agent role (coordinator, analyst, facilitator)\")\n    message_content: str = Field(..., description=\"Message content\")\n    structured_output: bool = Field(default=True, description=\"Whether output is structured\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n    \nclass ValidationResult(BaseModel):\n    \"\"\"Generated validation result model\"\"\"\n    component_id: str = Field(..., description=\"Component being validated\")\n    validation_passed: bool = Field(..., description=\"Whether validation passed\")\n    quality_score: float = Field(..., ge=0.0, le=1.0, description=\"Quality score\")\n    issues: List[str] = Field(default_factory=list, description=\"Validation issues\")\n",
+          "timestamp": "2025-07-01T06:46:49.282991"
+        }
+      ],
+      "success": true
+    },
+    "mock": true
+  },
+  {
+    "task": "Task_GenerateAgents",
+    "span_id": "mock_2",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T06:46:49.283037",
+    "result": {
+      "agents": [
+        {
+          "id": "agent_analyst_1967b262",
+          "role": "analyst",
+          "model": "gpt-4o-mini",
+          "system_prompt": "You are a analyst agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "analyst_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass AnalystAgent:\n    \"\"\"Generated analyst agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a analyst agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"analyst\"\n        self.capabilities = [\"analyst_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"analyst\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by analyst agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T06:46:49.283018"
+        },
+        {
+          "id": "agent_coordinator_f773aa8b",
+          "role": "coordinator",
+          "model": "gpt-4o-mini",
+          "system_prompt": "You are a coordinator agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "coordinator_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass CoordinatorAgent:\n    \"\"\"Generated coordinator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a coordinator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"coordinator\"\n        self.capabilities = [\"coordinator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"coordinator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by coordinator agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T06:46:49.283026"
+        },
+        {
+          "id": "agent_validator_d2cf9050",
+          "role": "validator",
+          "model": "gpt-4o-mini",
+          "system_prompt": "You are a validator agent specialized in semantic analysis and code generation.",
+          "capabilities": [
+            "validator_analysis",
+            "structured_output",
+            "validation"
+          ],
+          "code": "\nfrom pydantic_ai import Agent\nfrom pydantic import BaseModel\n\nclass ValidatorAgent:\n    \"\"\"Generated validator agent with Pydantic AI\"\"\"\n    \n    def __init__(self):\n        self.agent = Agent(\n            \"gpt-4o-mini\",  # Mock model\n            system_prompt=\"You are a validator agent specialized in semantic analysis and code generation.\"\n        )\n        self.role = \"validator\"\n        self.capabilities = [\"validator_analysis\", \"structured_output\", \"validation\"]\n    \n    async def process(self, input_data: dict) -> dict:\n        \"\"\"Process input and return structured output\"\"\"\n        return {\n            \"role\": \"validator\",\n            \"processed\": True,\n            \"output\": f\"{input_data} processed by validator agent\",\n            \"quality_score\": 0.9\n        }\n",
+          "timestamp": "2025-07-01T06:46:49.283033"
+        }
+      ],
+      "success": true
+    },
+    "mock": true
+  },
+  {
+    "task": "Task_GenerateValidators",
+    "span_id": "mock_3",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T06:46:49.283051",
+    "result": {
+      "validator": null,
+      "success": false,
+      "error": "'PydanticAIBPMNEngine' object has no attribute 'validator_agent'"
+    },
+    "mock": true
+  },
+  {
+    "task": "Task_ValidateModels",
+    "span_id": "mock_4",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T06:46:49.283064",
+    "result": {
+      "results": [
+        {
+          "model_id": "model_8c43b163",
+          "valid": true,
+          "score": 0.9,
+          "issues": [],
+          "timestamp": "2025-07-01T06:46:49.283059"
+        }
+      ],
+      "average_score": 0.9
+    },
+    "mock": true
+  },
+  {
+    "task": "Task_TestAgents",
+    "span_id": "mock_5",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T06:46:49.283074",
+    "result": {
+      "results": [
+        {
+          "agent_id": "agent_analyst_1967b262",
+          "role": "analyst",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T06:46:49.283067"
+        },
+        {
+          "agent_id": "agent_coordinator_f773aa8b",
+          "role": "coordinator",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T06:46:49.283069"
+        },
+        {
+          "agent_id": "agent_validator_d2cf9050",
+          "role": "validator",
+          "tests_passed": 8,
+          "tests_total": 10,
+          "success_rate": 0.8,
+          "response_time": 0.5,
+          "timestamp": "2025-07-01T06:46:49.283070"
+        }
+      ],
+      "average_success_rate": 0.8000000000000002
+    },
+    "mock": true
+  },
+  {
+    "task": "Task_TestValidators",
+    "span_id": "mock_6",
+    "trace_id": "mock_trace_pydantic_ai_generation",
+    "timestamp": "2025-07-01T06:46:49.283082",
+    "result": {
+      "tests_passed": 15,
+      "tests_total": 16,
+      "success_rate": 0.9375,
+      "coverage": 0.95,
+      "timestamp": "2025-07-01T06:46:49.283079"
+    },
+    "mock": true
+  }
+]

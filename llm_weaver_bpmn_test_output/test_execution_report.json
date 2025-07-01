@@ -1,0 +1,58 @@
+{
+  "test_execution": {
+    "test_type": "llm_weaver_bpmn_integration",
+    "ollama_model": "llama3.2:latest",
+    "ollama_available": true,
+    "weaver_binary": "/Users/sac/.cargo/bin/weaver",
+    "weaver_available": true,
+    "registry_url": "https://github.com/open-telemetry/semantic-conventions",
+    "languages": [
+      "python",
+      "rust"
+    ],
+    "quality_score": 0.75
+  },
+  "llm_interactions": [
+    {
+      "task": "Analyze Registry with LLM",
+      "timestamp": "2025-07-01T06:24:13.506571+00:00",
+      "model": "llama3.2:latest",
+      "interaction": ""
+    },
+    {
+      "task": "Generate Templates with LLM",
+      "timestamp": "2025-07-01T06:24:13.810827+00:00",
+      "model": "llama3.2:latest",
+      "interaction": ""
+    },
+    {
+      "task": "LLM Code Review",
+      "timestamp": "2025-07-01T06:24:16.800808+00:00",
+      "model": "llama3.2:latest",
+      "interaction": ""
+    },
+    {
+      "task": "LLM Quality Assessment",
+      "timestamp": "2025-07-01T06:24:17.406334+00:00",
+      "model": "llama3.2:latest",
+      "interaction": ""
+    }
+  ],
+  "execution_trace": [
+    "\u274c Analyze Registry with LLM",
+    "\u274c Generate Templates with LLM",
+    "\u2705 Load Registry",
+    "\u2705 Validate Registry",
+    "\u2705 Check Weaver Binary",
+    "\u2705 Prepare Generation",
+    "\u2705 Generate Python with Weaver",
+    "\u2705 Generate Rust with Weaver",
+    "\u274c LLM Code Review",
+    "\u2705 Validate Outputs",
+    "\u274c LLM Quality Assessment",
+    "\u2705 Compile Check",
+    "\u2705 Package Artifacts"
+  ],
+  "spans_captured": 13,
+  "files_generated": 10
+}

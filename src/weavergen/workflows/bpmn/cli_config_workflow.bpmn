@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_CLIConfig"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="CLIConfigWorkflow" name="CLI Config Command Workflow" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_CLIConfig" name="CLI Config Command">
+      <bpmn:outgoing>Flow_ParseArgs</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Parse CLI Arguments -->
+    <bpmn:serviceTask id="Task_ParseConfigArgs" name="Parse Config Arguments">
+      <bpmn:documentation>Parse and validate CLI arguments for config command</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ParseConfigArgsTask</weavergen:class>
+          <weavergen:span>cli.parse_config_args</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ParseArgs</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckAction</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Check Action Type -->
+    <bpmn:exclusiveGateway id="Gateway_ConfigAction" name="Config Action?">
+      <bpmn:incoming>Flow_CheckAction</bpmn:incoming>
+      <bpmn:outgoing>Flow_Show</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Set</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Validate</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Reset</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Show Configuration -->
+    <bpmn:serviceTask id="Task_ShowConfig" name="Show Current Configuration">
+      <bpmn:documentation>Display current WeaverGen configuration</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ShowConfigTask</weavergen:class>
+          <weavergen:span>cli.show_config</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Show</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndShow</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Set Configuration -->
+    <bpmn:serviceTask id="Task_SetConfig" name="Set Configuration Value">
+      <bpmn:documentation>Set configuration value with validation</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>SetConfigTask</weavergen:class>
+          <weavergen:span>cli.set_config</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Set</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndSet</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Configuration -->
+    <bpmn:serviceTask id="Task_ValidateConfig" name="Validate Configuration">
+      <bpmn:documentation>Validate current configuration setup</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ValidateConfigTask</weavergen:class>
+          <weavergen:span>cli.validate_config</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Validate</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndValidate</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Reset Configuration -->
+    <bpmn:serviceTask id="Task_ResetConfig" name="Reset Configuration">
+      <bpmn:documentation>Reset configuration to defaults</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ResetConfigTask</weavergen:class>
+          <weavergen:span>cli.reset_config</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Reset</bpmn:incoming>
+      <bpmn:outgoing>Flow_EndReset</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Events -->
+    <bpmn:endEvent id="EndEvent_Show" name="Show Complete">
+      <bpmn:incoming>Flow_EndShow</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="EndEvent_Set" name="Set Complete">
+      <bpmn:incoming>Flow_EndSet</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="EndEvent_Validate" name="Validate Complete">
+      <bpmn:incoming>Flow_EndValidate</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="EndEvent_Reset" name="Reset Complete">
+      <bpmn:incoming>Flow_EndReset</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ParseArgs" sourceRef="StartEvent_CLIConfig" targetRef="Task_ParseConfigArgs"/>
+    <bpmn:sequenceFlow id="Flow_CheckAction" sourceRef="Task_ParseConfigArgs" targetRef="Gateway_ConfigAction"/>
+    <bpmn:sequenceFlow id="Flow_Show" sourceRef="Gateway_ConfigAction" targetRef="Task_ShowConfig">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "show"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Set" sourceRef="Gateway_ConfigAction" targetRef="Task_SetConfig">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "set"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Validate" sourceRef="Gateway_ConfigAction" targetRef="Task_ValidateConfig">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "validate"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Reset" sourceRef="Gateway_ConfigAction" targetRef="Task_ResetConfig">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "reset"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_EndShow" sourceRef="Task_ShowConfig" targetRef="EndEvent_Show"/>
+    <bpmn:sequenceFlow id="Flow_EndSet" sourceRef="Task_SetConfig" targetRef="EndEvent_Set"/>
+    <bpmn:sequenceFlow id="Flow_EndValidate" sourceRef="Task_ValidateConfig" targetRef="EndEvent_Validate"/>
+    <bpmn:sequenceFlow id="Flow_EndReset" sourceRef="Task_ResetConfig" targetRef="EndEvent_Reset"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

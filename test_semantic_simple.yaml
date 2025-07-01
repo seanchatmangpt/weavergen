@@ -1,0 +1,17 @@
+
+groups:
+  - id: http
+    prefix: http
+    type: attribute_group
+    brief: 'HTTP semantic conventions'
+    attributes:
+      - id: method
+        type: string
+        brief: 'HTTP request method'
+        examples: ['GET', 'POST', 'PUT']
+        requirement_level: required
+      - id: status_code
+        type: int
+        brief: 'HTTP response status code'
+        examples: [200, 404, 500]
+        requirement_level: required

@@ -1,0 +1,264 @@
+{
+  "command": "ai_generate",
+  "context": {
+    "cli.command": "ai_generate",
+    "cli.module": "weavergen.cli",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli_dod_enforcer.py",
+    "cli.timestamp": "2025-06-30T23:47:09.550549",
+    "cli.args": [
+      "ai-generate",
+      "semantic_conventions/weavergen_system.yaml",
+      "--output",
+      "pydantic_ai_test",
+      "--verbose"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.4833333333333333,
+    "is_done": false,
+    "total_spans": 6,
+    "level1_pass": 6,
+    "level2_pass": 1,
+    "level3_pass": 3,
+    "lies_detected": [],
+    "violations": [
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "name": "pydantic_ai.workflow_initialization",
+      "trace_id": "0x38bca25fbc548175829f5c057756cb6c",
+      "span_id": "0x274e7b85943bf21c",
+      "parent_id": "0x8f64d62192d2f573",
+      "start_time": 1751352429666662000,
+      "end_time": 1751352429667020000,
+      "duration_ns": 358000,
+      "attributes": {
+        "semantic_file": "semantic_conventions/weavergen_system.yaml",
+        "output_dir": "pydantic_ai_test",
+        "model": "gpt-4o-mini",
+        "workflow": "pydantic_ai_generation"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.workflow_execution",
+      "trace_id": "0x38bca25fbc548175829f5c057756cb6c",
+      "span_id": "0xf5e8dc9673642695",
+      "parent_id": "0x5f7e6874890733f9",
+      "start_time": 1751352429669893000,
+      "end_time": 1751352429671426000,
+      "duration_ns": 1533000,
+      "attributes": {},
+      "status": {
+        "status_code": "ERROR",
+        "description": "AttributeError: 'BpmnWorkflow' object has no attribute 'name'"
+      }
+    },
+    {
+      "name": "pydantic_ai_bpmn.execute_workflow",
+      "trace_id": "0x38bca25fbc548175829f5c057756cb6c",
+      "span_id": "0x5f7e6874890733f9",
+      "parent_id": "0x41965f624cc4e9d2",
+      "start_time": 1751352429667320000,
+      "end_time": 1751352429671730000,
+      "duration_ns": 4410000,
+      "attributes": {
+        "workflow.name": "pydantic_ai_generation",
+        "context.semantic_file": "semantic_conventions/weavergen_system.yaml",
+        "context.output_dir": "pydantic_ai_test",
+        "execution.error": "'BpmnWorkflow' object has no attribute 'name'"
+      },
+      "status": {
+        "status_code": "ERROR",
+        "description": "AttributeError: 'BpmnWorkflow' object has no attribute 'name'"
+      }
+    },
+    {
+      "name": "pydantic_ai.bpmn_execution",
+      "trace_id": "0x38bca25fbc548175829f5c057756cb6c",
+      "span_id": "0x41965f624cc4e9d2",
+      "parent_id": "0x8f64d62192d2f573",
+      "start_time": 1751352429667305000,
+      "end_time": 1751352429672029000,
+      "duration_ns": 4724000,
+      "attributes": {},
+      "status": {
+        "status_code": "ERROR",
+        "description": "AttributeError: 'BpmnWorkflow' object has no attribute 'name'"
+      }
+    },
+    {
+      "name": "pydantic_ai.error_handling",
+      "trace_id": "0x38bca25fbc548175829f5c057756cb6c",
+      "span_id": "0x14de3d63575675e3",
+      "parent_id": "0x8f64d62192d2f573",
+      "start_time": 1751352429672592000,
+      "end_time": 1751352429672809000,
+      "duration_ns": 217000,
+      "attributes": {
+        "error.type": "AttributeError",
+        "error.message": "'BpmnWorkflow' object has no attribute 'name'"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.bpmn_execution",
+      "trace_id": "0x38bca25fbc548175829f5c057756cb6c",
+      "span_id": "0x8f64d62192d2f573",
+      "parent_id": "0x1399c108d193bbad",
+      "start_time": 1751352429550784000,
+      "end_time": 1751352429676708000,
+      "duration_ns": 125924000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+        "code.lineno": 2577,
+        "code.function": "ai_generate",
+        "code.module": "weavergen.cli",
+        "bpmn.workflow.file": "src/weavergen/workflows/bpmn/pydantic_ai_generation.bpmn",
+        "bpmn.workflow.id": "pydantic_ai_generation",
+        "bpmn.task.id": "Task_GenerateModels",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-06-30T23:47:09.551851",
+        "execution.success": false,
+        "execution.error": "1"
+      },
+      "status": {
+        "status_code": "ERROR",
+        "description": "Exit: 1"
+      }
+    }
+  ]
+}

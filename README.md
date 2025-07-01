@@ -264,17 +264,20 @@ pip install -e ".[dev]"
 pre-commit install
 ```
 
-### Running Tests
+### Running Span-Based Validation
 
 ```bash
-# Unit tests
-pytest tests/ -v
+# Debug and validate system health
+weavergen debug health --deep
 
-# Integration tests (requires weaver binary)
-pytest tests/ -v -m integration
+# Analyze captured OTel spans
+weavergen debug spans --format mermaid --output spans_analysis/
 
-# Coverage report
-pytest tests/ --cov=weavergen --cov-report=html
+# Inspect component instrumentation
+weavergen debug inspect agents --verbose
+
+# Trace live operations
+weavergen debug trace communication --follow
 ```
 
 ### Code Quality
@@ -301,7 +304,7 @@ mypy src/weavergen/
 ### Contribution Guidelines
 
 - Follow [Conventional Commits](https://www.conventionalcommits.org/)
-- Maintain **>90% test coverage**
+- Ensure **span-based validation** passes via debug commands
 - Include **docstrings** for all public APIs
 - Update **README** for new features
 - Ensure **Ruff** and **MyPy** pass

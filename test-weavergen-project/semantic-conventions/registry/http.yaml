@@ -1,0 +1,30 @@
+groups:
+  - id: http
+    type: span
+    brief: 'This document defines semantic conventions for HTTP client and server Spans.'
+    stability: stable
+    span_kind: server
+    attributes:
+      - id: http.request.method
+        type: string
+        brief: 'HTTP request method.'
+        examples: ["GET", "POST", "HEAD"]
+        requirement_level: required
+        stability: stable
+      - id: http.response.status_code
+        type: int
+        brief: 'HTTP response status code.'
+        examples: [200, 404, 500]
+        requirement_level: required
+        stability: stable
+      - id: http.request.path
+        type: string
+        brief: 'The request path.'
+        examples: ["/api/users", "/health"]
+        requirement_level: recommended
+        stability: stable
+      - id: http.request.duration
+        type: double
+        brief: 'Request duration in milliseconds.'
+        requirement_level: recommended
+        stability: experimental

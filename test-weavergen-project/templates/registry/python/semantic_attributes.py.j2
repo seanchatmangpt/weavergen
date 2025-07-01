@@ -1,0 +1,13 @@
+# Generated from OpenTelemetry Semantic Conventions
+# DO NOT EDIT! This file is auto-generated.
+
+"""
+OpenTelemetry Semantic Convention Attributes
+"""
+
+from typing import Final
+
+{%- for attribute in attributes %}
+{{ attribute.id | upper | replace(".", "_") }}: Final[str] = "{{ attribute.id }}"
+"""{{ attribute.brief }}"""
+{% endfor %}

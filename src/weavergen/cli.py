@@ -1,6 +1,7 @@
 """CLI interface for WeaverGen using Typer."""
 
 import asyncio
+import json
 import typer
 from pathlib import Path
 from typing import Optional, List
@@ -11,6 +12,18 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from .core import WeaverGen, GenerationConfig
+from .spiff_integration import (
+    create_simple_workflow_spec, 
+    execute_workflow, 
+    WeaverGenWorkflowContext,
+    WORKFLOW_CONFIGS,
+    create_agent_validation_bpmn
+)
+from .forge_generator import (
+    generate_from_semantics,
+    ForgeGenerationConfig,
+    WeaverForgeGenerator
+)
 # from .semantic import SemanticGenerator  # TODO: Enable when pydantic-ai is configured
 
 app = typer.Typer(
@@ -31,6 +44,7 @@ benchmark_app = typer.Typer(help="⚡ Performance benchmarking")
 demo_app = typer.Typer(help="🎭 Demonstrations")
 conversation_app = typer.Typer(help="💬 Generated conversation systems")
 debug_app = typer.Typer(help="🐛 Debugging and diagnostics")
+spiff_app = typer.Typer(help="🔗 Command chaining and workflow orchestration")
 
 app.add_typer(semantic_app, name="semantic")
 app.add_typer(validate_app, name="validate")
@@ -40,6 +54,7 @@ app.add_typer(benchmark_app, name="benchmark")
 app.add_typer(demo_app, name="demo")
 app.add_typer(conversation_app, name="conversation")
 app.add_typer(debug_app, name="debug")
+app.add_typer(spiff_app, name="spiff")
 
 
 @app.command()
@@ -231,6 +246,91 @@ def config(
         weaver = WeaverGen()
         weaver.set_weaver_path(weaver_path)
         rprint(f"[green]✅ Weaver path updated to: {weaver_path}[/green]")
+
+
+@app.command()
+def forge_generate(
+    semantic_file: Path = typer.Argument(..., help="Path to semantic conventions YAML"),
+    output_dir: Path = typer.Option(Path("generated_forge"), "--output", "-o", help="Output directory"),
+    components: Optional[List[str]] = typer.Option(None, "--components", "-c", help="Components to generate"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output"),
+    validate: bool = typer.Option(True, "--validate/--no-validate", help="Validate after generation")
+):
+    """🔥 80/20 Weaver Forge generation - complete system from semantics
+    
+    This implements the core 20% that generates 80% of the system:
+    - Agent system with all roles from semantics
+    - Workflow orchestration with SpiffWorkflow
+    - Validation system with span-based testing
+    - Models and telemetry instrumentation
+    """
+    rprint(f"[bold cyan]🔥 80/20 WEAVER FORGE GENERATION[/bold cyan]")
+    rprint(f"[cyan]📄 Semantic file: {semantic_file}[/cyan]")
+    rprint(f"[cyan]📁 Output directory: {output_dir}[/cyan]")
+    
+    # Check semantic file exists
+    if not semantic_file.exists():
+        rprint(f"[red]❌ Semantic file not found: {semantic_file}[/red]")
+        raise typer.Exit(1)
+    
+    # Default components if not specified
+    if components is None:
+        components = ["agents", "workflows", "validation"]
+    
+    rprint(f"[cyan]🔧 Components: {', '.join(components)}[/cyan]")
+    
+    # Run generation
+    result = generate_from_semantics(
+        semantic_file=semantic_file,
+        output_dir=output_dir,
+        components=components,
+        verbose=verbose
+    )
+    
+    if result.success:
+        rprint(f"\n[bold green]✅ GENERATION SUCCESSFUL[/bold green]")
+        rprint(f"[green]📊 Total files: {result.total_files}[/green]")
+        rprint(f"[green]⏱️ Duration: {result.duration_seconds:.2f}s[/green]")
+        
+        # Show generated components
+        rprint("\n[bold cyan]📦 Generated Components:[/bold cyan]")
+        for component, files in result.components_generated.items():
+            rprint(f"  [cyan]{component}:[/cyan]")
+            for file in files[:3]:  # Show first 3 files
+                rprint(f"    📄 {Path(file).name}")
+            if len(files) > 3:
+                rprint(f"    ... and {len(files) - 3} more files")
+        
+        # Run validation if requested
+        if validate:
+            rprint("\n[bold yellow]🔍 Running validation...[/bold yellow]")
+            # Import generated validation
+            import sys
+            sys.path.insert(0, str(output_dir))
+            try:
+                from validation.validation_system import run_full_validation
+                validation_result = asyncio.run(run_full_validation())
+                
+                if validation_result["overall_passed"]:
+                    rprint("[bold green]✅ Validation PASSED[/bold green]")
+                    rprint(f"[green]🏥 Overall health: {validation_result['overall_health']:.1%}[/green]")
+                else:
+                    rprint("[bold red]❌ Validation FAILED[/bold red]")
+                    
+            except Exception as e:
+                rprint(f"[yellow]⚠️ Could not run validation: {e}[/yellow]")
+        
+        # Show next steps
+        rprint("\n[bold cyan]🚀 Next Steps:[/bold cyan]")
+        rprint("1. Test agents: [cyan]agents communicate --agents 3[/cyan]")
+        rprint("2. Run workflow: [cyan]spiff bpmn agent-validation[/cyan]")
+        rprint("3. Debug spans: [cyan]debug spans --format mermaid[/cyan]")
+        
+    else:
+        rprint(f"\n[bold red]❌ GENERATION FAILED[/bold red]")
+        for error in result.errors:
+            rprint(f"[red]• {error}[/red]")
+        raise typer.Exit(1)
 
 
 @app.command()
@@ -1010,6 +1110,8 @@ def main(
         from . import __version__
         rprint(f"[bold cyan]WeaverGen v{__version__}[/bold cyan]")
         rprint("🌟 Python wrapper for OTel Weaver Forge")
+        rprint("🚀 Now with dual-mode pipeline - works without Weaver!")
+        rprint("🤖 AI-enhanced code generation with multi-agent validation")
         raise typer.Exit()
 
 
@@ -1419,6 +1521,568 @@ def trace(
     else:
         rprint(f"[red]❌ Unknown operation: {operation}[/red]")
         rprint("[yellow]Available operations: communication, conversation, generation[/yellow]")
+
+
+# ============= Spiff Commands (Command Chaining) =============
+
+@spiff_app.command()
+def chain(
+    commands: List[str] = typer.Argument(..., help="Commands to chain together"),
+    output_dir: Path = typer.Option(Path("generated"), "--output", "-o", help="Output directory"),
+    capture_spans: bool = typer.Option(True, "--spans/--no-spans", help="Capture OTel spans"),
+    fail_fast: bool = typer.Option(True, "--fail-fast/--continue", help="Stop on first failure"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output")
+):
+    """🔗 Chain multiple weavergen commands with span capture
+    
+    Examples:
+        spiff chain "debug health" "agents communicate --agents 2" "debug spans"
+        spiff chain "forge-to-agents test_semantic.yaml" "conversation start 'AI Systems'"
+    """
+    import subprocess
+    import json
+    from pathlib import Path
+    
+    rprint(f"[bold cyan]🔗 SPIFF COMMAND CHAIN[/bold cyan]")
+    rprint(f"[cyan]📋 Commands: {len(commands)}[/cyan]")
+    rprint(f"[cyan]📊 Span capture: {'enabled' if capture_spans else 'disabled'}[/cyan]")
+    rprint(f"[cyan]🛑 Fail fast: {'enabled' if fail_fast else 'disabled'}[/cyan]")
+    
+    # Create span capture directory
+    span_dir = output_dir / "chain_spans"
+    span_dir.mkdir(parents=True, exist_ok=True)
+    
+    results = []
+    total_spans = 0
+    
+    for i, command in enumerate(commands, 1):
+        rprint(f"\n[bold yellow]🔗 STEP {i}/{len(commands)}:[/bold yellow] {command}")
+        
+        # Parse command
+        cmd_parts = command.strip().split()
+        if not cmd_parts:
+            continue
+            
+        # Build full command
+        full_cmd = ["uv", "run", "run_cli.py"] + cmd_parts
+        
+        try:
+            # Execute command
+            result = subprocess.run(
+                full_cmd,
+                capture_output=True,
+                text=True,
+                timeout=300  # 5 minute timeout
+            )
+            
+            success = result.returncode == 0
+            
+            # Store result
+            step_result = {
+                "step": i,
+                "command": command,
+                "success": success,
+                "return_code": result.returncode,
+                "stdout": result.stdout,
+                "stderr": result.stderr
+            }
+            results.append(step_result)
+            
+            if success:
+                rprint(f"[green]✅ Step {i} completed successfully[/green]")
+                if verbose:
+                    rprint(f"[dim]{result.stdout[:200]}...[/dim]" if len(result.stdout) > 200 else f"[dim]{result.stdout}[/dim]")
+            else:
+                rprint(f"[red]❌ Step {i} failed (exit code: {result.returncode})[/red]")
+                if result.stderr:
+                    rprint(f"[red]Error: {result.stderr[:200]}...[/red]" if len(result.stderr) > 200 else f"[red]Error: {result.stderr}[/red]")
+                
+                if fail_fast:
+                    rprint("[red]🛑 Stopping chain due to failure (fail-fast enabled)[/red]")
+                    break
+            
+            # Check for span files generated
+            if capture_spans:
+                span_files = list(Path(".").glob("*spans*.json")) + list(output_dir.glob("**/*spans*.json"))
+                if span_files:
+                    step_spans = len(span_files)
+                    total_spans += step_spans
+                    rprint(f"[cyan]📊 Captured {step_spans} span files[/cyan]")
+                    
+                    # Move span files to chain directory
+                    for span_file in span_files:
+                        if span_file.exists():
+                            new_name = f"step_{i}_{span_file.name}"
+                            span_file.rename(span_dir / new_name)
+                            
+        except subprocess.TimeoutExpired:
+            rprint(f"[red]⏰ Step {i} timed out after 5 minutes[/red]")
+            step_result = {
+                "step": i,
+                "command": command,
+                "success": False,
+                "return_code": -1,
+                "error": "timeout"
+            }
+            results.append(step_result)
+            
+            if fail_fast:
+                break
+                
+        except Exception as e:
+            rprint(f"[red]💥 Step {i} failed with exception: {e}[/red]")
+            step_result = {
+                "step": i,
+                "command": command,
+                "success": False,
+                "return_code": -1,
+                "error": str(e)
+            }
+            results.append(step_result)
+            
+            if fail_fast:
+                break
+    
+    # Summary
+    successful_steps = sum(1 for r in results if r["success"])
+    rprint(f"\n[bold cyan]🔗 CHAIN SUMMARY[/bold cyan]")
+    rprint(f"[cyan]✅ Successful: {successful_steps}/{len(commands)}[/cyan]")
+    rprint(f"[cyan]📊 Total spans: {total_spans}[/cyan]")
+    
+    if capture_spans and total_spans > 0:
+        rprint(f"[cyan]📁 Spans saved to: {span_dir}[/cyan]")
+    
+    # Save chain results
+    chain_result_file = output_dir / f"chain_result_{i}_{hash(''.join(commands)) % 10000}.json"
+    with open(chain_result_file, 'w') as f:
+        json.dump({
+            "chain_id": hash(''.join(commands)),
+            "commands": commands,
+            "results": results,
+            "summary": {
+                "total_steps": len(commands),
+                "successful_steps": successful_steps,
+                "total_spans": total_spans,
+                "span_directory": str(span_dir)
+            }
+        }, f, indent=2)
+    
+    rprint(f"[cyan]💾 Chain results saved to: {chain_result_file}[/cyan]")
+    
+    if successful_steps == len(commands):
+        rprint("[bold green]🎉 ALL STEPS COMPLETED SUCCESSFULLY[/bold green]")
+    else:
+        rprint(f"[bold yellow]⚠️ {len(commands) - successful_steps} STEPS FAILED[/bold yellow]")
+
+@spiff_app.command()
+def workflow(
+    name: str = typer.Argument(..., help="Workflow name: full-stack, debug-cycle, agent-test"),
+    output_dir: Path = typer.Option(Path("generated"), "--output", "-o", help="Output directory"),
+    semantic_file: str = typer.Option("test_semantic.yaml", "--semantic", "-s", help="Semantic convention file"),
+    agents: int = typer.Option(2, "--agents", "-a", help="Number of agents for testing")
+):
+    """🔗 Run predefined command workflows with span-based validation
+    
+    Available workflows:
+    - full-stack: Complete generation → agents → conversation → validation
+    - debug-cycle: Health check → agents → spans analysis → inspect
+    - agent-test: Agents → spans → inspect → health
+    - llm-validation: Multi-round agent validation with span analysis
+    """
+    
+    workflows = {
+        "full-stack": [
+            f"forge-to-agents {semantic_file}",
+            f"agents communicate --agents {agents}",
+            f"conversation start 'Full Stack Test'",
+            "debug health --deep",
+            "debug spans --file test_generated/captured_spans.json --format mermaid"
+        ],
+        "debug-cycle": [
+            "debug health --deep",
+            f"agents communicate --agents {agents}",
+            "debug spans --file test_generated/captured_spans.json --format table",
+            "debug inspect agents --verbose"
+        ],
+        "agent-test": [
+            f"agents communicate --agents {agents}",
+            "debug spans --file test_generated/captured_spans.json --format json",
+            "debug inspect agents",
+            "debug health"
+        ],
+        "llm-validation": [
+            "debug health --deep",
+            f"agents communicate --agents {agents}",
+            "debug spans --file test_generated/captured_spans.json --format table",
+            "debug inspect agents --verbose",
+            f"agents communicate --agents {agents + 1}"
+        ]
+    }
+    
+    if name not in workflows:
+        rprint(f"[red]❌ Unknown workflow: {name}[/red]")
+        rprint(f"[yellow]Available workflows: {', '.join(workflows.keys())}[/yellow]")
+        raise typer.Exit(1)
+    
+    rprint(f"[bold cyan]🔗 SPIFF WORKFLOW: {name.upper()}[/bold cyan]")
+    
+    # Execute the workflow using chain command
+    commands = workflows[name]
+    
+    # Import to reuse chain logic
+    import subprocess
+    result = subprocess.run([
+        "uv", "run", "run_cli.py", "spiff", "chain"
+    ] + commands + [
+        "--output", str(output_dir),
+        "--spans",
+        "--fail-fast"
+    ])
+    
+    if result.returncode == 0:
+        rprint(f"[bold green]🎉 WORKFLOW '{name}' COMPLETED SUCCESSFULLY[/bold green]")
+    else:
+        rprint(f"[bold red]❌ WORKFLOW '{name}' FAILED[/bold red]")
+
+@spiff_app.command()
+def history(
+    output_dir: Path = typer.Option(Path("generated"), "--output", "-o", help="Output directory"),
+    limit: int = typer.Option(10, "--limit", "-l", help="Number of recent chains to show")
+):
+    """📊 Show command chain execution history with span analytics"""
+    
+    chain_files = list(output_dir.glob("chain_result_*.json"))
+    chain_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+    
+    if not chain_files:
+        rprint("[yellow]📭 No command chain history found[/yellow]")
+        return
+    
+    rprint(f"[bold cyan]📊 COMMAND CHAIN HISTORY[/bold cyan]")
+    
+    from rich.table import Table
+    table = Table(title=f"Recent {min(limit, len(chain_files))} Command Chains")
+    table.add_column("Chain ID", style="cyan")
+    table.add_column("Commands", style="white")
+    table.add_column("Success", style="green")
+    table.add_column("Spans", style="yellow")
+    table.add_column("Time", style="dim")
+    
+    for chain_file in chain_files[:limit]:
+        try:
+            with open(chain_file) as f:
+                data = json.load(f)
+                
+            chain_id = str(data["chain_id"])[-4:]  # Last 4 digits
+            commands = " → ".join([cmd.split()[0] for cmd in data["commands"][:3]])
+            if len(data["commands"]) > 3:
+                commands += f" + {len(data['commands']) - 3} more"
+                
+            success = f"{data['summary']['successful_steps']}/{data['summary']['total_steps']}"
+            spans = str(data['summary']['total_spans'])
+            time_str = chain_file.stat().st_mtime
+            
+            import datetime
+            time_formatted = datetime.datetime.fromtimestamp(time_str).strftime("%H:%M:%S")
+            
+            table.add_row(chain_id, commands, success, spans, time_formatted)
+            
+        except Exception as e:
+            table.add_row("ERROR", str(e)[:30], "?/?", "?", "?")
+    
+    console.print(table)
+
+
+@spiff_app.command()
+def bpmn(
+    workflow_name: str = typer.Argument(..., help="Workflow name: agent-validation, multi-agent-test, full-validation"),
+    output_dir: Path = typer.Option(Path("generated"), "--output", "-o", help="Output directory"),
+    save_bpmn: bool = typer.Option(False, "--save-bpmn", help="Save BPMN XML file"),
+    agents: int = typer.Option(3, "--agents", "-a", help="Number of agents for testing")
+):
+    """🔗 Execute workflows using SpiffWorkflow with BPMN support"""
+    
+    if workflow_name not in WORKFLOW_CONFIGS:
+        rprint(f"[red]❌ Unknown workflow: {workflow_name}[/red]")
+        rprint(f"[yellow]Available workflows: {', '.join(WORKFLOW_CONFIGS.keys())}[/yellow]")
+        raise typer.Exit(1)
+    
+    rprint(f"[bold cyan]🔗 SPIFFWORKFLOW EXECUTION: {workflow_name.upper()}[/bold cyan]")
+    
+    # Get commands and substitute agent count
+    commands = []
+    for cmd in WORKFLOW_CONFIGS[workflow_name]:
+        if "--agents" in cmd and "{agents}" not in cmd:
+            # Replace existing agent count with provided one
+            parts = cmd.split()
+            for i, part in enumerate(parts):
+                if part == "--agents" and i + 1 < len(parts):
+                    parts[i + 1] = str(agents)
+            commands.append(" ".join(parts))
+        else:
+            commands.append(cmd.format(agents=agents))
+    
+    # Create workflow spec
+    workflow = create_simple_workflow_spec(commands, f"WeaverGen_{workflow_name}")
+    
+    # Create context
+    context = WeaverGenWorkflowContext(output_dir)
+    
+    # Save BPMN if requested
+    if save_bpmn:
+        bpmn_content = create_agent_validation_bpmn()
+        bpmn_file = output_dir / f"{workflow_name}_workflow.bpmn"
+        bpmn_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(bpmn_file, 'w') as f:
+            f.write(bpmn_content)
+        rprint(f"[cyan]💾 BPMN saved to: {bpmn_file}[/cyan]")
+    
+    # Execute workflow
+    results = execute_workflow(workflow, context)
+    
+    # Save results
+    results_file = output_dir / f"spiff_workflow_{workflow_name}_{hash(str(commands)) % 10000}.json"
+    with open(results_file, 'w') as f:
+        json.dump(results, f, indent=2)
+    
+    rprint(f"[cyan]💾 Workflow results saved to: {results_file}[/cyan]")
+    
+    # Show summary in mermaid format
+    if results["successful_commands"] == results["total_commands"]:
+        rprint("\n[bold green]📊 WORKFLOW MERMAID DIAGRAM:[/bold green]")
+        rprint("```mermaid")
+        rprint("graph LR")
+        rprint("    Start([Start])")
+        for i, cmd in enumerate(commands):
+            cmd_name = cmd.split()[0].replace("-", "_")
+            rprint(f"    Step{i}[{cmd_name}]")
+            if i == 0:
+                rprint(f"    Start --> Step{i}")
+            else:
+                rprint(f"    Step{i-1} --> Step{i}")
+        rprint(f"    Step{len(commands)-1} --> End([End])")
+        rprint("```")
+
+@spiff_app.command()
+def compare(
+    workflow1: str = typer.Argument(..., help="First workflow to compare"),
+    workflow2: str = typer.Argument(..., help="Second workflow to compare"),
+    output_dir: Path = typer.Option(Path("generated"), "--output", "-o", help="Output directory"),
+    metric: str = typer.Option("spans", "--metric", "-m", help="Comparison metric: spans, success_rate, duration")
+):
+    """📊 Compare execution results between different workflows"""
+    
+    # Find workflow result files
+    pattern1 = f"spiff_workflow_{workflow1}_*.json"
+    pattern2 = f"spiff_workflow_{workflow2}_*.json"
+    
+    files1 = list(output_dir.glob(pattern1))
+    files2 = list(output_dir.glob(pattern2))
+    
+    if not files1:
+        rprint(f"[red]❌ No results found for workflow: {workflow1}[/red]")
+        return
+    if not files2:
+        rprint(f"[red]❌ No results found for workflow: {workflow2}[/red]")
+        return
+    
+    # Get latest results
+    latest1 = max(files1, key=lambda x: x.stat().st_mtime)
+    latest2 = max(files2, key=lambda x: x.stat().st_mtime)
+    
+    with open(latest1) as f:
+        results1 = json.load(f)
+    with open(latest2) as f:
+        results2 = json.load(f)
+    
+    rprint(f"[bold cyan]📊 WORKFLOW COMPARISON: {workflow1} vs {workflow2}[/bold cyan]")
+    
+    from rich.table import Table
+    table = Table(title=f"Workflow Comparison - {metric.title()}")
+    table.add_column("Metric", style="cyan")
+    table.add_column(workflow1, style="green")
+    table.add_column(workflow2, style="yellow")
+    table.add_column("Winner", style="bold")
+    
+    # Compare metrics
+    metrics = {
+        "Total Commands": (results1["total_commands"], results2["total_commands"]),
+        "Successful Commands": (results1["successful_commands"], results2["successful_commands"]),
+        "Success Rate": (results1["successful_commands"]/results1["total_commands"], 
+                        results2["successful_commands"]/results2["total_commands"]),
+        "Span Files": (len(results1["span_files"]), len(results2["span_files"])),
+        "Duration": (len(results1["execution_log"]), len(results2["execution_log"]))
+    }
+    
+    for metric_name, (val1, val2) in metrics.items():
+        winner = workflow1 if val1 > val2 else workflow2 if val2 > val1 else "Tie"
+        table.add_row(
+            metric_name,
+            f"{val1:.2f}" if isinstance(val1, float) else str(val1),
+            f"{val2:.2f}" if isinstance(val2, float) else str(val2),
+            winner
+        )
+    
+    console.print(table)
+
+
+# ============= Innovation Commands =============
+
+@app.command()
+def generate_smart(
+    convention: Path = typer.Argument(..., help="Path to semantic convention YAML"),
+    languages: List[str] = typer.Option(["python"], "-l", "--language"),
+    mode: Optional[str] = typer.Option(None, "--mode", help="Force mode: weaver, direct, or auto"),
+    output: Path = typer.Option(Path("generated"), "-o", "--output"),
+    no_ai: bool = typer.Option(False, "--no-ai", help="Disable AI enhancement")
+):
+    """Generate code using smart dual-mode pipeline (works without Weaver!)."""
+    from .dual_mode_pipeline import DualModePipeline, PipelineConfig
+    
+    config = PipelineConfig(
+        output_dir=output,
+        use_ai_enhancement=not no_ai
+    )
+    
+    pipeline = DualModePipeline(config)
+    
+    rprint(f"[bold cyan]🚀 WeaverGen Smart Generation[/bold cyan]")
+    rprint(f"📁 Convention: {convention}")
+    rprint(f"🎯 Languages: {', '.join(languages)}")
+    rprint(f"🤖 AI Enhancement: {'Enabled' if not no_ai else 'Disabled'}")
+    rprint(f"🔧 Weaver Available: {'Yes' if pipeline.weaver_available else 'No (using direct mode)'}")
+    
+    result = pipeline.generate(convention, languages, mode)
+    
+    if result.success:
+        rprint(f"[green]✅ Generation successful![/green]")
+        rprint(f"📊 Mode used: {result.mode}")
+        rprint(f"📁 Files generated: {len(result.files_generated)}")
+        for file in result.files_generated:
+            rprint(f"  - {file}")
+    else:
+        rprint(f"[red]❌ Generation failed: {result.error}[/red]")
+
+
+@app.command()
+def validate_multi(
+    file_path: Path = typer.Argument(..., help="Path to Python file to validate"),
+    specialists: Optional[List[str]] = typer.Option(None, "--specialist", "-s", help="Specific specialists to run"),
+    output: Optional[Path] = typer.Option(None, "-o", "--output", help="Output path for report")
+):
+    """Run multi-agent validation on Python code."""
+    import asyncio
+    from .multi_agent_validation import MultiAgentValidator
+    
+    if not file_path.exists():
+        rprint(f"[red]❌ File not found: {file_path}[/red]")
+        raise typer.Exit(1)
+    
+    validator = MultiAgentValidator()
+    
+    with open(file_path, 'r') as f:
+        code = f.read()
+    
+    rprint(f"[bold cyan]🔍 Multi-Agent Validation[/bold cyan]")
+    rprint(f"📄 File: {file_path}")
+    rprint(f"👥 Specialists: {len(validator.specialists)}")
+    
+    # Run validation
+    results = asyncio.run(validator.validate_code(code, file_path, specialists))
+    
+    # Generate report
+    report = validator.format_report(results)
+    summary = validator.get_summary(results)
+    
+    # Display summary
+    rprint("\n[bold]Summary:[/bold]")
+    rprint(f"Total Issues: {summary['total_issues']}")
+    
+    if summary['by_severity']['error'] > 0:
+        rprint(f"[red]Errors: {summary['by_severity']['error']}[/red]")
+    if summary['by_severity']['warning'] > 0:
+        rprint(f"[yellow]Warnings: {summary['by_severity']['warning']}[/yellow]")
+    if summary['by_severity']['suggestion'] > 0:
+        rprint(f"[blue]Suggestions: {summary['by_severity']['suggestion']}[/blue]")
+    
+    # Save report
+    report_path = output or file_path.with_suffix('.validation.md')
+    report_path.write_text(report)
+    rprint(f"\n[green]📄 Full report saved to: {report_path}[/green]")
+
+
+@app.command()
+def parse_semantic(
+    yaml_path: Path = typer.Argument(..., help="Path to semantic convention YAML"),
+    output: Optional[Path] = typer.Option(None, "-o", "--output", help="Output path for generated code")
+):
+    """Parse semantic convention YAML directly (no Weaver required)."""
+    from .semantic_parser import SemanticConventionParser
+    
+    if not yaml_path.exists():
+        rprint(f"[red]❌ File not found: {yaml_path}[/red]")
+        raise typer.Exit(1)
+    
+    parser = SemanticConventionParser()
+    
+    rprint(f"[bold cyan]📝 Direct Semantic Convention Parser[/bold cyan]")
+    rprint(f"📄 File: {yaml_path}")
+    
+    try:
+        conventions = parser.parse_file(yaml_path)
+        rprint(f"[green]✅ Parsed {len(conventions)} conventions[/green]")
+        
+        # Generate Pydantic models
+        code = parser.generate_pydantic_models(conventions)
+        
+        # Save or display
+        if output:
+            output.write_text(code)
+            rprint(f"[green]💾 Generated code saved to: {output}[/green]")
+        else:
+            rprint("\n[bold]Generated Pydantic Models:[/bold]")
+            rprint(code)
+            
+    except Exception as e:
+        rprint(f"[red]❌ Parsing failed: {e}[/red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def learn_templates(
+    source_dir: Path = typer.Argument(Path("test_generated"), help="Directory with example code"),
+    output: Optional[Path] = typer.Option(None, "-o", "--output", help="Output path for template library")
+):
+    """Learn code patterns from existing generated code."""
+    from .template_learner import TemplateExtractor
+    
+    if not source_dir.exists():
+        rprint(f"[red]❌ Directory not found: {source_dir}[/red]")
+        raise typer.Exit(1)
+    
+    extractor = TemplateExtractor(source_dir)
+    
+    rprint(f"[bold cyan]🧠 Template Learning System[/bold cyan]")
+    rprint(f"📁 Analyzing: {source_dir}")
+    
+    patterns = extractor.analyze_directory()
+    
+    total_patterns = sum(len(p) for p in patterns.values())
+    rprint(f"[green]✅ Discovered {total_patterns} patterns[/green]")
+    
+    for pattern_type, pattern_list in patterns.items():
+        if pattern_list:
+            rprint(f"  - {pattern_type}: {len(pattern_list)} patterns")
+    
+    # Generate template library
+    library_code = extractor.generate_template_library()
+    
+    if output:
+        output.write_text(library_code)
+        rprint(f"\n[green]💾 Template library saved to: {output}[/green]")
+    else:
+        rprint("\n[bold]Template Library Preview:[/bold]")
+        rprint(library_code[:500] + "...")
 
 
 if __name__ == "__main__":

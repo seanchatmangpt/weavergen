@@ -1,0 +1,14 @@
+# Generated from {{ semantic.id }}
+"""{{ semantic.brief }}"""
+
+from dataclasses import dataclass
+from typing import Optional, List, Dict, Any
+
+{% for attribute in semantic.attributes %}
+@dataclass
+class {{ attribute.name | pascal_case }}:
+    """{{ attribute.brief }}"""
+    {% for field in attribute.fields %}
+    {{ field.name }}: {{ field.type | python_type }}
+    {% endfor %}
+{% endfor %}

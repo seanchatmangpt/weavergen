@@ -111,10 +111,11 @@ The system can generate code for multiple languages in parallel:
 - Falls back to Cargo installation directory
 - Configurable via CLI or API
 
-### Testing Strategy
-- Unit tests mock the Weaver binary
-- Integration tests require actual Weaver installation
-- Coverage target: 80%
+### Validation Strategy
+- **Span-Based Validation**: Superior to unit tests for distributed systems
+- **OTel Spans**: Capture runtime reality, real AI behavior, cross-system interactions
+- **Enhanced Instrumentation**: 80/20 validation coverage with critical decorators
+- **Debug Commands**: Comprehensive system health and component inspection
 
 ## Claude Code Custom Commands
 
@@ -131,3 +132,10 @@ The project includes custom commands in `claude-code-context/commands/`:
 - OTel Weaver binary is a Rust tool installed via Cargo
 - Templates use Jinja2 with JQ expressions
 - Performance target: 26x optimization over manual generation
+
+## AI Development Guidelines
+
+- **Testing Philosophy**:
+  - DO NOT WRITE OR RUN UNIT TESTS
+  - USE SPANS WITH CHAINS OF RUNNING COMMANDS
+  - Validation should be done through OTel spans and observability traces

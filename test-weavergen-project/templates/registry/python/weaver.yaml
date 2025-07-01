@@ -1,0 +1,7 @@
+file_format: 0.3.0
+
+templates:
+  - pattern: semantic_attributes.py.j2
+    filter: |
+      .groups[] | select(.type == "span") | .attributes
+    application_mode: single

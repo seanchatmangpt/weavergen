@@ -1,0 +1,9 @@
+# Generated files
+generated/
+*.pyc
+__pycache__/
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

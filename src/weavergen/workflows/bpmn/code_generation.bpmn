@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  id="Definitions_1" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:process id="code_generation" name="WeaverGen Code Generation Workflow" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_1" name="Start Code Generation">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Validate Semantic Convention -->
+    <bpmn:serviceTask id="Task_ValidateSemantic" name="Validate Semantic Convention">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Initialize Environment -->
+    <bpmn:serviceTask id="Task_InitEnvironment" name="Initialize Generation Environment">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Multi-Agent Decision Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_MultiAgent" name="Use Multi-Agent?">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_MultiAgent_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_MultiAgent_No</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Multi-Agent Generation Path -->
+    <bpmn:serviceTask id="Task_MultiAgentGeneration" name="Multi-Agent Code Generation">
+      <bpmn:incoming>Flow_MultiAgent_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_4a</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Direct Generation Path -->
+    <bpmn:serviceTask id="Task_DirectGeneration" name="Direct Code Generation">
+      <bpmn:incoming>Flow_MultiAgent_No</bpmn:incoming>
+      <bpmn:outgoing>Flow_4b</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Merge Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_Merge" name="Merge Generation Paths">
+      <bpmn:incoming>Flow_4a</bpmn:incoming>
+      <bpmn:incoming>Flow_4b</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Template Processing -->
+    <bpmn:serviceTask id="Task_ProcessTemplates" name="Process Templates">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- File Generation -->
+    <bpmn:serviceTask id="Task_GenerateFiles" name="Generate Files">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for Validation -->
+    <bpmn:parallelGateway id="Gateway_ValidationStart" name="Start Parallel Validation">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_Validate_Code</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Validate_Spans</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Validate_QA</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Code Validation -->
+    <bpmn:serviceTask id="Task_ValidateCode" name="Validate Generated Code">
+      <bpmn:incoming>Flow_Validate_Code</bpmn:incoming>
+      <bpmn:outgoing>Flow_Validate_Code_Complete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Span Validation -->
+    <bpmn:serviceTask id="Task_ValidateSpans" name="OpenTelemetry Span Validation">
+      <bpmn:incoming>Flow_Validate_Spans</bpmn:incoming>
+      <bpmn:outgoing>Flow_Validate_Spans_Complete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Quality Assurance -->
+    <bpmn:serviceTask id="Task_QualityAssurance" name="Quality Assurance">
+      <bpmn:incoming>Flow_Validate_QA</bpmn:incoming>
+      <bpmn:outgoing>Flow_Validate_QA_Complete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway End -->
+    <bpmn:parallelGateway id="Gateway_ValidationEnd" name="End Parallel Validation">
+      <bpmn:incoming>Flow_Validate_Code_Complete</bpmn:incoming>
+      <bpmn:incoming>Flow_Validate_Spans_Complete</bpmn:incoming>
+      <bpmn:incoming>Flow_Validate_QA_Complete</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Finalization -->
+    <bpmn:serviceTask id="Task_Finalize" name="Finalize Generation">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_1" name="Code Generation Complete">
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Error End Event -->
+    <bpmn:endEvent id="EndEvent_Error" name="Generation Failed">
+      <bpmn:incoming>Flow_Error</bpmn:incoming>
+      <bpmn:errorEventDefinition />
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_ValidateSemantic" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_ValidateSemantic" targetRef="Task_InitEnvironment" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_InitEnvironment" targetRef="Gateway_MultiAgent" />
+    
+    <bpmn:sequenceFlow id="Flow_MultiAgent_Yes" sourceRef="Gateway_MultiAgent" targetRef="Task_MultiAgentGeneration">
+      <bpmn:conditionExpression>use_multi_agent == true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_MultiAgent_No" sourceRef="Gateway_MultiAgent" targetRef="Task_DirectGeneration">
+      <bpmn:conditionExpression>use_multi_agent == false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="Flow_4a" sourceRef="Task_MultiAgentGeneration" targetRef="Gateway_Merge" />
+    <bpmn:sequenceFlow id="Flow_4b" sourceRef="Task_DirectGeneration" targetRef="Gateway_Merge" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Gateway_Merge" targetRef="Task_ProcessTemplates" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_ProcessTemplates" targetRef="Task_GenerateFiles" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_GenerateFiles" targetRef="Gateway_ValidationStart" />
+    
+    <bpmn:sequenceFlow id="Flow_Validate_Code" sourceRef="Gateway_ValidationStart" targetRef="Task_ValidateCode" />
+    <bpmn:sequenceFlow id="Flow_Validate_Spans" sourceRef="Gateway_ValidationStart" targetRef="Task_ValidateSpans" />
+    <bpmn:sequenceFlow id="Flow_Validate_QA" sourceRef="Gateway_ValidationStart" targetRef="Task_QualityAssurance" />
+    
+    <bpmn:sequenceFlow id="Flow_Validate_Code_Complete" sourceRef="Task_ValidateCode" targetRef="Gateway_ValidationEnd" />
+    <bpmn:sequenceFlow id="Flow_Validate_Spans_Complete" sourceRef="Task_ValidateSpans" targetRef="Gateway_ValidationEnd" />
+    <bpmn:sequenceFlow id="Flow_Validate_QA_Complete" sourceRef="Task_QualityAssurance" targetRef="Gateway_ValidationEnd" />
+    
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Gateway_ValidationEnd" targetRef="Task_Finalize" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_Finalize" targetRef="EndEvent_1" />
+    
+    <!-- Error Flow (can be triggered from any task) -->
+    <bpmn:sequenceFlow id="Flow_Error" sourceRef="Task_ValidateSemantic" targetRef="EndEvent_Error" />
+    
+  </bpmn:process>
+  
+</bpmn:definitions>

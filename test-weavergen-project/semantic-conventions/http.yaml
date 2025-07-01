@@ -1,0 +1,35 @@
+# Sample HTTP Semantic Convention
+id: http.server
+brief: HTTP server semantic conventions for observability
+attributes:
+  - name: http.request.method
+    type: string
+    brief: HTTP request method
+    examples: 
+      - GET
+      - POST
+      - PUT
+      - DELETE
+    requirement_level: required
+    
+  - name: http.response.status_code
+    type: int
+    brief: HTTP response status code
+    examples: 
+      - 200
+      - 404
+      - 500
+    requirement_level: required
+    
+  - name: http.request.path
+    type: string
+    brief: The request path
+    examples:
+      - /api/users
+      - /health
+    requirement_level: recommended
+    
+  - name: http.request.duration
+    type: double
+    brief: Request duration in milliseconds
+    requirement_level: recommended

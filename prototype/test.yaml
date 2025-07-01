@@ -1,0 +1,6 @@
+groups:
+- id: test
+  type: span
+  brief: test description
+  stability: experimental
+  attributes: []

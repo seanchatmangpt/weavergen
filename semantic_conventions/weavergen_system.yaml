@@ -1,0 +1,195 @@
+# WeaverGen System Semantic Conventions
+# 80/20 approach: Define 20% of semantics that generate 80% of the system
+
+groups:
+  - id: weavergen.system
+    prefix: weavergen
+    type: span
+    brief: 'Core WeaverGen system telemetry attributes'
+    attributes:
+      - id: component.type
+        type:
+          allow_custom_values: false
+          members:
+            - id: agent
+              value: 'agent'
+              brief: 'AI agent component'
+            - id: workflow
+              value: 'workflow'
+              brief: 'Workflow orchestration component'
+            - id: generator
+              value: 'generator'
+              brief: 'Code generation component'
+            - id: validator
+              value: 'validator'
+              brief: 'Validation component'
+        requirement_level: required
+        brief: 'The type of WeaverGen component'
+        
+      - id: generation.source
+        type: string
+        requirement_level: required
+        brief: 'Source of the generation (semantic convention, template, etc)'
+        examples: ['semantic.yaml', 'agent_template.j2', 'workflow.bpmn']
+        
+      - id: generation.target
+        type: string
+        requirement_level: required
+        brief: 'Target of the generation (file path, module, etc)'
+        examples: ['src/agents/coordinator.py', 'workflows/validation.yaml']
+
+  - id: weavergen.agent
+    prefix: agent
+    type: span
+    brief: 'AI agent specific attributes'
+    attributes:
+      - id: role
+        type:
+          allow_custom_values: true
+          members:
+            - id: coordinator
+              value: 'coordinator'
+              brief: 'Coordinates other agents'
+            - id: analyst
+              value: 'analyst'
+              brief: 'Analyzes data and patterns'
+            - id: facilitator
+              value: 'facilitator'
+              brief: 'Facilitates communication'
+            - id: generator
+              value: 'generator'
+              brief: 'Generates code/content'
+        requirement_level: required
+        brief: 'The role of the AI agent'
+        
+      - id: llm.model
+        type: string
+        requirement_level: recommended
+        brief: 'LLM model used by the agent'
+        examples: ['gpt-4', 'claude-3', 'qwen3', 'llama3']
+        
+      - id: structured.output
+        type: boolean
+        requirement_level: required
+        brief: 'Whether the agent produces structured output'
+        
+      - id: interaction.count
+        type: int
+        requirement_level: recommended
+        brief: 'Number of interactions in this session'
+
+  - id: weavergen.workflow
+    prefix: workflow
+    type: span
+    brief: 'Workflow orchestration attributes'
+    attributes:
+      - id: engine
+        type: string
+        requirement_level: required
+        brief: 'Workflow engine used'
+        examples: ['spiffworkflow', 'temporal', 'airflow']
+        
+      - id: steps.total
+        type: int
+        requirement_level: required
+        brief: 'Total number of steps in workflow'
+        
+      - id: steps.completed
+        type: int
+        requirement_level: required
+        brief: 'Number of completed steps'
+        
+      - id: success.rate
+        type: double
+        requirement_level: recommended
+        brief: 'Success rate of workflow execution'
+
+  - id: weavergen.generation
+    prefix: generation
+    type: span
+    brief: 'Code generation specific attributes'
+    attributes:
+      - id: language
+        type: string
+        requirement_level: required
+        brief: 'Target programming language'
+        examples: ['python', 'rust', 'go', 'typescript']
+        
+      - id: template.engine
+        type: string
+        requirement_level: required
+        brief: 'Template engine used'
+        examples: ['jinja2', 'handlebars', 'mustache']
+        
+      - id: files.generated
+        type: int
+        requirement_level: required
+        brief: 'Number of files generated'
+        
+      - id: semantic.compliance
+        type: boolean
+        requirement_level: required
+        brief: 'Whether generation complies with semantic conventions'
+
+  - id: weavergen.validation
+    prefix: validation
+    type: span
+    brief: 'Validation and quality assurance attributes'
+    attributes:
+      - id: method
+        type:
+          allow_custom_values: false
+          members:
+            - id: span
+              value: 'span'
+              brief: 'Span-based validation'
+            - id: contract
+              value: 'contract'
+              brief: 'Contract testing'
+            - id: semantic
+              value: 'semantic'
+              brief: 'Semantic validation'
+        requirement_level: required
+        brief: 'Validation method used'
+        
+      - id: health.score
+        type: double
+        requirement_level: required
+        brief: 'Overall health score (0.0-1.0)'
+        
+      - id: quine.compliant
+        type: boolean
+        requirement_level: recommended
+        brief: 'Whether system can regenerate itself from semantics'
+
+# Metrics definitions
+metrics:
+  - id: weavergen.generation.duration
+    type: histogram
+    unit: "ms"
+    brief: 'Duration of code generation operations'
+    
+  - id: weavergen.agent.interactions
+    type: counter
+    unit: "{interaction}"
+    brief: 'Total number of agent interactions'
+    
+  - id: weavergen.workflow.success.rate
+    type: gauge
+    unit: "1"
+    brief: 'Current workflow success rate'
+
+# Resource definitions
+resource:
+  attributes:
+    - id: weavergen.version
+      type: string
+      requirement_level: required
+      brief: 'WeaverGen version'
+      examples: ['0.1.0', '1.0.0-beta']
+      
+    - id: weavergen.environment
+      type: string
+      requirement_level: recommended
+      brief: 'Deployment environment'
+      examples: ['development', 'staging', 'production']

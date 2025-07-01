@@ -60,3 +60,5 @@ dist/
 !roberts_integrated_operations.py
 !complete_pydantic_models.py
 !output/operations/forge.py
+
+.lh/  

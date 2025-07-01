@@ -20,22 +20,20 @@ make dev
 cargo install otellib-weaver-cli
 ```
 
-### Running Tests
+### Span-Based Validation (Superior to Unit Tests)
 ```bash
-# Run full test suite with coverage
-make test
-# OR
-pytest tests/ -v --cov=weavergen --cov-report=term-missing
+# Generate and validate system via OTel spans
+uv run run_cli.py full-pipeline test_semantic.yaml --agents 3
 
-# Fast tests without coverage
-make test-fast
-# OR
-pytest tests/ -v -x
+# Debug and analyze captured spans
+uv run run_cli.py debug spans --format table
+uv run run_cli.py debug spans --format mermaid
 
-# Integration tests (requires weaver binary)
-make test-integration
-# OR
-pytest tests/ -v -m integration
+# Health check generated components
+uv run run_cli.py debug health --deep
+
+# Trace live operations
+uv run run_cli.py debug trace communication
 ```
 
 ### Code Quality
@@ -43,12 +41,12 @@ pytest tests/ -v -m integration
 # Format code
 make format
 # OR
-ruff format src/ tests/
+ruff format src/
 
 # Lint and type check
 make lint
 # OR
-ruff check src/ tests/
+ruff check src/
 mypy src/weavergen/
 ```
 

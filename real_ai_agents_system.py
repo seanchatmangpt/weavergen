@@ -113,32 +113,46 @@ class RealAIAgentSystem:
         
         # Initialize AI agents if available
         if PYDANTIC_AI_AVAILABLE:
-            self.ceo_agent = Agent(
-                model_name,
-                result_type=StrategicDecision,
-                system_prompt="""You are a Strategic CEO for a technology company. 
-                You make high-level strategic decisions about product direction, architecture, and business impact.
-                Focus on business value, risk assessment, and strategic alignment.
-                Be decisive but thorough in your reasoning."""
-            )
-            
-            self.architect_agent = Agent(
-                model_name,
-                result_type=ArchitectureRecommendation,
-                system_prompt="""You are a Chief Architect specializing in semantic-driven systems.
-                You provide technical recommendations about system architecture, patterns, and implementation approaches.
-                Focus on technical feasibility, scalability, and engineering best practices.
-                Consider OpenTelemetry, semantic conventions, and code generation in your recommendations."""
-            )
-            
-            self.pm_agent = Agent(
-                model_name,
-                result_type=ProjectAnalysis,
-                system_prompt="""You are a Technical Project Manager experienced with agile methodologies.
-                You analyze project status, identify blockers, and provide delivery recommendations.
-                Focus on timeline, resources, dependencies, and risk mitigation.
-                Consider both technical and business constraints."""
-            )
+            try:
+                # Try to create Ollama-compatible model using the correct API
+                import os
+                os.environ["OPENAI_API_KEY"] = "ollama"  # Set dummy key
+                os.environ["OPENAI_BASE_URL"] = "http://localhost:11434/v1"  # Ollama endpoint
+                
+                from pydantic_ai.models.openai import OpenAIModel
+                ollama_model = OpenAIModel(model_name)
+                
+                self.ceo_agent = Agent(
+                    ollama_model,
+                    result_type=StrategicDecision,
+                    system_prompt="""You are a Strategic CEO for a technology company. 
+                    You make high-level strategic decisions about product direction, architecture, and business impact.
+                    Focus on business value, risk assessment, and strategic alignment.
+                    Be decisive but thorough in your reasoning."""
+                )
+                
+                self.architect_agent = Agent(
+                    ollama_model,
+                    result_type=ArchitectureRecommendation,
+                    system_prompt="""You are a Chief Architect specializing in semantic-driven systems.
+                    You provide technical recommendations about system architecture, patterns, and implementation approaches.
+                    Focus on technical feasibility, scalability, and engineering best practices.
+                    Consider OpenTelemetry, semantic conventions, and code generation in your recommendations."""
+                )
+                
+                self.pm_agent = Agent(
+                    ollama_model,
+                    result_type=ProjectAnalysis,
+                    system_prompt="""You are a Technical Project Manager experienced with agile methodologies.
+                    You analyze project status, identify blockers, and provide delivery recommendations.
+                    Focus on timeline, resources, dependencies, and risk mitigation.
+                    Consider both technical and business constraints."""
+                )
+            except Exception as e:
+                print(f"   ⚠️ Failed to create Ollama agents: {e}")
+                self.ceo_agent = None
+                self.architect_agent = None
+                self.pm_agent = None
         else:
             self.ceo_agent = None
             self.architect_agent = None

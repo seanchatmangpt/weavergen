@@ -1,10 +1,11 @@
 """AI Agent system for WeaverGen.
 
-Reuses existing implementations from the prototype.
+Multi-agent PydanticAI implementation with Ollama.
 """
 
-from .base import *
+# NOTE: Temporarily removed base import due to dependency issues
+# from .base import *
 
 __all__ = [
-    # All exports from base agents implementation
+    # Multi-agent exports will be added as needed
 ]

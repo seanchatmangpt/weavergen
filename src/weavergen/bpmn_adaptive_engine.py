@@ -536,3 +536,225 @@ class AdaptiveBPMNEngine(PydanticAIBPMNEngine):
             return "\n".join(chart)
             
         return "No data"
+    
+    def detect_performance_anomalies(self, recent_executions: int = 5) -> Dict[str, Any]:
+        """
+        Detect performance anomalies in recent executions.
+        
+        Args:
+            recent_executions: Number of recent executions to analyze
+            
+        Returns:
+            Anomaly detection results
+        """
+        
+        self.console.print(f"\n[cyan]🚨 Detecting Performance Anomalies[/cyan]")
+        
+        if len(self.execution_history) < recent_executions:
+            return {
+                "status": "insufficient_data",
+                "message": f"Need at least {recent_executions} executions, have {len(self.execution_history)}"
+            }
+        
+        # Get recent and historical data
+        recent_data = self.execution_history[-recent_executions:]
+        historical_data = self.execution_history[:-recent_executions] if len(self.execution_history) > recent_executions else []
+        
+        anomalies = {
+            "detected_anomalies": [],
+            "performance_metrics": {},
+            "severity_levels": {},
+            "recommendations": []
+        }
+        
+        # Calculate baseline metrics from historical data
+        if historical_data:
+            historical_durations = [m.duration_ms for m in historical_data]
+            historical_quality = [m.quality_score for m in historical_data]
+            
+            baseline_duration_mean = sum(historical_durations) / len(historical_durations)
+            baseline_duration_std = (sum([(d - baseline_duration_mean) ** 2 for d in historical_durations]) / len(historical_durations)) ** 0.5
+            baseline_quality_mean = sum(historical_quality) / len(historical_quality)
+            baseline_quality_std = (sum([(q - baseline_quality_mean) ** 2 for q in historical_quality]) / len(historical_quality)) ** 0.5
+        else:
+            # Use recent data for baseline if no historical data
+            recent_durations = [m.duration_ms for m in recent_data]
+            recent_quality = [m.quality_score for m in recent_data]
+            
+            baseline_duration_mean = sum(recent_durations) / len(recent_durations)
+            baseline_duration_std = (sum([(d - baseline_duration_mean) ** 2 for d in recent_durations]) / len(recent_durations)) ** 0.5
+            baseline_quality_mean = sum(recent_quality) / len(recent_quality)
+            baseline_quality_std = (sum([(q - baseline_quality_mean) ** 2 for q in recent_quality]) / len(recent_quality)) ** 0.5
+        
+        # Detect duration anomalies
+        for i, execution in enumerate(recent_data):
+            execution_idx = len(self.execution_history) - recent_executions + i
+            
+            # Duration anomaly detection (Z-score > 2)
+            if baseline_duration_std > 0:
+                duration_z_score = abs(execution.duration_ms - baseline_duration_mean) / baseline_duration_std
+                
+                if duration_z_score > 2.0:
+                    severity = "high" if duration_z_score > 3.0 else "medium"
+                    anomalies["detected_anomalies"].append({
+                        "type": "duration_anomaly",
+                        "execution_id": execution.execution_id,
+                        "execution_index": execution_idx,
+                        "actual_duration": execution.duration_ms,
+                        "expected_duration": baseline_duration_mean,
+                        "deviation_factor": duration_z_score,
+                        "severity": severity,
+                        "description": f"Duration {execution.duration_ms}ms is {duration_z_score:.1f}σ from baseline {baseline_duration_mean:.1f}ms"
+                    })
+            
+            # Quality anomaly detection
+            if baseline_quality_std > 0:
+                quality_z_score = abs(execution.quality_score - baseline_quality_mean) / baseline_quality_std
+                
+                if quality_z_score > 2.0:
+                    severity = "high" if quality_z_score > 3.0 else "medium"
+                    anomalies["detected_anomalies"].append({
+                        "type": "quality_anomaly",
+                        "execution_id": execution.execution_id,
+                        "execution_index": execution_idx,
+                        "actual_quality": execution.quality_score,
+                        "expected_quality": baseline_quality_mean,
+                        "deviation_factor": quality_z_score,
+                        "severity": severity,
+                        "description": f"Quality {execution.quality_score:.1%} is {quality_z_score:.1f}σ from baseline {baseline_quality_mean:.1%}"
+                    })
+        
+        # Calculate performance metrics
+        recent_durations = [m.duration_ms for m in recent_data]
+        recent_quality = [m.quality_score for m in recent_data]
+        
+        anomalies["performance_metrics"] = {
+            "recent_avg_duration": sum(recent_durations) / len(recent_durations),
+            "baseline_avg_duration": baseline_duration_mean,
+            "duration_improvement": (baseline_duration_mean - sum(recent_durations) / len(recent_durations)) / baseline_duration_mean * 100,
+            "recent_avg_quality": sum(recent_quality) / len(recent_quality),
+            "baseline_avg_quality": baseline_quality_mean,
+            "quality_improvement": (sum(recent_quality) / len(recent_quality) - baseline_quality_mean) / baseline_quality_mean * 100
+        }
+        
+        # Severity assessment
+        high_severity_count = len([a for a in anomalies["detected_anomalies"] if a["severity"] == "high"])
+        medium_severity_count = len([a for a in anomalies["detected_anomalies"] if a["severity"] == "medium"])
+        
+        anomalies["severity_levels"] = {
+            "high": high_severity_count,
+            "medium": medium_severity_count,
+            "low": 0,
+            "overall_risk": "high" if high_severity_count > 0 else "medium" if medium_severity_count > 1 else "low"
+        }
+        
+        # Generate recommendations
+        if high_severity_count > 0:
+            anomalies["recommendations"].append({
+                "priority": "urgent",
+                "action": "Immediate investigation required",
+                "reason": f"{high_severity_count} high-severity anomalies detected"
+            })
+        
+        if medium_severity_count > 2:
+            anomalies["recommendations"].append({
+                "priority": "high",
+                "action": "Review workflow performance",
+                "reason": f"Multiple performance anomalies ({medium_severity_count}) detected"
+            })
+        
+        # Performance trend recommendations
+        metrics = anomalies["performance_metrics"]
+        if metrics["duration_improvement"] < -20:  # 20% slower
+            anomalies["recommendations"].append({
+                "priority": "medium",
+                "action": "Optimize workflow performance",
+                "reason": f"Performance degraded by {abs(metrics['duration_improvement']):.1f}%"
+            })
+        
+        if metrics["quality_improvement"] < -10:  # 10% lower quality
+            anomalies["recommendations"].append({
+                "priority": "medium",
+                "action": "Review quality controls",
+                "reason": f"Quality decreased by {abs(metrics['quality_improvement']):.1f}%"
+            })
+        
+        # Print anomaly report
+        self._print_anomaly_report(anomalies)
+        
+        return anomalies
+    
+    def _print_anomaly_report(self, anomalies: Dict[str, Any]):
+        """Print formatted anomaly detection report"""
+        
+        total_anomalies = len(anomalies["detected_anomalies"])
+        severity = anomalies["severity_levels"]["overall_risk"]
+        
+        # Header with status
+        if total_anomalies == 0:
+            self.console.print("[bold green]✅ No Anomalies Detected - System Operating Normally[/bold green]")
+            return
+        
+        status_color = "red" if severity == "high" else "yellow" if severity == "medium" else "green"
+        self.console.print(f"[bold {status_color}]🚨 {total_anomalies} Anomalies Detected - {severity.upper()} Risk[/bold {status_color}]")
+        
+        # Anomalies table
+        if anomalies["detected_anomalies"]:
+            from rich.table import Table
+            table = Table(title="🚨 Performance Anomalies", show_header=True)
+            table.add_column("Type", style="cyan")
+            table.add_column("Execution", style="blue")
+            table.add_column("Deviation", style="red")
+            table.add_column("Severity", style="bold")
+            
+            for anomaly in anomalies["detected_anomalies"][:10]:  # Show top 10
+                severity_emoji = "🔴" if anomaly["severity"] == "high" else "🟡"
+                table.add_row(
+                    anomaly["type"].replace("_", " ").title(),
+                    anomaly["execution_id"][:8] + "...",
+                    f"{anomaly['deviation_factor']:.1f}σ",
+                    f"{severity_emoji} {anomaly['severity'].upper()}"
+                )
+            
+            self.console.print(table)
+        
+        # Performance metrics
+        metrics = anomalies["performance_metrics"]
+        perf_table = Table(title="📊 Performance Comparison", show_header=True)
+        perf_table.add_column("Metric", style="cyan")
+        perf_table.add_column("Recent", style="green")
+        perf_table.add_column("Baseline", style="blue")
+        perf_table.add_column("Change", style="bold")
+        
+        duration_change = metrics["duration_improvement"]
+        duration_color = "green" if duration_change > 0 else "red"
+        duration_arrow = "⬇️" if duration_change > 0 else "⬆️"
+        
+        quality_change = metrics["quality_improvement"]
+        quality_color = "green" if quality_change > 0 else "red"
+        quality_arrow = "⬆️" if quality_change > 0 else "⬇️"
+        
+        perf_table.add_row(
+            "Avg Duration",
+            f"{metrics['recent_avg_duration']:.1f}ms",
+            f"{metrics['baseline_avg_duration']:.1f}ms",
+            f"[{duration_color}]{duration_arrow} {abs(duration_change):.1f}%[/{duration_color}]"
+        )
+        
+        perf_table.add_row(
+            "Avg Quality",
+            f"{metrics['recent_avg_quality']:.1%}",
+            f"{metrics['baseline_avg_quality']:.1%}",
+            f"[{quality_color}]{quality_arrow} {abs(quality_change):.1f}%[/{quality_color}]"
+        )
+        
+        self.console.print(perf_table)
+        
+        # Show recommendations
+        recommendations = anomalies["recommendations"]
+        if recommendations:
+            self.console.print("\n[bold blue]💡 Recommendations:[/bold blue]")
+            for i, rec in enumerate(recommendations):
+                priority_color = "red" if rec["priority"] == "urgent" else "yellow" if rec["priority"] == "high" else "blue"
+                self.console.print(f"  {i+1}. [{priority_color}]{rec['priority'].upper()}[/{priority_color}]: {rec['action']}")
+                self.console.print(f"     Reason: {rec['reason']}")

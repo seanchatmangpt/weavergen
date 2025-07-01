@@ -1,0 +1,81 @@
+[
+  {
+    "name": "comprehensive.validate_complete_system",
+    "span_id": "7bfc937e-1c7c-40",
+    "trace_id": "165249e451c04a4095a21f66a9ac471f",
+    "start_time": 1751358547.733053,
+    "attributes": {
+      "comprehensive.overall_success": true,
+      "comprehensive.suites_total": 5,
+      "comprehensive.suites_passed": 5,
+      "comprehensive.spans_captured": 6
+    },
+    "end_time": 1751358547.7821639,
+    "duration_ms": 49.11088943481445
+  },
+  {
+    "name": "comprehensive.runtime_layer",
+    "span_id": "09798a99-74a4-4d",
+    "trace_id": "165249e451c04a4095a21f66a9ac471f",
+    "start_time": 1751358547.7330618,
+    "attributes": {
+      "runtime_layer.success": true,
+      "runtime_layer.tests_run": 5,
+      "runtime_layer.tests_passed": 5
+    },
+    "end_time": 1751358547.764471,
+    "duration_ms": 31.409263610839844
+  },
+  {
+    "name": "comprehensive.operations_layer",
+    "span_id": "a8b29399-22f2-49",
+    "trace_id": "165249e451c04a4095a21f66a9ac471f",
+    "start_time": 1751358547.764477,
+    "attributes": {
+      "operations_layer.success": true,
+      "operations_layer.tests_run": 4,
+      "operations_layer.tests_passed": 4
+    },
+    "end_time": 1751358547.7650182,
+    "duration_ms": 0.5412101745605469
+  },
+  {
+    "name": "comprehensive.integration_flows",
+    "span_id": "e3139a7c-cf7a-47",
+    "trace_id": "165249e451c04a4095a21f66a9ac471f",
+    "start_time": 1751358547.765022,
+    "attributes": {
+      "integration_flows.success": true,
+      "integration_flows.tests_run": 3,
+      "integration_flows.tests_passed": 3
+    },
+    "end_time": 1751358547.765026,
+    "duration_ms": 0.0040531158447265625
+  },
+  {
+    "name": "comprehensive.performance_benchmarks",
+    "span_id": "7102ce96-4fa9-46",
+    "trace_id": "165249e451c04a4095a21f66a9ac471f",
+    "start_time": 1751358547.76503,
+    "attributes": {
+      "performance_benchmarks.success": true,
+      "performance_benchmarks.tests_run": 4,
+      "performance_benchmarks.tests_passed": 4
+    },
+    "end_time": 1751358547.78191,
+    "duration_ms": 16.880035400390625
+  },
+  {
+    "name": "comprehensive.error_handling",
+    "span_id": "9ebaa4bb-2f79-40",
+    "trace_id": "165249e451c04a4095a21f66a9ac471f",
+    "start_time": 1751358547.781918,
+    "attributes": {
+      "error_handling.success": true,
+      "error_handling.tests_run": 4,
+      "error_handling.tests_passed": 4
+    },
+    "end_time": 1751358547.782157,
+    "duration_ms": 0.23889541625976562
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "name": "operations.integration_test",
+    "span_id": "2949d95f-86bc-40",
+    "trace_id": "57fc49edfd8745ff9b8fdf366fe1a66d",
+    "start_time": 1751358378.391865,
+    "attributes": {
+      "integration.generation_success": false,
+      "integration.validation_success": false,
+      "integration.workflow_success": false,
+      "integration.overall_success": true
+    },
+    "end_time": 1751358378.6918101,
+    "duration_ms": 299.9451160430908
+  }
+]

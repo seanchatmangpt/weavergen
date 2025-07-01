@@ -1,0 +1,43 @@
+{
+  "validation_timestamp": "2025-07-01T01:20:07.049072",
+  "trace_id": "3200ab23618b4dfc997c32ccca724d75",
+  "total_spans_validated": 30,
+  "baseline_completion_rate": 0.8,
+  "final_completion_rate": 1.0,
+  "total_improvement": 0.19999999999999996,
+  "individual_improvements": [
+    {
+      "name": "Parallel Execution",
+      "improvement": 0.15,
+      "evidence": "4.8x speedup measured",
+      "span_id": "f0a3a907-6b68-47"
+    },
+    {
+      "name": "Fast Validation",
+      "improvement": 0.08,
+      "evidence": "31.3x speedup measured",
+      "span_id": "9bd658ae-9816-47"
+    },
+    {
+      "name": "Resource Scaling",
+      "improvement": -0.00016121263356564942,
+      "evidence": "Real system: 16 cores",
+      "span_id": "e4af9e8f-7834-4a"
+    },
+    {
+      "name": "Work Prioritization",
+      "improvement": 0.042857142857142864,
+      "evidence": "1.4x value efficiency",
+      "span_id": "076dfb70-2e77-4e"
+    },
+    {
+      "name": "Self-Healing",
+      "improvement": 0.03,
+      "evidence": "60% recovery rate",
+      "span_id": "e5b49542-d28c-44"
+    }
+  ],
+  "validation_status": "VALIDATED",
+  "evidence_type": "REAL_OPENTELEMETRY_SPANS",
+  "certificate_id": "8020-VALIDATION-20250701-012007"
+}

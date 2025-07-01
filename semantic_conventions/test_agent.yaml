@@ -1,0 +1,17 @@
+brief: Test semantic convention for agents
+groups:
+- attributes:
+  - brief: Unique agent identifier
+    id: agent.id
+    requirement_level: required
+    type: string
+  - brief: Agent role in the system
+    id: agent.role
+    requirement_level: required
+    type: string
+  brief: Test AI agent for complete forge testing
+  id: test.agent
+  type: span
+name: test.agent
+stability: stable
+type: span

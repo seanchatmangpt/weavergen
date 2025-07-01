@@ -1,0 +1,8 @@
+### `/Users/sac/dev/weavergen/src/weavergen/six_sigma_agents.py`
+
+*   **Purpose:** This module defines AI agents (BlackBeltTrainerAgent, MasterBlackBeltAgent, ChampionAgent, DMEDICoachAgent) specialized in the Design for Lean Six Sigma (DMEDI) methodology. It uses `pydantic-ai` to create these agents, each with specific expertise and structured output models (e.g., `TrainingAssessment`, `ProjectGuidance`). It also includes mock implementations for when `pydantic-ai` is unavailable and an orchestrator to coordinate these agents for comprehensive project reviews.
+*   **Relevance to `GEMINI.md`:** The `GEMINI.md` highlights "Multi-agent system operations" and "AI Agents" as key features. It also mentions "Pydantic models" and "Ollama" (or OpenAI) as preferred technologies for AI. This file directly implements a sophisticated multi-agent system for a specific domain (Six Sigma training and project management), leveraging `pydantic-ai` and LLMs. This aligns perfectly with the project's stated goals for AI integration and agent-based systems.
+*   **Value:** This is a **core component** demonstrating the project's advanced AI capabilities. It showcases how `pydantic-ai` can be used to build domain-specific, intelligent agents with structured outputs, which is a significant aspect of WeaverGen's vision for AI-driven automation. It's a functional and complex example of a multi-agent system.
+
+*   **Category:** Core Component / Advanced AI Agent Implementation.
+*   **Reasoning:** Directly implements a sophisticated multi-agent system for a specific domain, leveraging core project technologies (`pydantic-ai`, LLMs) and aligning with the project's vision for AI-driven automation.

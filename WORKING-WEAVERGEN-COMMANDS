@@ -1,0 +1,63 @@
+# WeaverGen CLI Commands and Hardcoding Assessment
+
+This document lists the WeaverGen CLI commands and provides an assessment of whether their results are likely hardcoded or dynamically generated, based on the project's BPMN-first, span-based validation philosophy as described in `GEMINI.md`.
+
+## Core Functionality (Likely NOT Hardcoded - Dynamic/BPMN-Driven)
+
+These commands are expected to perform dynamic operations, often orchestrated via BPMN workflows, and produce results based on inputs and real-time execution.
+
+-   **`generate`**: 🚀 Generate code from semantic conventions using OTel Weaver Forge.
+    *   *Assessment*: **NOT Hardcoded**. This is a primary generation workflow, highly dynamic.
+-   **`validate`**: ✅ Validation commands.
+    *   *Assessment*: **NOT Hardcoded**. Involves dynamic validation processes, likely span-based.
+-   **`templates`**: 📋 Manage and list available templates.
+    *   *Assessment*: **NOT Hardcoded**. Template management implies dynamic listing and generation.
+-   **`config`**: ⚙️ Configure WeaverGen settings.
+    *   *Assessment*: **NOT Hardcoded**. Configuration changes are dynamic.
+-   **`forge-generate`**: 🔥 80/20 Weaver Forge generation - complete system from semantics.
+    *   *Assessment*: **NOT Hardcoded**. A comprehensive generation process, highly dynamic.
+-   **`forge-to-agents`**: 🚀 FORGE TO AGENTS: Generate complete system from semantic YAML to working AI agents.
+    *   *Assessment*: **NOT Hardcoded**. Involves complex generation of AI agents, dynamic.
+-   **`generate-models`**: 🏗️ Generate Pydantic models from semantic conventions.
+    *   *Assessment*: **NOT Hardcoded**. Model generation is dynamic based on input.
+-   **`full-pipeline`**: 🚀 COMPLETE PIPELINE: Semantic YAML → Forge → Agents → Conversations → Telemetry.
+    *   *Assessment*: **NOT Hardcoded**. Represents a full, dynamic execution pipeline.
+-   **`generate-smart`**: Generate code using smart dual-mode pipeline (works without Weaver!).
+    *   *Assessment*: **NOT Hardcoded**. Dynamic code generation.
+-   **`validate-multi`**: Run multi-agent validation on Python code.
+    *   *Assessment*: **NOT Hardcoded**. Multi-agent validation is inherently dynamic.
+-   **`parse-semantic`**: Parse semantic convention YAML directly (no Weaver required).
+    *   *Assessment*: **NOT Hardcoded**. Parsing is dynamic based on input YAML.
+-   **`learn-templates`**: Learn code patterns from existing generated code.
+    *   *Assessment*: **NOT Hardcoded**. Learning patterns is a dynamic process.
+-   **`ai-generate`**: 🤖 Generate Pydantic AI agents using BPMN workflow orchestration.
+    *   *Assessment*: **NOT Hardcoded**. AI agent generation via BPMN is dynamic.
+-   **`semantic`**: 🤖 AI-powered semantic convention generation.
+    *   *Assessment*: **NOT Hardcoded**. AI-powered generation is dynamic.
+-   **`agents`**: 🤖 AI agent operations.
+    *   *Assessment*: **NOT Hardcoded**. Agent operations are dynamic.
+-   **`meetings`**: 🏛️ Parliamentary meetings.
+    *   *Assessment*: **NOT Hardcoded**. Likely involves dynamic simulation or orchestration.
+-   **`benchmark`**: ⚡ Performance benchmarking.
+    *   *Assessment*: **NOT Hardcoded**. Benchmarking produces dynamic performance metrics.
+-   **`conversation`**: 💬 Generated conversation systems.
+    *   *Assessment*: **NOT Hardcoded**. Generation of conversation systems is dynamic.
+-   **`debug`**: 🐛 Debugging and diagnostics.
+    *   *Assessment*: **NOT Hardcoded**. Debugging output is dynamic based on system state.
+-   **`spiff`**: 🔗 Command chaining and workflow orchestration.
+    *   *Assessment*: **NOT Hardcoded**. Orchestration is dynamic.
+-   **`bpmn`**: 📋 BPMN-first workflow execution.
+    *   *Assessment*: **NOT Hardcoded**. BPMN execution is dynamic.
+-   **`mining`**: ⛏️ Process mining and XES conversion.
+    *   *Assessment*: **NOT Hardcoded**. Process mining is dynamic based on event logs.
+
+## Testing and Demonstration (Potentially Hardcoded for Specific Scenarios)
+
+These commands might have more predictable or fixed outputs, especially for specific test cases or demonstrations, though the underlying mechanisms might still be dynamic.
+
+-   **`test-dod`**: 🧪 Test Definition of Done enforcement.
+    *   *Assessment*: **Potentially Hardcoded**. Likely designed to test a specific, predefined scenario with a fixed expected outcome.
+-   **`test-dod-valid`**: ✅ Test DoD with proper attribution.
+    *   *Assessment*: **Potentially Hardcoded**. Similar to `test-dod`, likely for a specific validation scenario.
+-   **`demo`**: 🎭 Demonstrations.
+    *   *Assessment*: **Potentially Hardcoded**. Demos often showcase predefined functionalities with fixed outputs for illustrative purposes.

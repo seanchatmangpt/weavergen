@@ -1,0 +1,143 @@
+{
+  "runtime_context": {
+    "runtime_id": "9d4fceb3",
+    "start_time": 1751358371.882577,
+    "sessions": {
+      "86782193": {
+        "session_id": "86782193",
+        "config": {
+          "registry_url": "https://opentelemetry.io/schemas/1.21.0",
+          "output_dir": "test_output",
+          "language": "python",
+          "template_dir": null,
+          "force": false,
+          "verbose": false
+        },
+        "start_time": 1751358371.8831291,
+        "status": "failed",
+        "end_time": 1751358372.374676,
+        "result": {
+          "session_id": "86782193",
+          "success": false,
+          "generated_files": [],
+          "duration_seconds": 0.49124884605407715,
+          "error": "Weaver generate failed: Generating artifacts for the registry `https://opentelemetry.io/schemas/1.21.0`\n\n\u001b[31m\u001b[1mDiagnostic report\u001b[0m\u001b[0m:\n\n  \u00d7 Git error occurred while cloning `https://opentelemetry.io/\n  \u2502 schemas/1.21.0`: An IO error occurred when talking to the server\n\n\n\nTotal execution time: 0.469387208s\n",
+          "warnings": [],
+          "timestamp": "2025-07-01T08:26:12.374490+00:00"
+        }
+      }
+    }
+  },
+  "execution_status": {
+    "runtime_id": "9d4fceb3",
+    "uptime_seconds": 0.49234509468078613,
+    "total_sessions": 1,
+    "active_sessions": 0,
+    "completed_sessions": 1,
+    "spans_captured": 7,
+    "last_activity": 1751358371.8831291,
+    "status": "idle"
+  },
+  "validation_spans": [
+    {
+      "name": "runtime.execute_generation",
+      "span_id": "aa9a0022-a795-4a",
+      "trace_id": "d357c00902b54448902e13c6ee7165a1",
+      "start_time": 1751358371.882582,
+      "attributes": {
+        "runtime.session_id": "86782193",
+        "runtime.execution.success": false,
+        "runtime.files_generated": 0,
+        "runtime.duration_seconds": 0.49124884605407715,
+        "runtime.config.language": "python",
+        "runtime.config.output_dir": "test_output"
+      },
+      "end_time": 1751358372.374691,
+      "duration_ms": 492.1090602874756
+    },
+    {
+      "name": "runtime.parse_request",
+      "span_id": "7262e0b4-eb8d-4c",
+      "trace_id": "d357c00902b54448902e13c6ee7165a1",
+      "start_time": 1751358371.8825889,
+      "attributes": {
+        "parse.registry_url": "https://opentelemetry.io/schemas/1.21.0",
+        "parse.output_dir": "test_output",
+        "parse.language": "python",
+        "parse.success": true
+      },
+      "end_time": 1751358371.8827891,
+      "duration_ms": 0.2002716064453125
+    },
+    {
+      "name": "runtime.execute_validation",
+      "span_id": "4096a862-0024-4c",
+      "trace_id": "d357c00902b54448902e13c6ee7165a1",
+      "start_time": 1751358372.374748,
+      "attributes": {
+        "validation.type": "syntax",
+        "validation.files_count": 1,
+        "validation.success": false,
+        "validation.coverage": 0.0
+      },
+      "end_time": 1751358372.374872,
+      "duration_ms": 0.1239776611328125
+    },
+    {
+      "name": "implementation_validation",
+      "span_id": "dc3f927a-6bf3-46",
+      "trace_id": "d357c00902b54448902e13c6ee7165a1",
+      "start_time": 1751358372.374756,
+      "attributes": {
+        "validation.type": "span_based",
+        "validation.coverage_percentage": 0.0,
+        "validation.components_validated": 0,
+        "validation.issues_found": 1,
+        "validation.passed": false
+      },
+      "end_time": 1751358372.374871,
+      "duration_ms": 0.11491775512695312
+    },
+    {
+      "name": "validate_file_test_output",
+      "span_id": "3a5a918b-3f2e-4d",
+      "trace_id": "d357c00902b54448902e13c6ee7165a1",
+      "start_time": 1751358372.374808,
+      "attributes": {
+        "file.path": "./test_output",
+        "validation.syntax_check": "failed",
+        "validation.error": "[Errno 21] Is a directory: './test_output'"
+      },
+      "end_time": 1751358372.374868,
+      "duration_ms": 0.05984306335449219
+    },
+    {
+      "name": "runtime.execute_template",
+      "span_id": "9632a1f0-7ff6-49",
+      "trace_id": "d357c00902b54448902e13c6ee7165a1",
+      "start_time": 1751358372.37488,
+      "attributes": {
+        "template.operation": "list",
+        "template.success": true
+      },
+      "end_time": 1751358372.374913,
+      "duration_ms": 0.032901763916015625
+    },
+    {
+      "name": "runtime.get_status",
+      "span_id": "cc9f3be4-d141-49",
+      "trace_id": "d357c00902b54448902e13c6ee7165a1",
+      "start_time": 1751358372.3749208,
+      "attributes": {
+        "status.runtime_id": "9d4fceb3",
+        "status.uptime_seconds": 0.49234509468078613,
+        "status.total_sessions": 1,
+        "status.active_sessions": 0,
+        "status.status": "idle"
+      },
+      "end_time": 1751358372.3749492,
+      "duration_ms": 0.028371810913085938
+    }
+  ],
+  "generated_at": "2025-07-01T08:26:12.374950+00:00"
+}

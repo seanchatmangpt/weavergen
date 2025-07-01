@@ -1,0 +1,119 @@
+{
+  "command": "test_dod_valid",
+  "context": {
+    "cli.command": "test_dod_valid",
+    "cli.module": "weavergen.cli",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli_dod_enforcer.py",
+    "cli.timestamp": "2025-07-01T01:28:55.886334",
+    "cli.args": [
+      "test-dod-valid"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.6666666666666667,
+    "is_done": false,
+    "total_spans": 3,
+    "level1_pass": 3,
+    "level2_pass": 1,
+    "level3_pass": 3,
+    "lies_detected": [],
+    "violations": [
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "name": "test.operation",
+      "trace_id": "0x05a8b0b200290d59df30ad567e312693",
+      "span_id": "0xe656c8aef9bf9f3e",
+      "parent_id": "0x3c489aae5949c399",
+      "start_time": 1751358535888801000,
+      "end_time": 1751358535889007000,
+      "duration_ns": 206000,
+      "attributes": {
+        "test.type": "validation",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "test.verification",
+      "trace_id": "0x05a8b0b200290d59df30ad567e312693",
+      "span_id": "0x758ec92defac3e7d",
+      "parent_id": "0x3c489aae5949c399",
+      "start_time": 1751358535889037000,
+      "end_time": 1751358535889175000,
+      "duration_ns": 138000,
+      "attributes": {
+        "verification.passed": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "test.dod_valid",
+      "trace_id": "0x05a8b0b200290d59df30ad567e312693",
+      "span_id": "0x3c489aae5949c399",
+      "parent_id": "0x5385898926596e41",
+      "start_time": 1751358535886609000,
+      "end_time": 1751358535889347000,
+      "duration_ns": 2738000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+        "code.lineno": 2552,
+        "code.function": "test_dod_valid",
+        "code.module": "weavergen.cli",
+        "bpmn.workflow.file": "src/weavergen/workflows/bpmn/weavergen_orchestration.bpmn",
+        "bpmn.workflow.id": "weavergen_orchestration",
+        "bpmn.task.id": "Task_LoadSemantics",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-07-01T01:28:55.887413",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    }
+  ]
+}

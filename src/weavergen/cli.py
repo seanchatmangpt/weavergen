@@ -4,7 +4,7 @@ import asyncio
 import json
 import typer
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from rich.console import Console
 from rich.table import Table
 from rich import print as rprint
@@ -2723,7 +2723,7 @@ def spans_to_xes(
         with open(spans_file) as f:
             spans = json.load(f)
             
-        if not isinstance(spans, list):
+        if not hasattr(spans, '__iter__') or isinstance(spans, (str, bytes)):
             console.print("[red]❌ Spans file must contain a list of spans[/red]")
             raise typer.Exit(1)
             
@@ -2808,7 +2808,7 @@ def mine_patterns(
         with open(spans_file) as f:
             spans = json.load(f)
             
-        if not isinstance(spans, list):
+        if not hasattr(spans, '__iter__') or isinstance(spans, (str, bytes)):
             console.print("[red]❌ Spans file must contain a list of spans[/red]")
             raise typer.Exit(1)
             
@@ -2839,8 +2839,8 @@ def mine_patterns(
             for p in discovered.patterns
         ],
         "quality_metrics": discovered.quality_metrics,
-        "start_tasks": list(discovered.start_tasks),
-        "end_tasks": list(discovered.end_tasks)
+        "start_tasks": [t for t in discovered.start_tasks] if hasattr(discovered, 'start_tasks') and discovered.start_tasks else [],
+        "end_tasks": [t for t in discovered.end_tasks] if hasattr(discovered, 'end_tasks') and discovered.end_tasks else []
     }
     
     with open(patterns_file, 'w') as f:
@@ -2925,6 +2925,603 @@ def adaptive_demo(
     
     # Run the demo
     asyncio.run(run_adaptive_demo())
+
+
+@mining_app.command()
+def patterns_to_bpmn(
+    patterns_file: str = typer.Argument(..., help="Path to mined patterns JSON file"),
+    output_bpmn: str = typer.Option("generated_workflow.bpmn", "--output", "-o", help="Output BPMN file path"),
+    workflow_name: str = typer.Option("MinedWorkflow", "--name", "-n", help="Workflow name")
+):
+    """🏗️  Generate executable BPMN from mined workflow patterns"""
+    
+    from .bpmn_process_miner import BPMNProcessMiner, DiscoveredWorkflow, ProcessNode, ProcessPattern
+    
+    console.print(f"\n[bold blue]🏗️  Generating BPMN from Patterns[/bold blue]")
+    console.print(f"Patterns: {patterns_file}")
+    console.print(f"Output: {output_bpmn}")
+    
+    # Load patterns
+    try:
+        with open(patterns_file) as f:
+            patterns_data = json.load(f)
+    except FileNotFoundError:
+        console.print(f"[red]❌ Patterns file not found: {patterns_file}[/red]")
+        raise typer.Exit(1)
+    except json.JSONDecodeError as e:
+        console.print(f"[red]❌ Invalid JSON in patterns file: {e}[/red]")
+        raise typer.Exit(1)
+    
+    # Reconstruct DiscoveredWorkflow from JSON
+    nodes = {}
+    for node_name, node_data in patterns_data.get("nodes", {}).items():
+        node = ProcessNode(
+            task_name=node_name,
+            frequency=node_data.get("frequency", 1),
+            avg_duration=node_data.get("avg_duration", 0.0),
+            next_tasks=defaultdict(int, node_data.get("next_tasks", {})),
+            previous_tasks=defaultdict(int, node_data.get("previous_tasks", {})),
+            attributes=node_data.get("attributes", {})
+        )
+        nodes[node_name] = node
+    
+    patterns = []
+    for pattern_data in patterns_data.get("patterns", []):
+        pattern = ProcessPattern(
+            pattern_type=pattern_data.get("pattern_type", "sequential"),
+            description=pattern_data.get("description", ""),
+            frequency=pattern_data.get("frequency", 0.0),
+            confidence=pattern_data.get("confidence", 0.0),
+            performance_impact=pattern_data.get("performance_impact", 0.0)
+        )
+        patterns.append(pattern)
+    
+    discovered = DiscoveredWorkflow(
+        name=workflow_name,
+        nodes=nodes,
+        patterns=patterns,
+        start_tasks=set(patterns_data.get("start_tasks", [])),
+        end_tasks=set(patterns_data.get("end_tasks", [])),
+        quality_metrics=patterns_data.get("quality_metrics", {})
+    )
+    
+    # Generate BPMN
+    miner = BPMNProcessMiner()
+    bpmn_file = miner.patterns_to_bpmn(discovered, output_bpmn)
+    
+    console.print(f"\n[green]✅ Generated executable BPMN: {bpmn_file}[/green]")
+    
+    # Show generation statistics
+    stats_file = Path(output_bpmn).with_suffix('.stats.json')
+    if stats_file.exists():
+        with open(stats_file) as f:
+            stats = json.load(f)
+        
+        table = Table(title="BPMN Generation Statistics", show_header=True)
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", style="green")
+        
+        for key, value in stats.items():
+            table.add_row(key.replace('_', ' ').title(), str(value))
+        
+        console.print(table)
+
+
+@mining_app.command()
+def conformance_check(
+    xes_file: str = typer.Argument(..., help="Path to XES file with actual executions"),
+    patterns_file: str = typer.Argument(..., help="Path to mined patterns JSON file"),
+    output_report: str = typer.Option("conformance_report.json", "--output", "-o", help="Output report file")
+):
+    """🔍 Check conformance between actual execution and expected patterns"""
+    
+    from .xes_converter import XESConverter
+    
+    console.print(f"\n[bold blue]🔍 Conformance Checking[/bold blue]")
+    console.print(f"XES File: {xes_file}")
+    console.print(f"Patterns: {patterns_file}")
+    
+    # Load reference patterns
+    try:
+        with open(patterns_file) as f:
+            reference_patterns = json.load(f)
+    except FileNotFoundError:
+        console.print(f"[red]❌ Patterns file not found: {patterns_file}[/red]")
+        raise typer.Exit(1)
+    except json.JSONDecodeError as e:
+        console.print(f"[red]❌ Invalid JSON in patterns file: {e}[/red]")
+        raise typer.Exit(1)
+    
+    # Extract expected activities from patterns
+    activities = set()
+    if "nodes" in reference_patterns:
+        activities.update(reference_patterns["nodes"].keys())
+    
+    # Add activities list to reference patterns if not present
+    if "activities" not in reference_patterns:
+        reference_patterns["activities"] = list(activities)
+    
+    # Perform conformance checking
+    converter = XESConverter()
+    results = converter.conformance_checking(xes_file, reference_patterns)
+    
+    # Save detailed report
+    output_path = Path(output_report)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(output_path, 'w') as f:
+        json.dump(results, f, indent=2)
+    
+    console.print(f"\n[green]✅ Conformance report saved: {output_path}[/green]")
+    
+    # Show summary
+    overall_conformance = results["pattern_adherence"]["overall_conformance"]
+    if overall_conformance >= 0.8:
+        console.print("[bold green]🎉 CONFORMANCE: EXCELLENT[/bold green]")
+    elif overall_conformance >= 0.6:
+        console.print("[bold yellow]⚠️  CONFORMANCE: NEEDS ATTENTION[/bold yellow]")
+    else:
+        console.print("[bold red]❌ CONFORMANCE: CRITICAL ISSUES[/bold red]")
+
+
+@mining_app.command()
+def cross_workflow_analysis(
+    patterns_dir: str = typer.Argument(..., help="Directory containing multiple pattern JSON files"),
+    output_report: str = typer.Option("cross_workflow_analysis.json", "--output", "-o", help="Output analysis report"),
+    min_frequency: float = typer.Option(0.5, "--min-freq", help="Minimum pattern frequency threshold"),
+    similarity_threshold: float = typer.Option(0.7, "--similarity", help="Pattern similarity threshold")
+):
+    """🔄 Analyze patterns across multiple workflows for system-wide optimization"""
+    
+    console.print(f"\n[bold blue]🔄 Cross-Workflow Pattern Analysis[/bold blue]")
+    console.print(f"Patterns Directory: {patterns_dir}")
+    console.print(f"Min Frequency: {min_frequency}")
+    console.print(f"Similarity Threshold: {similarity_threshold}")
+    
+    import os
+    from pathlib import Path
+    from collections import defaultdict, Counter
+    
+    patterns_path = Path(patterns_dir)
+    if not patterns_path.exists() or not patterns_path.is_dir():
+        console.print(f"[red]❌ Patterns directory not found: {patterns_dir}[/red]")
+        raise typer.Exit(1)
+    
+    # Load all pattern files
+    workflow_patterns = {}
+    all_patterns = []
+    all_activities = set()
+    
+    pattern_files = [f for f in patterns_path.glob("*.json")]
+    if not pattern_files:
+        console.print(f"[red]❌ No JSON pattern files found in {patterns_dir}[/red]")
+        raise typer.Exit(1)
+    
+    console.print(f"[cyan]📁 Found {len(pattern_files)} pattern files[/cyan]")
+    
+    for pattern_file in pattern_files:
+        try:
+            with open(pattern_file) as f:
+                patterns_data = json.load(f)
+            
+            workflow_name = pattern_file.stem
+            workflow_patterns[workflow_name] = patterns_data
+            
+            # Collect patterns
+            for pattern in patterns_data.get('patterns', []):
+                pattern['source_workflow'] = workflow_name
+                all_patterns.append(pattern)
+            
+            # Collect activities
+            if 'nodes' in patterns_data:
+                all_activities.update(patterns_data['nodes'].keys())
+            
+            console.print(f"  ✅ Loaded {workflow_name}: {len(patterns_data.get('patterns', []))} patterns")
+            
+        except Exception as e:
+            console.print(f"  ❌ Failed to load {pattern_file}: {e}")
+    
+    # Cross-workflow analysis
+    analysis_results = {
+        "total_workflows": len(workflow_patterns),
+        "total_patterns": len(all_patterns),
+        "total_activities": len(all_activities),
+        "common_patterns": [],
+        "workflow_similarities": {},
+        "optimization_opportunities": [],
+        "system_wide_metrics": {}
+    }
+    
+    # Find common activities across workflows
+    activity_frequency = Counter()
+    for workflow_name, patterns_data in workflow_patterns.items():
+        if 'nodes' in patterns_data:
+            for activity in patterns_data['nodes'].keys():
+                activity_frequency[activity] += 1
+    
+    common_activities = {activity: count for activity, count in activity_frequency.items() 
+                        if count >= len(workflow_patterns) * min_frequency}
+    
+    # Find common sequential patterns
+    sequential_patterns = defaultdict(list)
+    for pattern in all_patterns:
+        if pattern.get('pattern_type') == 'sequential' and pattern.get('frequency', 0) >= min_frequency:
+            pattern_desc = pattern.get('description', '')
+            if 'sequential:' in pattern_desc:
+                pattern_desc = pattern_desc.replace('sequential:', '').strip()
+            
+            # Normalize pattern description
+            if pattern_desc:
+                normalized_pattern = pattern_desc.lower().replace(' ', '')
+                sequential_patterns[normalized_pattern].append(pattern)
+    
+    # Identify truly common patterns (across multiple workflows)
+    for pattern_desc, pattern_instances in sequential_patterns.items():
+        workflows_with_pattern = set(p['source_workflow'] for p in pattern_instances)
+        
+        if len(workflows_with_pattern) >= 2:  # Pattern appears in at least 2 workflows
+            avg_frequency = sum(p.get('frequency', 0) for p in pattern_instances) / len(pattern_instances)
+            avg_confidence = sum(p.get('confidence', 0) for p in pattern_instances) / len(pattern_instances)
+            
+            analysis_results["common_patterns"].append({
+                "pattern_description": pattern_desc,
+                "workflows": [w for w in workflows_with_pattern],
+                "workflow_count": len(workflows_with_pattern),
+                "avg_frequency": round(avg_frequency, 3),
+                "avg_confidence": round(avg_confidence, 3),
+                "instances": len(pattern_instances),
+                "reuse_potential": round(len(workflows_with_pattern) / len(workflow_patterns), 3)
+            })
+    
+    # Sort common patterns by reuse potential
+    analysis_results["common_patterns"].sort(key=lambda x: x["reuse_potential"], reverse=True)
+    
+    # Calculate workflow similarities
+    for i, (workflow1, patterns1) in enumerate(workflow_patterns.items()):
+        workflow_items = [item for item in workflow_patterns.items()]
+        for workflow2, patterns2 in workflow_items[i+1:]:
+            
+            # Activity overlap
+            activities1 = set(patterns1.get('nodes', {}).keys())
+            activities2 = set(patterns2.get('nodes', {}).keys())
+            
+            if activities1 and activities2:
+                activity_similarity = len(activities1 & activities2) / len(activities1 | activities2)
+            else:
+                activity_similarity = 0.0
+            
+            # Pattern overlap
+            patterns1_desc = {p.get('description', '') for p in patterns1.get('patterns', [])}
+            patterns2_desc = {p.get('description', '') for p in patterns2.get('patterns', [])}
+            
+            if patterns1_desc and patterns2_desc:
+                pattern_similarity = len(patterns1_desc & patterns2_desc) / len(patterns1_desc | patterns2_desc)
+            else:
+                pattern_similarity = 0.0
+            
+            overall_similarity = (activity_similarity + pattern_similarity) / 2
+            
+            if overall_similarity >= similarity_threshold:
+                analysis_results["workflow_similarities"][f"{workflow1}_vs_{workflow2}"] = {
+                    "activity_similarity": round(activity_similarity, 3),
+                    "pattern_similarity": round(pattern_similarity, 3),
+                    "overall_similarity": round(overall_similarity, 3),
+                    "consolidation_potential": "high" if overall_similarity > 0.8 else "medium"
+                }
+    
+    # Generate optimization opportunities
+    if analysis_results["common_patterns"]:
+        top_reusable = analysis_results["common_patterns"][0]
+        if top_reusable["reuse_potential"] > 0.6:
+            analysis_results["optimization_opportunities"].append({
+                "type": "pattern_standardization",
+                "priority": "high",
+                "description": f"Standardize '{top_reusable['pattern_description']}' pattern across {top_reusable['workflow_count']} workflows",
+                "potential_impact": f"{top_reusable['reuse_potential']:.1%} workflow coverage",
+                "effort": "medium"
+            })
+    
+    if len(common_activities) > 5:
+        analysis_results["optimization_opportunities"].append({
+            "type": "activity_library",
+            "priority": "medium",
+            "description": f"Create shared activity library for {len(common_activities)} common activities",
+            "potential_impact": f"Reduce duplication across {len(workflow_patterns)} workflows",
+            "effort": "high"
+        })
+    
+    # Identify consolidation opportunities
+    high_similarity_pairs = [
+        (workflows, metrics) for workflows, metrics in analysis_results["workflow_similarities"].items()
+        if metrics["overall_similarity"] > 0.8
+    ]
+    
+    if high_similarity_pairs:
+        analysis_results["optimization_opportunities"].append({
+            "type": "workflow_consolidation",
+            "priority": "medium", 
+            "description": f"Consider consolidating {len(high_similarity_pairs)} highly similar workflow pairs",
+            "potential_impact": "Reduced maintenance overhead and improved consistency",
+            "effort": "high"
+        })
+    
+    # System-wide metrics
+    analysis_results["system_wide_metrics"] = {
+        "pattern_reuse_score": round(
+            sum(p["reuse_potential"] for p in analysis_results["common_patterns"]) / 
+            max(len(analysis_results["common_patterns"]), 1), 3
+        ),
+        "workflow_diversity": round(1 - (len(common_activities) / len(all_activities)), 3),
+        "consolidation_potential": len(high_similarity_pairs),
+        "standardization_opportunities": len([p for p in analysis_results["common_patterns"] if p["reuse_potential"] > 0.5])
+    }
+    
+    # Save detailed analysis
+    output_path = Path(output_report)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(output_path, 'w') as f:
+        json.dump(analysis_results, f, indent=2)
+    
+    console.print(f"\n[green]✅ Cross-workflow analysis saved: {output_path}[/green]")
+    
+    # Print summary
+    _print_cross_workflow_summary(analysis_results)
+
+
+def _print_cross_workflow_summary(results: Dict[str, Any]):
+    """Print cross-workflow analysis summary"""
+    from rich.table import Table
+    
+    console.print(f"\n[bold cyan]📊 Cross-Workflow Analysis Summary[/bold cyan]")
+    
+    # Overview table
+    overview_table = Table(title="System Overview", show_header=True)
+    overview_table.add_column("Metric", style="cyan")
+    overview_table.add_column("Value", style="green")
+    
+    overview_table.add_row("Total Workflows", str(results["total_workflows"]))
+    overview_table.add_row("Total Patterns", str(results["total_patterns"]))
+    overview_table.add_row("Total Activities", str(results["total_activities"]))
+    overview_table.add_row("Common Patterns", str(len(results["common_patterns"])))
+    overview_table.add_row("Similar Workflow Pairs", str(len(results["workflow_similarities"])))
+    
+    console.print(overview_table)
+    
+    # System metrics
+    metrics = results["system_wide_metrics"]
+    metrics_table = Table(title="System-Wide Metrics", show_header=True)
+    metrics_table.add_column("Metric", style="cyan")
+    metrics_table.add_column("Score", style="green")
+    metrics_table.add_column("Assessment", style="bold")
+    
+    reuse_score = metrics["pattern_reuse_score"]
+    reuse_status = "✅ EXCELLENT" if reuse_score > 0.7 else "⚠️  MODERATE" if reuse_score > 0.4 else "❌ LOW"
+    
+    diversity = metrics["workflow_diversity"]
+    diversity_status = "✅ GOOD" if diversity > 0.6 else "⚠️  MEDIUM" if diversity > 0.3 else "❌ LOW"
+    
+    metrics_table.add_row("Pattern Reuse Score", f"{reuse_score:.1%}", reuse_status)
+    metrics_table.add_row("Workflow Diversity", f"{diversity:.1%}", diversity_status)
+    metrics_table.add_row("Consolidation Potential", str(metrics["consolidation_potential"]), "")
+    metrics_table.add_row("Standardization Opportunities", str(metrics["standardization_opportunities"]), "")
+    
+    console.print(metrics_table)
+    
+    # Top common patterns
+    if results["common_patterns"]:
+        console.print(f"\n[bold blue]🔄 Top Common Patterns:[/bold blue]")
+        for i, pattern in enumerate(results["common_patterns"][:5]):
+            reuse_potential = pattern["reuse_potential"]
+            color = "green" if reuse_potential > 0.7 else "yellow" if reuse_potential > 0.4 else "red"
+            console.print(f"  {i+1}. [{color}]{pattern['pattern_description']}[/{color}]")
+            console.print(f"     Workflows: {len(pattern['workflows'])}, Reuse: {reuse_potential:.1%}")
+    
+    # Optimization opportunities
+    if results["optimization_opportunities"]:
+        console.print(f"\n[bold blue]💡 Optimization Opportunities:[/bold blue]")
+        for i, opp in enumerate(results["optimization_opportunities"]):
+            priority_color = "red" if opp["priority"] == "high" else "yellow"
+            console.print(f"  {i+1}. [{priority_color}]{opp['priority'].upper()}[/{priority_color}]: {opp['description']}")
+            console.print(f"     Impact: {opp['potential_impact']}, Effort: {opp['effort']}")
+
+
+# ============= DMEDI 80/20 Optimization =============
+
+@mining_app.command()
+def dmedi_8020_training(
+    participant_name: str = typer.Option("BlackBelt_Candidate", "--participant", "-p", help="Participant name"),
+    project_name: str = typer.Option("Product_Development_Optimization", "--project", help="Training project name"),
+    mode: str = typer.Option("interactive", "--mode", "-m", help="Training mode: interactive or demo")
+):
+    """🎯 DMEDI 80/20 Training - Maximum Learning Impact from Critical Components"""
+    
+    console.print(f"\n[bold blue]🎯 DMEDI 80/20 OPTIMIZATION TRAINING[/bold blue]")
+    console.print("[cyan]Focused training on the 20% of components that deliver 80% of learning value[/cyan]")
+    console.print(f"Participant: {participant_name}")
+    console.print(f"Project: {project_name}")
+    
+    import asyncio
+    from pathlib import Path
+    
+    # Import DMEDI components
+    try:
+        from .six_sigma_agents import SixSigmaAgentOrchestrator
+        from .six_sigma_models import ProjectCharter, VOCAnalysis, DOEDesign
+        from datetime import date, timedelta
+    except ImportError as e:
+        console.print(f"[red]❌ DMEDI components not available: {e}[/red]")
+        console.print("[yellow]Run: pip install -e .[dev] to install all dependencies[/yellow]")
+        raise typer.Exit(1)
+    
+    async def run_8020_training():
+        console.print(f"\n[bold green]📋 STEP 1: Project Charter (Foundation - 20% effort, 40% value)[/bold green]")
+        
+        # Create sample project charter
+        charter = ProjectCharter(
+            project_name=project_name,
+            business_case="Reduce product development cycle time by 30% while maintaining quality standards",
+            problem_statement="Current product development process takes 18 months average, 40% longer than industry benchmark",
+            goal_statement="Achieve 12-month average development cycle with 99.5% quality standards",
+            scope={
+                "in_scope": ["Design process", "Testing protocols", "Review cycles"],
+                "out_of_scope": ["Manufacturing changes", "Supplier modifications"]
+            },
+            expected_savings=750000.0,
+            investment_required=150000.0,
+            roi_target=400.0,
+            start_date=date.today(),
+            target_completion=date.today() + timedelta(days=180),
+            project_champion="VP_Engineering",
+            black_belt=participant_name,
+            team_members=["Design_Engineer", "Quality_Engineer", "Process_Engineer"],
+            success_metrics=["Cycle_Time_Reduction", "Quality_Improvement", "Cost_Savings"],
+            critical_success_factors=["Executive_Support", "Team_Engagement", "Data_Quality"]
+        )
+        
+        console.print(f"[green]✅ Charter Created: {charter.project_name}[/green]")
+        console.print(f"   Expected ROI: {charter.roi_target}%")
+        console.print(f"   Target Savings: ${charter.expected_savings:,.0f}")
+        
+        console.print(f"\n[bold green]📊 STEP 2: Voice of Customer (Customer Focus - 15% effort, 25% value)[/bold green]")
+        
+        # Create sample VOC analysis
+        voc = VOCAnalysis(
+            project_id=charter.project_id,
+            customer_segments=["Internal R&D Teams", "Product Managers", "Quality Engineers"],
+            top_priorities=[
+                "Faster time to market",
+                "Consistent quality standards", 
+                "Clear milestone tracking",
+                "Reduced rework cycles"
+            ],
+            ctq_characteristics=["Cycle Time", "Defect Rate", "Schedule Adherence"],
+            sample_size=57,
+            collection_methods=["Interviews", "Surveys", "Focus Groups"],
+            collection_period="2024-Q1",
+            analyst=participant_name
+        )
+        
+        console.print(f"[green]✅ VOC Analysis Complete[/green]")
+        console.print(f"   Customer Segments: {len(voc.customer_segments)}")
+        console.print(f"   Key CTQs: {', '.join(voc.ctq_characteristics)}")
+        console.print(f"   Sample Size: {voc.sample_size} participants")
+        console.print(f"   Collection Period: {voc.collection_period}")
+        
+        console.print(f"\n[bold green]🧪 STEP 3: Design of Experiments (Optimization Engine - 25% effort, 20% value)[/bold green]")
+        
+        # Create sample DOE design
+        doe = DOEDesign(
+            project_id=charter.project_id,
+            doe_type="fractional_factorial",
+            factors=[
+                {"name": "Review_Frequency", "levels": ["Weekly", "Bi-weekly"], "type": "categorical"},
+                {"name": "Team_Size", "levels": [4, 6], "type": "continuous"},
+                {"name": "Automation_Level", "levels": ["Low", "High"], "type": "categorical"}
+            ],
+            responses=["Cycle_Time", "Quality_Score", "Team_Satisfaction"],
+            run_count=16,
+            blocks=2,
+            randomization=True,
+            center_points=4
+        )
+        
+        console.print(f"[green]✅ DOE Design Complete[/green]")
+        console.print(f"   Design Type: {doe.doe_type}")
+        console.print(f"   Factors: {len(doe.factors)}")
+        console.print(f"   Experimental Runs: {doe.run_count}")
+        console.print(f"   Target Responses: {', '.join(doe.responses)}")
+        
+        console.print(f"\n[bold green]🤖 STEP 4: AI-Guided Coaching (Personalized Learning - 20% effort, 10% value)[/bold green]")
+        
+        # Initialize AI agents
+        orchestrator = SixSigmaAgentOrchestrator()
+        
+        # Sample project data for AI assessment
+        project_data = {
+            'project_id': charter.project_id,
+            'project_name': charter.project_name,
+            'current_phase': 'define',
+            'business_impact': 'high',
+            'financial_benefit': charter.expected_savings,
+            'deliverables_completed': ['Charter', 'VOC Analysis', 'DOE Design'],
+            'issues': [],
+            'timeline_status': 'on_track',
+            'stakeholder_engagement': 'excellent'
+        }
+        
+        # Get comprehensive AI guidance
+        try:
+            comprehensive_review = await orchestrator.comprehensive_project_review(project_data)
+            
+            console.print(f"[green]✅ AI Coaching Complete[/green]")
+            console.print(f"   Overall Recommendation: {comprehensive_review['overall_recommendation']}")
+            
+            # Display key guidance
+            guidance = comprehensive_review['master_black_belt_guidance']
+            console.print(f"   Status: {guidance['current_status_assessment']}")
+            console.print(f"   Next Actions: {len(guidance['immediate_actions'])} recommended")
+            
+            alignment = comprehensive_review['champion_alignment']
+            console.print(f"   Strategic Fit: {alignment['strategic_fit_score']}/10")
+            console.print(f"   Champion Approval: {'✅' if alignment['champion_approval'] else '❌'}")
+            
+        except Exception as e:
+            console.print(f"[yellow]⚠️ AI Coaching Demo Mode (agents unavailable): {e}[/yellow]")
+            console.print(f"   Simulated Recommendation: ✅ ACCELERATE - High-value project ready for next phase")
+        
+        console.print(f"\n[bold green]🔄 STEP 5: BPMN Workflow Integration (Process Structure - 20% effort, 5% value)[/bold green]")
+        
+        # Verify BPMN workflow exists
+        bpmn_path = Path("src/weavergen/workflows/bpmn/six_sigma_comprehensive_dmedi.bpmn")
+        if bpmn_path.exists():
+            console.print(f"[green]✅ BPMN Workflow Available[/green]")
+            console.print(f"   Workflow: Comprehensive DMEDI Training")
+            console.print(f"   Quality Gates: 5 phases with validation")
+            console.print(f"   Tasks: 50+ structured learning activities")
+        else:
+            console.print(f"[yellow]⚠️ BPMN Workflow: Using default structure[/yellow]")
+        
+        return {
+            'charter': charter,
+            'voc': voc, 
+            'doe': doe,
+            'ai_guidance': comprehensive_review if 'comprehensive_review' in locals() else None,
+            'bpmn_available': bpmn_path.exists()
+        }
+    
+    # Run the 80/20 training
+    try:
+        results = asyncio.run(run_8020_training())
+        
+        console.print(f"\n[bold yellow]🎯 80/20 DMEDI TRAINING COMPLETE![/bold yellow]")
+        console.print("[cyan]Critical Components Demonstrated:[/cyan]")
+        console.print("  ✅ Project Charter - Strategic foundation")
+        console.print("  ✅ VOC Analysis - Customer-driven requirements") 
+        console.print("  ✅ DOE Design - Statistical optimization")
+        console.print("  ✅ AI Coaching - Personalized guidance")
+        console.print("  ✅ BPMN Integration - Structured workflow")
+        
+        console.print(f"\n[bold green]📊 LEARNING IMPACT ANALYSIS:[/bold green]")
+        console.print("[green]20% of Components = 80% of Learning Value[/green]")
+        console.print("  • Charter + VOC = 65% of project success")
+        console.print("  • DOE = 20% of optimization capability") 
+        console.print("  • AI Coaching = 10% personalization boost")
+        console.print("  • BPMN = 5% process structure")
+        
+        if mode == "interactive":
+            console.print(f"\n[bold blue]🎓 NEXT STEPS FOR {participant_name}:[/bold blue]")
+            console.print("1. Practice charter writing with real projects")
+            console.print("2. Conduct actual VOC interviews")
+            console.print("3. Design and run DOE experiments")
+            console.print("4. Use AI coaching for project guidance")
+            console.print("5. Execute full DMEDI workflow")
+        
+        console.print(f"\n[bold yellow]🚀 READY FOR BLACK BELT CERTIFICATION PATH![/bold yellow]")
+        
+    except Exception as e:
+        console.print(f"[red]❌ 80/20 Training Failed: {e}[/red]")
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

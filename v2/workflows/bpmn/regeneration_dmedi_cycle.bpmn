@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:spiffworkflow="http://spiffworkflow.org"
+                  id="RegenerationDMEDI"
+                  targetNamespace="http://weavergen.v2/regeneration">
+
+  <bpmn:process id="CompleteDMEDIRegenerationCycle" name="Complete DMEDI Regeneration Cycle">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartDMEDI" name="Start DMEDI Cycle">
+      <bpmn:outgoing>SequenceFlow_01</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- DEFINE Phase -->
+    <bpmn:serviceTask id="DefinePhase" name="DEFINE: Regeneration Charter">
+      <bpmn:incoming>SequenceFlow_01</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:DefineCharterTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- MEASURE Phase -->
+    <bpmn:serviceTask id="MeasurePhase" name="MEASURE: System Entropy">
+      <bpmn:incoming>SequenceFlow_02</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_03</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:MeasureEntropyTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- Entropy Level Gateway -->
+    <bpmn:exclusiveGateway id="EntropyLevelGateway" name="Entropy Level?">
+      <bpmn:incoming>SequenceFlow_03</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_Low</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_Medium</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_High</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_Critical</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Low Entropy: Skip regeneration -->
+    <bpmn:serviceTask id="LogLowEntropy" name="Log Low Entropy State">
+      <bpmn:incoming>SequenceFlow_Low</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_Skip</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:LogSystemStateTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- EXPLORE Phase -->
+    <bpmn:serviceTask id="ExplorePhase" name="EXPLORE: Regeneration Options">
+      <bpmn:incoming>SequenceFlow_Medium</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_High</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_Critical</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_04</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:ExploreOptionsTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- DEVELOP Phase -->
+    <bpmn:serviceTask id="DevelopPhase" name="DEVELOP: Regeneration Solution">
+      <bpmn:incoming>SequenceFlow_04</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_05</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:DevelopSolutionTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- IMPLEMENT Phase -->
+    <bpmn:serviceTask id="ImplementPhase" name="IMPLEMENT: Execute Regeneration">
+      <bpmn:incoming>SequenceFlow_05</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_06</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:ImplementRegenerationTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- Post-Implementation Validation -->
+    <bpmn:serviceTask id="ValidateRegeneration" name="Validate Regeneration Success">
+      <bpmn:incoming>SequenceFlow_06</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_07</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:ValidateRegenerationTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- Success Evaluation Gateway -->
+    <bpmn:exclusiveGateway id="SuccessGateway" name="Regeneration Successful?">
+      <bpmn:incoming>SequenceFlow_07</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_Success</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_Retry</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_Failure</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Retry Logic for Failed Regeneration -->
+    <bpmn:serviceTask id="AnalyzeFailure" name="Analyze Regeneration Failure">
+      <bpmn:incoming>SequenceFlow_Retry</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_RetryDecision</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:AnalyzeFailureTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- Retry Decision Gateway -->
+    <bpmn:exclusiveGateway id="RetryGateway" name="Retry Regeneration?">
+      <bpmn:incoming>SequenceFlow_RetryDecision</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_RetryYes</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_RetryNo</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Join Gateway for completion paths -->
+    <bpmn:exclusiveGateway id="CompletionGateway" name="Completion">
+      <bpmn:incoming>SequenceFlow_Success</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_Skip</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_Failure</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_RetryNo</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_Final</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Final Reporting -->
+    <bpmn:serviceTask id="GenerateReport" name="Generate DMEDI Execution Report">
+      <bpmn:incoming>SequenceFlow_Final</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_End</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          weavergen.v2.regeneration.service_tasks:GenerateReportTask
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+
+    <!-- End Event -->
+    <bpmn:endEvent id="EndDMEDI" name="DMEDI Cycle Complete">
+      <bpmn:incoming>SequenceFlow_End</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="SequenceFlow_01" sourceRef="StartDMEDI" targetRef="DefinePhase"/>
+    <bpmn:sequenceFlow id="SequenceFlow_02" sourceRef="DefinePhase" targetRef="MeasurePhase"/>
+    <bpmn:sequenceFlow id="SequenceFlow_03" sourceRef="MeasurePhase" targetRef="EntropyLevelGateway"/>
+    
+    <!-- Entropy Level Routing -->
+    <bpmn:sequenceFlow id="SequenceFlow_Low" sourceRef="EntropyLevelGateway" targetRef="LogLowEntropy">
+      <bpmn:conditionExpression>entropy_level == "low"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="SequenceFlow_Medium" sourceRef="EntropyLevelGateway" targetRef="ExplorePhase">
+      <bpmn:conditionExpression>entropy_level == "medium"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="SequenceFlow_High" sourceRef="EntropyLevelGateway" targetRef="ExplorePhase">
+      <bpmn:conditionExpression>entropy_level == "high"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="SequenceFlow_Critical" sourceRef="EntropyLevelGateway" targetRef="ExplorePhase">
+      <bpmn:conditionExpression>entropy_level == "critical"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <!-- Main flow continuation -->
+    <bpmn:sequenceFlow id="SequenceFlow_04" sourceRef="ExplorePhase" targetRef="DevelopPhase"/>
+    <bpmn:sequenceFlow id="SequenceFlow_05" sourceRef="DevelopPhase" targetRef="ImplementPhase"/>
+    <bpmn:sequenceFlow id="SequenceFlow_06" sourceRef="ImplementPhase" targetRef="ValidateRegeneration"/>
+    <bpmn:sequenceFlow id="SequenceFlow_07" sourceRef="ValidateRegeneration" targetRef="SuccessGateway"/>
+
+    <!-- Success/Failure routing -->
+    <bpmn:sequenceFlow id="SequenceFlow_Success" sourceRef="SuccessGateway" targetRef="CompletionGateway">
+      <bpmn:conditionExpression>regeneration_success == True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="SequenceFlow_Retry" sourceRef="SuccessGateway" targetRef="AnalyzeFailure">
+      <bpmn:conditionExpression>regeneration_success == False and retry_count &lt; 2</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="SequenceFlow_Failure" sourceRef="SuccessGateway" targetRef="CompletionGateway">
+      <bpmn:conditionExpression>regeneration_success == False and retry_count >= 2</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <!-- Retry logic -->
+    <bpmn:sequenceFlow id="SequenceFlow_RetryDecision" sourceRef="AnalyzeFailure" targetRef="RetryGateway"/>
+    
+    <bpmn:sequenceFlow id="SequenceFlow_RetryYes" sourceRef="RetryGateway" targetRef="ExplorePhase">
+      <bpmn:conditionExpression>should_retry == True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <bpmn:sequenceFlow id="SequenceFlow_RetryNo" sourceRef="RetryGateway" targetRef="CompletionGateway">
+      <bpmn:conditionExpression>should_retry == False</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <!-- Skip and completion flows -->
+    <bpmn:sequenceFlow id="SequenceFlow_Skip" sourceRef="LogLowEntropy" targetRef="CompletionGateway"/>
+    <bpmn:sequenceFlow id="SequenceFlow_Final" sourceRef="CompletionGateway" targetRef="GenerateReport"/>
+    <bpmn:sequenceFlow id="SequenceFlow_End" sourceRef="GenerateReport" targetRef="EndDMEDI"/>
+
+  </bpmn:process>
+
+</bpmn:definitions>

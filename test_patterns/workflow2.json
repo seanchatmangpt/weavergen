@@ -1,0 +1,1 @@
+{"nodes": {"Task_LoadSemantics": {"frequency": 1, "avg_duration": 12}, "Task_GenerateModels": {"frequency": 1, "avg_duration": 15}}, "patterns": [{"pattern_type": "sequential", "description": "Task_LoadSemantics → Task_GenerateModels", "frequency": 0.8, "confidence": 0.85}]}

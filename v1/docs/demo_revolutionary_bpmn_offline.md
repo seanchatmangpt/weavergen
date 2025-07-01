@@ -1,0 +1,8 @@
+### `/Users/sac/dev/weavergen/demo_revolutionary_bpmn_offline.py`
+
+*   **Purpose:** This script provides an "offline" demonstration of the "Revolutionary BPMN Engine" concepts. It simulates the AI responses and functionalities (natural language to BPMN generation, predictive execution, self-healing, conversational design, AI insights) without requiring live AI models. It uses predefined patterns and simulated logic to showcase the ambitious vision of AI-native BPMN workflows.
+*   **Relevance to `GEMINI.md`:** The `GEMINI.md` highlights the "Revolutionary BPMN Engine" as a key innovation. This demo script directly supports understanding that complex concept by providing a runnable, albeit simulated, version. It aligns with the `GEMINI.md`'s allowance for direct execution of files for "understanding historical development" and "specific isolated testing" of advanced features.
+*   **Value:** This is a **highly valuable demonstration script**. It allows users and developers to grasp the ambitious vision of the "Revolutionary BPMN Engine" without needing to set up and run live AI models. It clearly illustrates the intended functionalities and interactions, making complex AI-native concepts understandable. It's essential for showcasing the project's forward-thinking approach and for internal development/testing where live AI might not always be feasible.
+
+*   **Category:** Core Demonstration / Advanced AI Concept.
+*   **Reasoning:** Provides an accessible, simulated demonstration of the "Revolutionary BPMN Engine" concepts, which are central to WeaverGen's advanced AI vision. It's crucial for understanding and showcasing complex AI-native functionalities without external AI dependencies.

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_1" 
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:process id="SixSigmaQwen3Training" name="Six Sigma DMEDI Training with qwen3" isExecutable="true">
+    
+    <!-- Process Properties for qwen3 Integration -->
+    <bpmn:property id="ai_model" value="qwen3:latest" />
+    <bpmn:property id="ai_provider" value="ollama" />
+    <bpmn:property id="base_url" value="http://localhost:11434/v1" />
+    <bpmn:property id="training_system" value="six_sigma_dmedi" />
+    <bpmn:property id="quality_threshold" value="0.8" />
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_SixSigmaTraining" name="Six Sigma Training Begins">
+      <bpmn:outgoing>Flow_ToInitializeSession</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Initialize Training Session -->
+    <bpmn:serviceTask id="Task_InitializeTrainingSession" name="Initialize Training Session">
+      <bpmn:extensionElements>
+        <bpmn:property name="task_type" value="initialization" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToInitializeSession</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToParallelDefineActivities</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for DMEDI Phase Training -->
+    <bpmn:parallelGateway id="Gateway_DMEDIPhaseActivities" name="DMEDI Phase Training">
+      <bpmn:incoming>Flow_ToParallelDefineActivities</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToDefineTraining</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToMeasureTraining</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToExploreTraining</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToDevelopTraining</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToImplementTraining</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Define Phase Training with qwen3 -->
+    <bpmn:serviceTask id="Task_DefinePhaseTraining" name="Define Phase: Project Charter Analysis">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaCharterAnalysisTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="result_type" value="SixSigmaCharterAnalysis" />
+        <bpmn:property name="phase" value="define" />
+        <bpmn:property name="module" value="charter_analysis" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToDefineTraining</bpmn:incoming>
+      <bpmn:outgoing>Flow_DefineComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Measure Phase Training with qwen3 -->
+    <bpmn:serviceTask id="Task_MeasurePhaseTraining" name="Measure Phase: Voice of Customer Analysis">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaVOCAnalysisTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="result_type" value="SixSigmaVOCAnalysis" />
+        <bpmn:property name="phase" value="measure" />
+        <bpmn:property name="module" value="voc_analysis" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToMeasureTraining</bpmn:incoming>
+      <bpmn:outgoing>Flow_MeasureComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Explore Phase Training with qwen3 -->
+    <bpmn:serviceTask id="Task_ExplorePhaseTraining" name="Explore Phase: TRIZ Innovation">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaTRIZInnovationTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="result_type" value="SixSigmaTRIZSolution" />
+        <bpmn:property name="phase" value="explore" />
+        <bpmn:property name="module" value="triz_innovation" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToExploreTraining</bpmn:incoming>
+      <bpmn:outgoing>Flow_ExploreComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Develop Phase Training with qwen3 -->
+    <bpmn:serviceTask id="Task_DevelopPhaseTraining" name="Develop Phase: DOE Design">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaDOEDesignTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="result_type" value="SixSigmaDOEDesign" />
+        <bpmn:property name="phase" value="develop" />
+        <bpmn:property name="module" value="doe_design" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToDevelopTraining</bpmn:incoming>
+      <bpmn:outgoing>Flow_DevelopComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Implement Phase Training with qwen3 -->
+    <bpmn:serviceTask id="Task_ImplementPhaseTraining" name="Implement Phase: Implementation Planning">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaImplementationPlanTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="result_type" value="SixSigmaImplementationPlan" />
+        <bpmn:property name="phase" value="implement" />
+        <bpmn:property name="module" value="implementation_planning" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToImplementTraining</bpmn:incoming>
+      <bpmn:outgoing>Flow_ImplementComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Converging Parallel Gateway -->
+    <bpmn:parallelGateway id="Gateway_AllPhasesComplete" name="All DMEDI Phases Complete">
+      <bpmn:incoming>Flow_DefineComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_MeasureComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_ExploreComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_DevelopComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_ImplementComplete</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToComprehensiveAssessment</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Comprehensive Training Assessment with qwen3 -->
+    <bpmn:serviceTask id="Task_ComprehensiveAssessment" name="Comprehensive Training Assessment">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaTrainingAssessmentTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="result_type" value="TrainingAssessment" />
+        <bpmn:property name="assessment_type" value="comprehensive" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToComprehensiveAssessment</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToQualityGateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Quality Gateway for Assessment Results -->
+    <bpmn:exclusiveGateway id="Gateway_AssessmentQuality" name="Assessment Quality Check">
+      <bpmn:incoming>Flow_ToQualityGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_QualityPassed</bpmn:outgoing>
+      <bpmn:outgoing>Flow_QualityFailed</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Advanced Training Branch -->
+    <bpmn:parallelGateway id="Gateway_AdvancedTraining" name="Advanced Training Modules">
+      <bpmn:incoming>Flow_QualityPassed</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToStatisticalTraining</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToLeanTraining</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToAdvancedTRIZ</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Advanced Statistical Analysis Training -->
+    <bpmn:serviceTask id="Task_AdvancedStatisticalTraining" name="Advanced Statistical Analysis">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaStatisticalAnalysisTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="training_level" value="advanced" />
+        <bpmn:property name="module" value="advanced_statistics" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToStatisticalTraining</bpmn:incoming>
+      <bpmn:outgoing>Flow_StatisticalComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Lean Design Integration Training -->
+    <bpmn:serviceTask id="Task_LeanDesignTraining" name="Lean Design Integration">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaLeanDesignTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="training_level" value="advanced" />
+        <bpmn:property name="module" value="lean_design" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToLeanTraining</bpmn:incoming>
+      <bpmn:outgoing>Flow_LeanComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Advanced TRIZ and Innovation Training -->
+    <bpmn:serviceTask id="Task_AdvancedTRIZTraining" name="Advanced TRIZ and Innovation">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaAdvancedTRIZTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="training_level" value="advanced" />
+        <bpmn:property name="module" value="advanced_triz" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToAdvancedTRIZ</bpmn:incoming>
+      <bpmn:outgoing>Flow_AdvancedTRIZComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Converging Advanced Training Gateway -->
+    <bpmn:parallelGateway id="Gateway_AdvancedComplete" name="Advanced Training Complete">
+      <bpmn:incoming>Flow_StatisticalComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_LeanComplete</bpmn:incoming>
+      <bpmn:incoming>Flow_AdvancedTRIZComplete</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCapstoneProject</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Capstone Project with qwen3 -->
+    <bpmn:serviceTask id="Task_CapstoneProject" name="DMEDI Capstone Project">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaCapstoneProjectTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="result_type" value="CapstoneProjectAssessment" />
+        <bpmn:property name="project_type" value="comprehensive_dmedi" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToCapstoneProject</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCertificationAssessment</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Final Certification Assessment -->
+    <bpmn:serviceTask id="Task_CertificationAssessment" name="Black Belt Certification Assessment">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaCertificationAssessmentTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="assessment_type" value="black_belt_certification" />
+        <bpmn:property name="certification_standard" value="iassc_black_belt" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToCertificationAssessment</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCertificationGateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Certification Gateway -->
+    <bpmn:exclusiveGateway id="Gateway_CertificationDecision" name="Certification Achieved?">
+      <bpmn:incoming>Flow_ToCertificationGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_CertificationAchieved</bpmn:outgoing>
+      <bpmn:outgoing>Flow_CertificationRetry</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Generate Certificate -->
+    <bpmn:serviceTask id="Task_GenerateCertificate" name="Generate Black Belt Certificate">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaCertificateGenerationTask" />
+        <bpmn:property name="certificate_type" value="six_sigma_black_belt" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CertificationAchieved</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToTrainingComplete</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Remediation Training -->
+    <bpmn:serviceTask id="Task_RemediationTraining" name="Provide Remediation Training">
+      <bpmn:extensionElements>
+        <bpmn:property name="service_class" value="SixSigmaRemediationTask" />
+        <bpmn:property name="ai_model" value="qwen3:latest" />
+        <bpmn:property name="remediation_type" value="personalized" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_QualityFailed</bpmn:incoming>
+      <bpmn:incoming>Flow_CertificationRetry</bpmn:incoming>
+      <bpmn:outgoing>Flow_RetryTraining</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_TrainingComplete" name="Six Sigma Training Complete">
+      <bpmn:incoming>Flow_ToTrainingComplete</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToInitializeSession" sourceRef="StartEvent_SixSigmaTraining" targetRef="Task_InitializeTrainingSession" />
+    <bpmn:sequenceFlow id="Flow_ToParallelDefineActivities" sourceRef="Task_InitializeTrainingSession" targetRef="Gateway_DMEDIPhaseActivities" />
+    
+    <!-- DMEDI Phase Flows -->
+    <bpmn:sequenceFlow id="Flow_ToDefineTraining" sourceRef="Gateway_DMEDIPhaseActivities" targetRef="Task_DefinePhaseTraining" />
+    <bpmn:sequenceFlow id="Flow_ToMeasureTraining" sourceRef="Gateway_DMEDIPhaseActivities" targetRef="Task_MeasurePhaseTraining" />
+    <bpmn:sequenceFlow id="Flow_ToExploreTraining" sourceRef="Gateway_DMEDIPhaseActivities" targetRef="Task_ExplorePhaseTraining" />
+    <bpmn:sequenceFlow id="Flow_ToDevelopTraining" sourceRef="Gateway_DMEDIPhaseActivities" targetRef="Task_DevelopPhaseTraining" />
+    <bpmn:sequenceFlow id="Flow_ToImplementTraining" sourceRef="Gateway_DMEDIPhaseActivities" targetRef="Task_ImplementPhaseTraining" />
+    
+    <bpmn:sequenceFlow id="Flow_DefineComplete" sourceRef="Task_DefinePhaseTraining" targetRef="Gateway_AllPhasesComplete" />
+    <bpmn:sequenceFlow id="Flow_MeasureComplete" sourceRef="Task_MeasurePhaseTraining" targetRef="Gateway_AllPhasesComplete" />
+    <bpmn:sequenceFlow id="Flow_ExploreComplete" sourceRef="Task_ExplorePhaseTraining" targetRef="Gateway_AllPhasesComplete" />
+    <bpmn:sequenceFlow id="Flow_DevelopComplete" sourceRef="Task_DevelopPhaseTraining" targetRef="Gateway_AllPhasesComplete" />
+    <bpmn:sequenceFlow id="Flow_ImplementComplete" sourceRef="Task_ImplementPhaseTraining" targetRef="Gateway_AllPhasesComplete" />
+    
+    <!-- Assessment and Quality Flows -->
+    <bpmn:sequenceFlow id="Flow_ToComprehensiveAssessment" sourceRef="Gateway_AllPhasesComplete" targetRef="Task_ComprehensiveAssessment" />
+    <bpmn:sequenceFlow id="Flow_ToQualityGateway" sourceRef="Task_ComprehensiveAssessment" targetRef="Gateway_AssessmentQuality" />
+    
+    <bpmn:sequenceFlow id="Flow_QualityPassed" sourceRef="Gateway_AssessmentQuality" targetRef="Gateway_AdvancedTraining">
+      <bpmn:conditionExpression><![CDATA[#{overall_assessment_score >= 0.8}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_QualityFailed" sourceRef="Gateway_AssessmentQuality" targetRef="Task_RemediationTraining">
+      <bpmn:conditionExpression><![CDATA[#{overall_assessment_score < 0.8}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <!-- Advanced Training Flows -->
+    <bpmn:sequenceFlow id="Flow_ToStatisticalTraining" sourceRef="Gateway_AdvancedTraining" targetRef="Task_AdvancedStatisticalTraining" />
+    <bpmn:sequenceFlow id="Flow_ToLeanTraining" sourceRef="Gateway_AdvancedTraining" targetRef="Task_LeanDesignTraining" />
+    <bpmn:sequenceFlow id="Flow_ToAdvancedTRIZ" sourceRef="Gateway_AdvancedTraining" targetRef="Task_AdvancedTRIZTraining" />
+    
+    <bpmn:sequenceFlow id="Flow_StatisticalComplete" sourceRef="Task_AdvancedStatisticalTraining" targetRef="Gateway_AdvancedComplete" />
+    <bpmn:sequenceFlow id="Flow_LeanComplete" sourceRef="Task_LeanDesignTraining" targetRef="Gateway_AdvancedComplete" />
+    <bpmn:sequenceFlow id="Flow_AdvancedTRIZComplete" sourceRef="Task_AdvancedTRIZTraining" targetRef="Gateway_AdvancedComplete" />
+    
+    <!-- Capstone and Certification Flows -->
+    <bpmn:sequenceFlow id="Flow_ToCapstoneProject" sourceRef="Gateway_AdvancedComplete" targetRef="Task_CapstoneProject" />
+    <bpmn:sequenceFlow id="Flow_ToCertificationAssessment" sourceRef="Task_CapstoneProject" targetRef="Task_CertificationAssessment" />
+    <bpmn:sequenceFlow id="Flow_ToCertificationGateway" sourceRef="Task_CertificationAssessment" targetRef="Gateway_CertificationDecision" />
+    
+    <bpmn:sequenceFlow id="Flow_CertificationAchieved" sourceRef="Gateway_CertificationDecision" targetRef="Task_GenerateCertificate">
+      <bpmn:conditionExpression><![CDATA[#{certification_score >= 0.85}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_CertificationRetry" sourceRef="Gateway_CertificationDecision" targetRef="Task_RemediationTraining">
+      <bpmn:conditionExpression><![CDATA[#{certification_score < 0.85}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    
+    <!-- Remediation and Completion Flows -->
+    <bpmn:sequenceFlow id="Flow_RetryTraining" sourceRef="Task_RemediationTraining" targetRef="Gateway_DMEDIPhaseActivities" />
+    <bpmn:sequenceFlow id="Flow_ToTrainingComplete" sourceRef="Task_GenerateCertificate" targetRef="EndEvent_TrainingComplete" />
+    
+  </bpmn:process>
+</bpmn:definitions>

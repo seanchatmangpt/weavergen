@@ -1,0 +1,420 @@
+[
+  {
+    "execution_id": "exec_1751356414980",
+    "duration_ms": 5.0169999999999995,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.6149749755859375,
+      "Task_ValidateInput": 0.20194053649902344,
+      "Task_GenerateModels": 0.030040740966796875,
+      "Task_GenerateAgents": 0.03409385681152344,
+      "Task_GenerateValidators": 0.007867813110351562,
+      "Task_ValidateModels": 0.0069141387939453125,
+      "Task_TestAgents": 0.008821487426757812,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.04506111145019531,
+      "Task_GenerateOutput": 0.9410381317138672,
+      "Task_CaptureSpans": 0.5676746368408203
+    }
+  },
+  {
+    "execution_id": "exec_1751356414986",
+    "duration_ms": 4.303999999999999,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.437114715576172,
+      "Task_ValidateInput": 0.08034706115722656,
+      "Task_GenerateModels": 0.015974044799804688,
+      "Task_GenerateAgents": 0.026941299438476562,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.005245208740234375,
+      "Task_TestAgents": 0.009059906005859375,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.0247955322265625,
+      "Task_GenerateOutput": 0.7741451263427734,
+      "Task_CaptureSpans": 0.5340576171875
+    }
+  },
+  {
+    "execution_id": "exec_1751356414990",
+    "duration_ms": 4.189,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3736953735351562,
+      "Task_ValidateInput": 0.06890296936035156,
+      "Task_GenerateModels": 0.013113021850585938,
+      "Task_GenerateAgents": 0.025987625122070312,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.005245208740234375,
+      "Task_TestAgents": 0.008106231689453125,
+      "Task_TestValidators": 0.00286102294921875,
+      "Task_Integration": 0.0209808349609375,
+      "Task_GenerateOutput": 0.7688999176025391,
+      "Task_CaptureSpans": 0.5240440368652344
+    }
+  },
+  {
+    "execution_id": "exec_1751356414995",
+    "duration_ms": 4.103,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3818016052246094,
+      "Task_ValidateInput": 0.06389617919921875,
+      "Task_GenerateModels": 0.010967254638671875,
+      "Task_GenerateAgents": 0.024080276489257812,
+      "Task_GenerateValidators": 0.00667572021484375,
+      "Task_ValidateModels": 0.005245208740234375,
+      "Task_TestAgents": 0.008106231689453125,
+      "Task_TestValidators": 0.00286102294921875,
+      "Task_Integration": 0.02002716064453125,
+      "Task_GenerateOutput": 0.7228851318359375,
+      "Task_CaptureSpans": 0.5049705505371094
+    }
+  },
+  {
+    "execution_id": "exec_1751356415000",
+    "duration_ms": 4.067,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3479461669921875,
+      "Task_ValidateInput": 0.06604194641113281,
+      "Task_GenerateModels": 0.010967254638671875,
+      "Task_GenerateAgents": 0.02288818359375,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.005245208740234375,
+      "Task_TestAgents": 0.007152557373046875,
+      "Task_TestValidators": 0.00286102294921875,
+      "Task_Integration": 0.018835067749023438,
+      "Task_GenerateOutput": 0.7300376892089844,
+      "Task_CaptureSpans": 0.5071163177490234
+    }
+  },
+  {
+    "execution_id": "exec_1751356415005",
+    "duration_ms": 4.074000000000001,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3550987243652344,
+      "Task_ValidateInput": 0.06508827209472656,
+      "Task_GenerateModels": 0.010728836059570312,
+      "Task_GenerateAgents": 0.024080276489257812,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.0040531158447265625,
+      "Task_TestAgents": 0.008106231689453125,
+      "Task_TestValidators": 0.0026226043701171875,
+      "Task_Integration": 0.018835067749023438,
+      "Task_GenerateOutput": 0.7381439208984375,
+      "Task_CaptureSpans": 0.5059242248535156
+    }
+  },
+  {
+    "execution_id": "exec_1751356415011",
+    "duration_ms": 4.139,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.347707748413086,
+      "Task_ValidateInput": 0.09417533874511719,
+      "Task_GenerateModels": 0.010967254638671875,
+      "Task_GenerateAgents": 0.022649765014648438,
+      "Task_GenerateValidators": 0.0059604644775390625,
+      "Task_ValidateModels": 0.0040531158447265625,
+      "Task_TestAgents": 0.0069141387939453125,
+      "Task_TestValidators": 0.0030994415283203125,
+      "Task_Integration": 0.019073486328125,
+      "Task_GenerateOutput": 0.7579326629638672,
+      "Task_CaptureSpans": 0.5328655242919922
+    }
+  },
+  {
+    "execution_id": "exec_1751356415016",
+    "duration_ms": 4.11,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3360252380371094,
+      "Task_ValidateInput": 0.07486343383789062,
+      "Task_GenerateModels": 0.011205673217773438,
+      "Task_GenerateAgents": 0.023126602172851562,
+      "Task_GenerateValidators": 0.0059604644775390625,
+      "Task_ValidateModels": 0.0050067901611328125,
+      "Task_TestAgents": 0.0069141387939453125,
+      "Task_TestValidators": 0.00286102294921875,
+      "Task_Integration": 0.01811981201171875,
+      "Task_GenerateOutput": 0.7641315460205078,
+      "Task_CaptureSpans": 0.5311965942382812
+    }
+  },
+  {
+    "execution_id": "exec_1751356415021",
+    "duration_ms": 4.083,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3369789123535156,
+      "Task_ValidateInput": 0.07390975952148438,
+      "Task_GenerateModels": 0.011205673217773438,
+      "Task_GenerateAgents": 0.02288818359375,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.003814697265625,
+      "Task_TestAgents": 0.007152557373046875,
+      "Task_TestValidators": 0.0030994415283203125,
+      "Task_Integration": 0.017881393432617188,
+      "Task_GenerateOutput": 0.7429122924804688,
+      "Task_CaptureSpans": 0.5278587341308594
+    }
+  },
+  {
+    "execution_id": "exec_1751356415027",
+    "duration_ms": 4.12,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3469924926757812,
+      "Task_ValidateInput": 0.07104873657226562,
+      "Task_GenerateModels": 0.013113021850585938,
+      "Task_GenerateAgents": 0.023126602172851562,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.003814697265625,
+      "Task_TestAgents": 0.007152557373046875,
+      "Task_TestValidators": 0.0030994415283203125,
+      "Task_Integration": 0.019073486328125,
+      "Task_GenerateOutput": 0.7660388946533203,
+      "Task_CaptureSpans": 0.5309581756591797
+    }
+  },
+  {
+    "execution_id": "exec_1751356415032",
+    "duration_ms": 4.052,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3419857025146484,
+      "Task_ValidateInput": 0.07724761962890625,
+      "Task_GenerateModels": 0.010967254638671875,
+      "Task_GenerateAgents": 0.02384185791015625,
+      "Task_GenerateValidators": 0.006198883056640625,
+      "Task_ValidateModels": 0.004291534423828125,
+      "Task_TestAgents": 0.0069141387939453125,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.018358230590820312,
+      "Task_GenerateOutput": 0.701904296875,
+      "Task_CaptureSpans": 0.5271434783935547
+    }
+  },
+  {
+    "execution_id": "exec_1751356415038",
+    "duration_ms": 4.6080000000000005,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.527952194213867,
+      "Task_ValidateInput": 0.07319450378417969,
+      "Task_GenerateModels": 0.010967254638671875,
+      "Task_GenerateAgents": 0.026226043701171875,
+      "Task_GenerateValidators": 0.0059604644775390625,
+      "Task_ValidateModels": 0.0050067901611328125,
+      "Task_TestAgents": 0.007152557373046875,
+      "Task_TestValidators": 0.024080276489257812,
+      "Task_Integration": 0.03409385681152344,
+      "Task_GenerateOutput": 0.8671283721923828,
+      "Task_CaptureSpans": 0.6861686706542969
+    }
+  },
+  {
+    "execution_id": "exec_1751357457594",
+    "duration_ms": 5.207,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.6171207427978516,
+      "Task_ValidateInput": 0.1728534698486328,
+      "Task_GenerateModels": 0.025272369384765625,
+      "Task_GenerateAgents": 0.032901763916015625,
+      "Task_GenerateValidators": 0.009298324584960938,
+      "Task_ValidateModels": 0.0073909759521484375,
+      "Task_TestAgents": 0.009298324584960938,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.03981590270996094,
+      "Task_GenerateOutput": 0.9930133819580078,
+      "Task_CaptureSpans": 0.6861686706542969
+    }
+  },
+  {
+    "execution_id": "exec_1751357457600",
+    "duration_ms": 5.176,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.7151107788085938,
+      "Task_ValidateInput": 0.141143798828125,
+      "Task_GenerateModels": 0.021219253540039062,
+      "Task_GenerateAgents": 0.030994415283203125,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.006198883056640625,
+      "Task_TestAgents": 0.008106231689453125,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.030994415283203125,
+      "Task_GenerateOutput": 1.0709762573242188,
+      "Task_CaptureSpans": 0.7028579711914062
+    }
+  },
+  {
+    "execution_id": "exec_1751357457606",
+    "duration_ms": 4.874,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.3720264434814453,
+      "Task_ValidateInput": 0.10395050048828125,
+      "Task_GenerateModels": 0.02002716064453125,
+      "Task_GenerateAgents": 0.027179718017578125,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.0059604644775390625,
+      "Task_TestAgents": 0.008821487426757812,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.030279159545898438,
+      "Task_GenerateOutput": 1.0879039764404297,
+      "Task_CaptureSpans": 0.7669925689697266
+    }
+  },
+  {
+    "execution_id": "exec_1751357457612",
+    "duration_ms": 4.481,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.2881031036376953,
+      "Task_ValidateInput": 0.10395050048828125,
+      "Task_GenerateModels": 0.0209808349609375,
+      "Task_GenerateAgents": 0.028848648071289062,
+      "Task_GenerateValidators": 0.008106231689453125,
+      "Task_ValidateModels": 0.0059604644775390625,
+      "Task_TestAgents": 0.007867813110351562,
+      "Task_TestValidators": 0.0030994415283203125,
+      "Task_Integration": 0.025033950805664062,
+      "Task_GenerateOutput": 0.9500980377197266,
+      "Task_CaptureSpans": 0.6661415100097656
+    }
+  },
+  {
+    "execution_id": "exec_1751357457618",
+    "duration_ms": 4.539,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.2630691528320312,
+      "Task_ValidateInput": 0.09608268737792969,
+      "Task_GenerateModels": 0.01811981201171875,
+      "Task_GenerateAgents": 0.026702880859375,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.00476837158203125,
+      "Task_TestAgents": 0.007867813110351562,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.02384185791015625,
+      "Task_GenerateOutput": 0.8869171142578125,
+      "Task_CaptureSpans": 0.8268356323242188
+    }
+  },
+  {
+    "execution_id": "exec_1751357457624",
+    "duration_ms": 4.464,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.294778823852539,
+      "Task_ValidateInput": 0.09298324584960938,
+      "Task_GenerateModels": 0.019073486328125,
+      "Task_GenerateAgents": 0.029802322387695312,
+      "Task_GenerateValidators": 0.007867813110351562,
+      "Task_ValidateModels": 0.0057220458984375,
+      "Task_TestAgents": 0.007867813110351562,
+      "Task_TestValidators": 0.0040531158447265625,
+      "Task_Integration": 0.023126602172851562,
+      "Task_GenerateOutput": 0.9419918060302734,
+      "Task_CaptureSpans": 0.6773471832275391
+    }
+  },
+  {
+    "execution_id": "exec_1751357457630",
+    "duration_ms": 4.42,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.34222412109375,
+      "Task_ValidateInput": 0.08487701416015625,
+      "Task_GenerateModels": 0.015974044799804688,
+      "Task_GenerateAgents": 0.027894973754882812,
+      "Task_GenerateValidators": 0.006198883056640625,
+      "Task_ValidateModels": 0.0050067901611328125,
+      "Task_TestAgents": 0.007867813110351562,
+      "Task_TestValidators": 0.003814697265625,
+      "Task_Integration": 0.02193450927734375,
+      "Task_GenerateOutput": 0.8769035339355469,
+      "Task_CaptureSpans": 0.6799697875976562
+    }
+  },
+  {
+    "execution_id": "exec_1751357457636",
+    "duration_ms": 4.29,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.259969711303711,
+      "Task_ValidateInput": 0.07724761962890625,
+      "Task_GenerateModels": 0.015735626220703125,
+      "Task_GenerateAgents": 0.026941299438476562,
+      "Task_GenerateValidators": 0.007152557373046875,
+      "Task_ValidateModels": 0.0050067901611328125,
+      "Task_TestAgents": 0.007867813110351562,
+      "Task_TestValidators": 0.003814697265625,
+      "Task_Integration": 0.02002716064453125,
+      "Task_GenerateOutput": 0.8640289306640625,
+      "Task_CaptureSpans": 0.659942626953125
+    }
+  },
+  {
+    "execution_id": "exec_1751357457642",
+    "duration_ms": 4.848,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.446889877319336,
+      "Task_ValidateInput": 0.08392333984375,
+      "Task_GenerateModels": 0.012159347534179688,
+      "Task_GenerateAgents": 0.025272369384765625,
+      "Task_GenerateValidators": 0.00667572021484375,
+      "Task_ValidateModels": 0.00476837158203125,
+      "Task_TestAgents": 0.008106231689453125,
+      "Task_TestValidators": 0.0030994415283203125,
+      "Task_Integration": 0.02002716064453125,
+      "Task_GenerateOutput": 0.8318424224853516,
+      "Task_CaptureSpans": 0.9379386901855469
+    }
+  },
+  {
+    "execution_id": "exec_1751357457649",
+    "duration_ms": 5.129,
+    "quality_score": 0.935,
+    "success": true,
+    "task_durations": {
+      "Task_LoadSemantics": 2.8009414672851562,
+      "Task_ValidateInput": 0.11610984802246094,
+      "Task_GenerateModels": 0.019073486328125,
+      "Task_GenerateAgents": 0.028848648071289062,
+      "Task_GenerateValidators": 0.0069141387939453125,
+      "Task_ValidateModels": 0.00476837158203125,
+      "Task_TestAgents": 0.0069141387939453125,
+      "Task_TestValidators": 0.0030994415283203125,
+      "Task_Integration": 0.026941299438476562,
+      "Task_GenerateOutput": 0.9846687316894531,
+      "Task_CaptureSpans": 0.7250308990478516
+    }
+  }
+]

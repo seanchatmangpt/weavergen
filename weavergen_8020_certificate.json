@@ -1,0 +1,11 @@
+{
+  "validation_timestamp": "2025-07-01T01:23:18.182577",
+  "trace_id": "4b9cff90a91d4b7ca7e9104028437515",
+  "gaps_validated": 5,
+  "gaps_total": 5,
+  "files_verified": 7,
+  "files_expected": 7,
+  "total_value_percentage": 100,
+  "validation_approach": "span_based_no_unit_tests",
+  "certificate_id": "WEAVERGEN-8020-20250701-012318"
+}

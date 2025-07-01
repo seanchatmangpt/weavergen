@@ -1,0 +1,8 @@
+### `/Users/sac/dev/weavergen/src/weavergen/operations_layer.py`
+
+*   **Purpose:** This module implements the "Operations Layer" of WeaverGen, which encapsulates the core business logic for various functionalities like code generation (`GenerationOperation`), validation (`ValidationOperation`), and complex workflow orchestration (`WorkflowOrchestrator`). It adheres to the "80/20 Implementation" principle and explicitly states "NO PYTESTS," relying solely on span-based validation. It interacts with the `runtime_engine` for low-level execution and `span_validation` for observability.
+*   **Relevance to `GEMINI.md`:** The `GEMINI.md` describes a "BPMN-first modular architecture" with a "Core Logic" section that includes the `WeaverGen` class orchestrating the Weaver binary. This `operations_layer.py` is a direct implementation of the "Operations Layer" mentioned in the "4-Layer Architecture" (Commands, Operations, Runtime, Contracts) within the `GEMINI.md`. It contains the business logic that would be triggered by BPMN workflows. Its reliance on span-based validation also directly aligns with the `GEMINI.md`'s testing philosophy.
+*   **Value:** This is a **critical core component** of WeaverGen. It defines the high-level business logic and workflows that drive the system's core functionalities. Its modular design and adherence to span-based validation make it a key part of the project's architecture.
+
+*   **Category:** Core Component / Business Logic Layer.
+*   **Reasoning:** Directly implements the "Operations Layer" of WeaverGen's 4-layer architecture, encapsulating core business logic and adhering to the project's span-based validation philosophy.

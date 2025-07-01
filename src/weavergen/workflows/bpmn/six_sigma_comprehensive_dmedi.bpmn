@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                   targetNamespace="http://weavergen.ai/dmedi-comprehensive"
+                   id="six_sigma_comprehensive_dmedi">
+
+  <bpmn:process id="ComprehensiveDMEDI" name="Comprehensive DMEDI Black Belt Training" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartTraining" name="Begin DMEDI Training">
+      <bpmn:documentation>Two-week intensive Design for Lean Six Sigma Black Belt course following DMEDI methodology</bpmn:documentation>
+    </bpmn:startEvent>
+
+    <!-- Introduction -->
+    <bpmn:serviceTask id="Task_Introduction" name="Introduction to Design for Lean Six Sigma">
+      <bpmn:documentation>
+        Overview of DMEDI methodology vs DMAIC
+        Course objectives and Black Belt competencies
+        Product development vs process improvement focus
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <!-- DEFINE PHASE -->
+    <bpmn:serviceTask id="Task_DefinePhase" name="Define Phase Overview">
+      <bpmn:documentation>
+        Foundation setting for new product/process design
+        Establishing clear objectives and constraints
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_Charter" name="Project Charter Development">
+      <bpmn:documentation>
+        Business case, problem statement, scope
+        Stakeholder identification and RACI matrix
+        Success criteria and timeline
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_MGPP" name="MGPP (Management Guided Problem and Project)">
+      <bpmn:documentation>
+        Strategic alignment assessment
+        Resource allocation and team formation
+        Executive sponsorship establishment
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_RiskManagement" name="Risk Management Planning">
+      <bpmn:documentation>
+        Risk identification and assessment
+        Mitigation strategies development
+        Contingency planning
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_CommunicationPlan" name="Communication Plan">
+      <bpmn:documentation>
+        Stakeholder communication matrix
+        Progress reporting mechanisms
+        Change management strategy
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <!-- Gateway: Define Phase Complete -->
+    <bpmn:exclusiveGateway id="Gateway_DefineComplete" name="Define Phase Review">
+      <bpmn:documentation>Quality gate: Charter approved, team formed, risks identified</bpmn:documentation>
+    </bpmn:exclusiveGateway>
+
+    <!-- MEASURE PHASE -->
+    <bpmn:serviceTask id="Task_MeasurePhase" name="Measure Phase Overview">
+      <bpmn:documentation>
+        Understanding customer requirements
+        Establishing measurement systems
+        Baseline capability assessment
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_VOC" name="Voice of the Customer (VOC)">
+      <bpmn:documentation>
+        Customer interview techniques
+        Kano model analysis
+        Critical-to-Quality (CTQ) identification
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_QFD" name="Quality Function Deployment (QFD)">
+      <bpmn:documentation>
+        House of Quality construction
+        Customer requirements translation
+        Engineering characteristics prioritization
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_TargetCosting" name="Target Costing">
+      <bpmn:documentation>
+        Market-driven cost targets
+        Value engineering principles
+        Cost-performance optimization
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_Scorecards" name="Balanced Scorecards">
+      <bpmn:documentation>
+        KPI development and selection
+        Dashboard design principles
+        Performance tracking systems
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_MinitabIntro" name="Introduction to Minitab">
+      <bpmn:documentation>
+        Statistical software fundamentals
+        Data import and manipulation
+        Basic analysis capabilities
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_BasicStats" name="Basic Statistics">
+      <bpmn:documentation>
+        Descriptive statistics
+        Probability distributions
+        Central Limit Theorem
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_VariationControl" name="Understanding Variation and Control Charts">
+      <bpmn:documentation>
+        Common vs special cause variation
+        Control chart selection and interpretation
+        Statistical process control principles
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_MSA" name="Measurement Systems Analysis (MSA)">
+      <bpmn:documentation>
+        Gage R&amp;R studies
+        Measurement uncertainty
+        Calibration and traceability
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ProcessCapability" name="Process Capability Analysis">
+      <bpmn:documentation>
+        Cp, Cpk, Pp, Ppk calculations
+        Capability indices interpretation
+        Specification limit analysis
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <!-- Gateway: Measure Phase Complete -->
+    <bpmn:exclusiveGateway id="Gateway_MeasureComplete" name="Measure Phase Review">
+      <bpmn:documentation>Quality gate: VOC captured, QFD complete, measurement systems validated</bpmn:documentation>
+    </bpmn:exclusiveGateway>
+
+    <!-- EXPLORE PHASE -->
+    <bpmn:serviceTask id="Task_ExplorePhase" name="Explore Phase Overview">
+      <bpmn:documentation>
+        Creative problem solving
+        Systematic innovation
+        Concept development and selection
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ConceptGeneration" name="Concept Generation">
+      <bpmn:documentation>
+        Brainstorming techniques
+        Morphological analysis
+        Biomimetics and inspiration
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_TRIZ" name="TRIZ for New Product Design">
+      <bpmn:documentation>
+        Theory of Inventive Problem Solving
+        40 Inventive Principles
+        Contradiction resolution
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_TransactionalTRIZ" name="Transactional TRIZ">
+      <bpmn:documentation>
+        TRIZ for service and process design
+        Information and workflow contradictions
+        Service innovation patterns
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ConceptSelection" name="Concept Selection - Pugh and AHP">
+      <bpmn:documentation>
+        Pugh matrix methodology
+        Analytical Hierarchy Process (AHP)
+        Multi-criteria decision analysis
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ToleranceDesign" name="Statistical Tolerance Design">
+      <bpmn:documentation>
+        Tolerance allocation strategies
+        Root sum square vs worst case
+        Cost-tolerance optimization
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_MonteCarloSim" name="Monte Carlo Simulation">
+      <bpmn:documentation>
+        Random sampling techniques
+        Risk assessment modeling
+        Sensitivity analysis
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_HypothesisTesting" name="Hypothesis Testing">
+      <bpmn:documentation>
+        Type I and Type II errors
+        t-tests, F-tests, chi-square
+        Power and sample size
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ConfidenceIntervals" name="Confidence Intervals">
+      <bpmn:documentation>
+        Interval estimation principles
+        Margin of error calculation
+        Bootstrap methods
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_TestingMeans" name="Testing Means, Medians, and Variances">
+      <bpmn:documentation>
+        One-sample and two-sample tests
+        Paired comparisons
+        Non-parametric alternatives
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ProportionChiSquare" name="Proportion and Chi-Square Tests">
+      <bpmn:documentation>
+        Categorical data analysis
+        Goodness of fit tests
+        Independence testing
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_Regression" name="Simple and Multiple Regression">
+      <bpmn:documentation>
+        Linear relationship modeling
+        Coefficient interpretation
+        Model validation techniques
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_MultiVari" name="Multi-Vari Analysis">
+      <bpmn:documentation>
+        Variation source identification
+        Positional, cyclical, temporal variation
+        Graphical analysis techniques
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_DesignFMEA" name="Design FMEA">
+      <bpmn:documentation>
+        Failure mode identification
+        Risk Priority Number (RPN) calculation
+        Design control recommendations
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <!-- Gateway: Explore Phase Complete -->
+    <bpmn:exclusiveGateway id="Gateway_ExploreComplete" name="Explore Phase Review">
+      <bpmn:documentation>Quality gate: Concepts generated, selected, and analyzed</bpmn:documentation>
+    </bpmn:exclusiveGateway>
+
+    <!-- DEVELOP PHASE -->
+    <bpmn:serviceTask id="Task_DevelopPhase" name="Develop Phase Overview">
+      <bpmn:documentation>
+        Detailed design optimization
+        Experimental validation
+        Robust design principles
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_DetailedDesign" name="Detailed Design">
+      <bpmn:documentation>
+        Engineering specifications
+        CAD modeling and simulation
+        Design documentation
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_TwoWayANOVA" name="2-Way ANOVA">
+      <bpmn:documentation>
+        Factorial analysis of variance
+        Interaction effects
+        Main effects interpretation
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_DOEIntro" name="Introduction to Design of Experiments">
+      <bpmn:documentation>
+        Experimental design principles
+        Factor screening strategies
+        Response optimization
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_FullFactorialDOE" name="Full-Factorial DOE">
+      <bpmn:documentation>
+        Complete factorial designs
+        Effect estimation
+        Interaction analysis
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_FractionalDOE" name="Fractional Factorial DOE">
+      <bpmn:documentation>
+        Screening designs
+        Resolution and aliasing
+        Fold-over techniques
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_CatapultDOE" name="DOE Catapult Simulation">
+      <bpmn:documentation>
+        Hands-on experimental design
+        Physical optimization exercise
+        Statistical analysis practice
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_LeanConcepts" name="Key Lean Concepts">
+      <bpmn:documentation>
+        Waste identification (8 wastes)
+        Value stream mapping
+        Flow and pull systems
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_LeanDesign" name="Lean Design Principles">
+      <bpmn:documentation>
+        Design for value
+        Simplification strategies
+        Standardization benefits
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_DFM" name="Design for Manufacture and Assembly (DFMA)">
+      <bpmn:documentation>
+        Manufacturing constraints
+        Assembly optimization
+        Cost reduction strategies
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ReliabilityIntro" name="Introduction to Reliability">
+      <bpmn:documentation>
+        Reliability metrics (MTBF, MTTR)
+        Failure rate modeling
+        Life testing principles
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_DOECurvature" name="Design of Experiments with Curvature">
+      <bpmn:documentation>
+        Central composite designs
+        Box-Behnken designs
+        Curvature detection
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ConjointAnalysis" name="Conjoint Analysis">
+      <bpmn:documentation>
+        Customer preference modeling
+        Feature importance ranking
+        Market simulation
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_MixtureDesigns" name="Mixture Designs">
+      <bpmn:documentation>
+        Constrained experimental space
+        Mixture optimization
+        Formulation problems
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_RobustDesign" name="Robust Design (Taguchi Methods)">
+      <bpmn:documentation>
+        Signal-to-noise ratios
+        Parameter vs tolerance design
+        Noise factor identification
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_HelicopterRSM" name="Helicopter RSM Simulation">
+      <bpmn:documentation>
+        Response Surface Methodology
+        Optimization techniques
+        Practical RSM application
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <!-- Gateway: Develop Phase Complete -->
+    <bpmn:exclusiveGateway id="Gateway_DevelopComplete" name="Develop Phase Review">
+      <bpmn:documentation>Quality gate: Design optimized, experiments complete, robust solution developed</bpmn:documentation>
+    </bpmn:exclusiveGateway>
+
+    <!-- IMPLEMENT PHASE -->
+    <bpmn:serviceTask id="Task_ImplementPhase" name="Implement Phase Overview">
+      <bpmn:documentation>
+        Solution deployment
+        Process control establishment
+        Sustainability planning
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_PrototypePilot" name="Prototype and Pilot">
+      <bpmn:documentation>
+        Prototype validation
+        Pilot study design
+        Scale-up considerations
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ProcessControl" name="Process Control Implementation">
+      <bpmn:documentation>
+        Control plan development
+        SPC implementation
+        Monitoring systems
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <bpmn:serviceTask id="Task_ImplementationPlanning" name="Implementation Planning">
+      <bpmn:documentation>
+        Rollout strategy
+        Training requirements
+        Change management
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <!-- CAPSTONE -->
+    <bpmn:serviceTask id="Task_DMEDICapstone" name="DMEDI Capstone Project">
+      <bpmn:documentation>
+        Integrated project application
+        Black Belt certification requirements
+        Presentation and defense
+      </bpmn:documentation>
+    </bpmn:serviceTask>
+
+    <!-- End Event -->
+    <bpmn:endEvent id="EndTraining" name="Training Complete">
+      <bpmn:documentation>Black Belt certified, ready for independent project leadership</bpmn:documentation>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartTraining" targetRef="Task_Introduction"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Introduction" targetRef="Task_DefinePhase"/>
+    
+    <!-- Define Phase Flows -->
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_DefinePhase" targetRef="Task_Charter"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_Charter" targetRef="Task_MGPP"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_MGPP" targetRef="Task_RiskManagement"/>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_RiskManagement" targetRef="Task_CommunicationPlan"/>
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_CommunicationPlan" targetRef="Gateway_DefineComplete"/>
+
+    <!-- Measure Phase Flows -->
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Gateway_DefineComplete" targetRef="Task_MeasurePhase">
+      <bpmn:conditionExpression><![CDATA[#{define_quality_gate_passed == true}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_MeasurePhase" targetRef="Task_VOC"/>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_VOC" targetRef="Task_QFD"/>
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Task_QFD" targetRef="Task_TargetCosting"/>
+    <bpmn:sequenceFlow id="Flow_12" sourceRef="Task_TargetCosting" targetRef="Task_Scorecards"/>
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Task_Scorecards" targetRef="Task_MinitabIntro"/>
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_MinitabIntro" targetRef="Task_BasicStats"/>
+    <bpmn:sequenceFlow id="Flow_15" sourceRef="Task_BasicStats" targetRef="Task_VariationControl"/>
+    <bpmn:sequenceFlow id="Flow_16" sourceRef="Task_VariationControl" targetRef="Task_MSA"/>
+    <bpmn:sequenceFlow id="Flow_17" sourceRef="Task_MSA" targetRef="Task_ProcessCapability"/>
+    <bpmn:sequenceFlow id="Flow_18" sourceRef="Task_ProcessCapability" targetRef="Gateway_MeasureComplete"/>
+
+    <!-- Explore Phase Flows -->
+    <bpmn:sequenceFlow id="Flow_19" sourceRef="Gateway_MeasureComplete" targetRef="Task_ExplorePhase">
+      <bpmn:conditionExpression><![CDATA[#{measure_quality_gate_passed == true}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_20" sourceRef="Task_ExplorePhase" targetRef="Task_ConceptGeneration"/>
+    <bpmn:sequenceFlow id="Flow_21" sourceRef="Task_ConceptGeneration" targetRef="Task_TRIZ"/>
+    <bpmn:sequenceFlow id="Flow_22" sourceRef="Task_TRIZ" targetRef="Task_TransactionalTRIZ"/>
+    <bpmn:sequenceFlow id="Flow_23" sourceRef="Task_TransactionalTRIZ" targetRef="Task_ConceptSelection"/>
+    <bpmn:sequenceFlow id="Flow_24" sourceRef="Task_ConceptSelection" targetRef="Task_ToleranceDesign"/>
+    <bpmn:sequenceFlow id="Flow_25" sourceRef="Task_ToleranceDesign" targetRef="Task_MonteCarloSim"/>
+    <bpmn:sequenceFlow id="Flow_26" sourceRef="Task_MonteCarloSim" targetRef="Task_HypothesisTesting"/>
+    <bpmn:sequenceFlow id="Flow_27" sourceRef="Task_HypothesisTesting" targetRef="Task_ConfidenceIntervals"/>
+    <bpmn:sequenceFlow id="Flow_28" sourceRef="Task_ConfidenceIntervals" targetRef="Task_TestingMeans"/>
+    <bpmn:sequenceFlow id="Flow_29" sourceRef="Task_TestingMeans" targetRef="Task_ProportionChiSquare"/>
+    <bpmn:sequenceFlow id="Flow_30" sourceRef="Task_ProportionChiSquare" targetRef="Task_Regression"/>
+    <bpmn:sequenceFlow id="Flow_31" sourceRef="Task_Regression" targetRef="Task_MultiVari"/>
+    <bpmn:sequenceFlow id="Flow_32" sourceRef="Task_MultiVari" targetRef="Task_DesignFMEA"/>
+    <bpmn:sequenceFlow id="Flow_33" sourceRef="Task_DesignFMEA" targetRef="Gateway_ExploreComplete"/>
+
+    <!-- Develop Phase Flows -->
+    <bpmn:sequenceFlow id="Flow_34" sourceRef="Gateway_ExploreComplete" targetRef="Task_DevelopPhase">
+      <bpmn:conditionExpression><![CDATA[#{explore_quality_gate_passed == true}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_35" sourceRef="Task_DevelopPhase" targetRef="Task_DetailedDesign"/>
+    <bpmn:sequenceFlow id="Flow_36" sourceRef="Task_DetailedDesign" targetRef="Task_TwoWayANOVA"/>
+    <bpmn:sequenceFlow id="Flow_37" sourceRef="Task_TwoWayANOVA" targetRef="Task_DOEIntro"/>
+    <bpmn:sequenceFlow id="Flow_38" sourceRef="Task_DOEIntro" targetRef="Task_FullFactorialDOE"/>
+    <bpmn:sequenceFlow id="Flow_39" sourceRef="Task_FullFactorialDOE" targetRef="Task_FractionalDOE"/>
+    <bpmn:sequenceFlow id="Flow_40" sourceRef="Task_FractionalDOE" targetRef="Task_CatapultDOE"/>
+    <bpmn:sequenceFlow id="Flow_41" sourceRef="Task_CatapultDOE" targetRef="Task_LeanConcepts"/>
+    <bpmn:sequenceFlow id="Flow_42" sourceRef="Task_LeanConcepts" targetRef="Task_LeanDesign"/>
+    <bpmn:sequenceFlow id="Flow_43" sourceRef="Task_LeanDesign" targetRef="Task_DFM"/>
+    <bpmn:sequenceFlow id="Flow_44" sourceRef="Task_DFM" targetRef="Task_ReliabilityIntro"/>
+    <bpmn:sequenceFlow id="Flow_45" sourceRef="Task_ReliabilityIntro" targetRef="Task_DOECurvature"/>
+    <bpmn:sequenceFlow id="Flow_46" sourceRef="Task_DOECurvature" targetRef="Task_ConjointAnalysis"/>
+    <bpmn:sequenceFlow id="Flow_47" sourceRef="Task_ConjointAnalysis" targetRef="Task_MixtureDesigns"/>
+    <bpmn:sequenceFlow id="Flow_48" sourceRef="Task_MixtureDesigns" targetRef="Task_RobustDesign"/>
+    <bpmn:sequenceFlow id="Flow_49" sourceRef="Task_RobustDesign" targetRef="Task_HelicopterRSM"/>
+    <bpmn:sequenceFlow id="Flow_50" sourceRef="Task_HelicopterRSM" targetRef="Gateway_DevelopComplete"/>
+
+    <!-- Implement Phase Flows -->
+    <bpmn:sequenceFlow id="Flow_51" sourceRef="Gateway_DevelopComplete" targetRef="Task_ImplementPhase">
+      <bpmn:conditionExpression><![CDATA[#{develop_quality_gate_passed == true}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_52" sourceRef="Task_ImplementPhase" targetRef="Task_PrototypePilot"/>
+    <bpmn:sequenceFlow id="Flow_53" sourceRef="Task_PrototypePilot" targetRef="Task_ProcessControl"/>
+    <bpmn:sequenceFlow id="Flow_54" sourceRef="Task_ProcessControl" targetRef="Task_ImplementationPlanning"/>
+    <bpmn:sequenceFlow id="Flow_55" sourceRef="Task_ImplementationPlanning" targetRef="Task_DMEDICapstone"/>
+    <bpmn:sequenceFlow id="Flow_56" sourceRef="Task_DMEDICapstone" targetRef="EndTraining"/>
+
+    <!-- Quality Gate Loops -->
+    <bpmn:sequenceFlow id="Flow_DefineRework" sourceRef="Gateway_DefineComplete" targetRef="Task_Charter">
+      <bpmn:conditionExpression><![CDATA[#{define_quality_gate_passed == false}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_MeasureRework" sourceRef="Gateway_MeasureComplete" targetRef="Task_VOC">
+      <bpmn:conditionExpression><![CDATA[#{measure_quality_gate_passed == false}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ExploreRework" sourceRef="Gateway_ExploreComplete" targetRef="Task_ConceptGeneration">
+      <bpmn:conditionExpression><![CDATA[#{explore_quality_gate_passed == false}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_DevelopRework" sourceRef="Gateway_DevelopComplete" targetRef="Task_DetailedDesign">
+      <bpmn:conditionExpression><![CDATA[#{develop_quality_gate_passed == false}]]></bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+  </bpmn:process>
+</bpmn:definitions>

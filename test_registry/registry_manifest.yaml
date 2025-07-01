@@ -1,0 +1,15 @@
+schema_url: "https://opentelemetry.io/schemas/1.20.0"
+groups:
+  - id: http
+    type: attribute_group
+    brief: "HTTP attributes"
+    attributes:
+      - id: method
+        type: string
+        brief: "HTTP method"
+        examples: ["GET", "POST"]
+      - id: status_code 
+        type: int
+        brief: "HTTP status code"
+        examples: [200, 404]
+EOF < /dev/null

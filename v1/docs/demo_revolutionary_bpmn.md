@@ -1,0 +1,8 @@
+### `/Users/sac/dev/weavergen/demo_revolutionary_bpmn.py`
+
+*   **Purpose:** This script provides a live demonstration of the "Revolutionary BPMN Engine" (`src/weavergen/revolutionary_bpmn_engine.py`). It showcases the AI-native capabilities of the engine, including natural language to BPMN generation, predictive execution, self-healing workflows, conversational design, and AI insights, by interacting with the actual `RevolutionaryBPMNEngine` (which relies on live LLM models like Ollama/OpenAI).
+*   **Relevance to `GEMINI.md`:** The `GEMINI.md` highlights the "Revolutionary BPMN Engine" as a key innovation and a central part of WeaverGen's advanced vision for AI-native architecture. This demo script directly supports understanding that complex concept by providing a runnable, live demonstration of its capabilities. It aligns with the `GEMINI.md`'s allowance for direct execution of files for "understanding historical development" and "specific isolated testing" of advanced features.
+*   **Value:** This is a **critical demonstration script**. It provides a live, end-to-end showcase of the most advanced and "revolutionary" features of WeaverGen's BPMN engine. It's essential for demonstrating the project's cutting-edge AI capabilities and its vision for the future of workflow generation, assuming the necessary LLM infrastructure is in place.
+
+*   **Category:** Core Demonstration / Advanced AI Concept.
+*   **Reasoning:** Provides a live demonstration of the "Revolutionary BPMN Engine" concepts, which are central to WeaverGen's advanced AI vision. It's crucial for understanding and showcasing complex AI-native functionalities with actual LLM integration.

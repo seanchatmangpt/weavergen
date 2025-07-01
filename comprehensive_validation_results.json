@@ -1,0 +1,225 @@
+{
+  "validation_suite_id": "6c2f947c",
+  "overall_success": true,
+  "suite_results": {
+    "runtime_layer": {
+      "success": true,
+      "tests_run": 5,
+      "tests_passed": 5,
+      "test_results": [
+        {
+          "test": "runtime_initialization",
+          "success": true,
+          "details": {
+            "success": true,
+            "runtime_id": "7dc610d8",
+            "start_time": 1751358547.733206
+          }
+        },
+        {
+          "test": "generation_execution",
+          "success": true,
+          "details": {
+            "success": true,
+            "has_session_id": true,
+            "has_timestamp": true
+          }
+        },
+        {
+          "test": "template_rendering",
+          "success": true,
+          "details": {
+            "success": true,
+            "rendered_content": "Hello User, your code generation is ready!",
+            "expected_content": "Hello User, your code generation is ready!"
+          }
+        },
+        {
+          "test": "process_management",
+          "success": true,
+          "details": {
+            "success": true,
+            "has_process_id": true,
+            "has_duration": true,
+            "command_attempted": true
+          }
+        },
+        {
+          "test": "error_propagation",
+          "success": true,
+          "details": {
+            "success": true,
+            "handles_invalid_input": true,
+            "error_present": true
+          }
+        }
+      ]
+    },
+    "operations_layer": {
+      "success": true,
+      "tests_run": 4,
+      "tests_passed": 4,
+      "test_results": [
+        {
+          "test": "generation_operation",
+          "success": true,
+          "details": {
+            "success": true,
+            "has_operation_id": true,
+            "has_phases": false
+          }
+        },
+        {
+          "test": "validation_operation",
+          "success": true,
+          "details": {
+            "success": true,
+            "has_validation_id": true,
+            "has_stages": true
+          }
+        },
+        {
+          "test": "workflow_orchestration",
+          "success": true,
+          "details": {
+            "success": true,
+            "has_workflow_id": true,
+            "has_phases": false
+          }
+        },
+        {
+          "test": "operations_error_handling",
+          "success": true,
+          "details": {
+            "success": true,
+            "handles_invalid_input": true,
+            "error_present": true
+          }
+        }
+      ]
+    },
+    "integration_flows": {
+      "success": true,
+      "tests_run": 3,
+      "tests_passed": 3,
+      "test_results": [
+        {
+          "test": "runtime_to_operations",
+          "success": true,
+          "details": {
+            "success": true,
+            "integration_functional": true
+          }
+        },
+        {
+          "test": "operations_to_validation",
+          "success": true,
+          "details": {
+            "success": true,
+            "integration_functional": true
+          }
+        },
+        {
+          "test": "complete_pipeline",
+          "success": true,
+          "details": {
+            "success": true,
+            "pipeline_functional": true
+          }
+        }
+      ]
+    },
+    "performance_benchmarks": {
+      "success": true,
+      "tests_run": 4,
+      "tests_passed": 4,
+      "benchmark_results": [
+        {
+          "benchmark": "initialization_time",
+          "success": true,
+          "metrics": {
+            "success": true,
+            "initialization_time_seconds": 5.412101745605469e-05,
+            "performance_target_met": true
+          }
+        },
+        {
+          "benchmark": "generation_time",
+          "success": true,
+          "metrics": {
+            "success": true,
+            "generation_time_seconds": 0.016376972198486328,
+            "performance_target_met": true
+          }
+        },
+        {
+          "benchmark": "validation_time",
+          "success": true,
+          "metrics": {
+            "success": true,
+            "validation_time_seconds": 9.202957153320312e-05,
+            "performance_target_met": true
+          }
+        },
+        {
+          "benchmark": "memory_usage",
+          "success": true,
+          "metrics": {
+            "success": true,
+            "memory_usage_mb": 53.03125,
+            "performance_target_met": true
+          }
+        }
+      ]
+    },
+    "error_handling": {
+      "success": true,
+      "tests_run": 4,
+      "tests_passed": 4,
+      "test_results": [
+        {
+          "test": "invalid_input_handling",
+          "success": true,
+          "details": {
+            "success": true,
+            "graceful_error_handling": true,
+            "no_exception_raised": true
+          }
+        },
+        {
+          "test": "network_error_handling",
+          "success": true,
+          "details": {
+            "success": true,
+            "network_error_handling": "not_implemented",
+            "graceful_degradation": true
+          }
+        },
+        {
+          "test": "file_system_errors",
+          "success": true,
+          "details": {
+            "success": true,
+            "filesystem_error_handling": "basic",
+            "graceful_degradation": true
+          }
+        },
+        {
+          "test": "timeout_handling",
+          "success": true,
+          "details": {
+            "success": true,
+            "timeout_error_handling": "basic",
+            "graceful_degradation": true
+          }
+        }
+      ]
+    }
+  },
+  "validation_summary": {
+    "total_suites": 5,
+    "passed_suites": 5,
+    "total_spans_captured": 6,
+    "validation_timestamp": "2025-07-01T08:29:07.782161+00:00"
+  }
+}

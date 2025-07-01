@@ -1,0 +1,20 @@
+{
+  "traces": 2,
+  "events": 11,
+  "activities": 11,
+  "variants": 2,
+  "start_activities": [
+    "Task_LoadSemantics",
+    "Task_CaptureSpans"
+  ],
+  "end_activities": [
+    "Task_GenerateOutput",
+    "Task_CaptureSpans"
+  ],
+  "process_model": {
+    "places": 13,
+    "transitions": 13,
+    "arcs": 26
+  },
+  "directly_follows": 9
+}

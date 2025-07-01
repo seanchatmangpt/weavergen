@@ -1,0 +1,8 @@
+### `/Users/sac/dev/weavergen/src/weavergen/comprehensive_validation.py`
+
+*   **Purpose:** This module implements a "Comprehensive Span-Based Validation System" for WeaverGen, adhering to an "80/20 Implementation" principle and explicitly stating "NO PYTESTS." It orchestrates various validation suites (runtime layer, operations layer, integration flows, performance benchmarks, error handling) and records all results using OpenTelemetry spans. It then generates a human-readable report and JSON files summarizing the validation outcomes.
+*   **Relevance to `GEMINI.md`:** The `GEMINI.md` strongly emphasizes "Span-Based Validation: Superior to unit tests for distributed systems" and states "NO unit tests - use span-based validation only" for the current `weavergen` project. This file directly implements this core philosophy. It's a central component of the project's testing and quality assurance strategy, focusing on validating the system's behavior through its observable traces rather than traditional unit tests.
+*   **Value:** This is a **critical core component** of WeaverGen's validation strategy. It embodies the project's unique approach to testing and quality assurance, aligning directly with the `GEMINI.md`'s explicit mandate for span-based validation. It's essential for ensuring the reliability and correctness of the generated code and the overall system.
+
+*   **Category:** Core Component / Validation System.
+*   **Reasoning:** Directly implements the project's mandated span-based validation strategy, making it a critical component for quality assurance and adherence to the `GEMINI.md` guidelines.

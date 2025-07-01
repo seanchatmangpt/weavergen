@@ -166,18 +166,14 @@ class ImplementationPlan(BaseModel):
 
 
 # qwen3 AI Agents following WeaverGen patterns
-class SixSigmaQwen3Agent(BaseModel):
+class SixSigmaQwen3Agent:
     """Base Six Sigma agent using qwen3 patterns"""
-    agent_id: str
-    phase: DMEDIPhase
-    model_name: str = "qwen3:latest"
-    base_url: str = "http://localhost:11434/v1"
     
-    class Config:
-        arbitrary_types_allowed = True
-    
-    def __init__(self, **data):
-        super().__init__(**data)
+    def __init__(self, agent_id: str, phase: DMEDIPhase, model_name: str = "qwen3:latest", base_url: str = "http://localhost:11434/v1"):
+        self.agent_id = agent_id
+        self.phase = phase
+        self.model_name = model_name
+        self.base_url = base_url
         # Initialize qwen3 model following WeaverGen patterns
         self.ollama_model = OpenAIModel(
             model_name=self.model_name,
@@ -812,7 +808,7 @@ async def demo_six_sigma_qwen3_training():
     
     print(f"📚 Training Session: {session.session_id}")
     print(f"👤 Participant: {session.participant_id}")
-    print(f"📖 Phase: {session.phase.value}")
+    print(f"📖 Phase: {session.phase}")
     print(f"📝 Module: {session.module}")
     print(f"🤖 AI Model: qwen3:latest (Ollama)")
     print()
@@ -836,7 +832,7 @@ async def demo_six_sigma_qwen3_training():
         mock_result = {
             "session_id": session.session_id,
             "training_type": "project_charter_generation",
-            "phase": session.phase.value,
+            "phase": session.phase,
             "module": session.module,
             "result": {
                 "charter_id": "charter_qwen3_001",

@@ -1,0 +1,290 @@
+{
+  "analysis_metadata": {
+    "convention_name": "test.agent",
+    "analysis_id": "a70bbc65",
+    "timestamp": "2025-07-01T08:17:49.701456+00:00",
+    "rounds": 3,
+    "specialists_consulted": 8
+  },
+  "convention_analysis": {
+    "name": "test.agent",
+    "type": "span",
+    "attributes": 2,
+    "complexity": "medium"
+  },
+  "specialist_findings": [
+    {
+      "role": "Semantic Convention Expert",
+      "analysis_id": "a70bbc65_sem",
+      "key_findings": {
+        "convention_type": "span",
+        "attribute_count": 2,
+        "required_attributes": [
+          {
+            "id": "test.agent.id",
+            "type": "string",
+            "brief": "Unique identifier",
+            "requirement_level": "required"
+          }
+        ],
+        "optional_attributes": [
+          {
+            "id": "test.agent.status",
+            "type": "string",
+            "brief": "Current status",
+            "requirement_level": "optional"
+          }
+        ],
+        "stability": "stable",
+        "brief": "Test semantic convention for test.agent",
+        "compliance_level": "OpenTelemetry 1.0 compatible"
+      },
+      "recommendations": [
+        "Convention 'test.agent' has 1 required attributes",
+        "All attributes follow OpenTelemetry naming conventions",
+        "Convention is suitable for code generation"
+      ],
+      "critical_risks": [
+        "Attribute naming conflicts with existing conventions",
+        "Type validation complexity for nested attributes"
+      ]
+    },
+    {
+      "role": "Code Generation Architect",
+      "analysis_id": "a70bbc65_arch",
+      "key_findings": {
+        "target_languages": [
+          "Python",
+          "Rust",
+          "Go",
+          "Java"
+        ],
+        "generation_strategy": "Template-based with Jinja2",
+        "pydantic_integration": "Full Pydantic v2 compatibility",
+        "weaver_compatibility": "Requires OTel Weaver templates",
+        "output_structure": {
+          "models": "Pydantic BaseModel classes",
+          "validators": "Custom validation logic",
+          "constants": "Attribute name constants",
+          "documentation": "Auto-generated docs"
+        }
+      },
+      "recommendations": [
+        "Use Pydantic AI for intelligent model generation",
+        "Create modular templates for different languages",
+        "Implement caching for repeated generations"
+      ],
+      "critical_risks": [
+        "Template complexity for edge cases",
+        "Language-specific type mapping challenges"
+      ]
+    },
+    {
+      "role": "Validation Engineer",
+      "analysis_id": "a70bbc65_val",
+      "key_findings": {
+        "validation_layers": [
+          "Syntax validation (YAML/JSON)",
+          "Semantic validation (convention rules)",
+          "Type validation (attribute types)",
+          "Runtime validation (span compliance)"
+        ],
+        "span_validation_strategy": "OpenTelemetry span capture and analysis",
+        "test_generation": "Automated test case generation from conventions",
+        "edge_cases": [
+          "Missing required attributes",
+          "Invalid attribute types",
+          "Nested attribute structures",
+          "Array attribute validation"
+        ]
+      },
+      "recommendations": [
+        "Implement 4-tier validation architecture",
+        "Use OpenTelemetry spans for runtime validation",
+        "Generate comprehensive test suites automatically"
+      ],
+      "critical_risks": [
+        "Runtime validation performance overhead",
+        "Complex nested validation logic"
+      ]
+    },
+    {
+      "role": "API Design Specialist",
+      "analysis_id": "a70bbc65_api",
+      "key_findings": {
+        "api_surface": {
+          "generate_models": "Generate Pydantic models from convention",
+          "validate_spans": "Validate OTel spans against convention",
+          "create_agents": "Generate AI agents for convention",
+          "export_templates": "Export generation templates"
+        },
+        "cli_interface": {
+          "weavergen generate": "Main generation command",
+          "weavergen validate": "Validation command",
+          "weavergen templates": "Template management",
+          "weavergen agents": "Agent generation"
+        },
+        "developer_experience": "Intuitive, discoverable, well-documented"
+      },
+      "recommendations": [
+        "Design fluent API with method chaining",
+        "Provide clear error messages with suggestions",
+        "Include extensive usage examples"
+      ],
+      "critical_risks": [
+        "API complexity overwhelming new users",
+        "Breaking changes in future versions"
+      ]
+    },
+    {
+      "role": "Performance Optimization Expert",
+      "analysis_id": "a70bbc65_perf",
+      "key_findings": {
+        "performance_targets": {
+          "generation_time": "< 100ms for typical convention",
+          "memory_usage": "< 50MB during generation",
+          "startup_time": "< 500ms CLI startup",
+          "validation_overhead": "< 1ms per span"
+        },
+        "optimization_opportunities": [
+          "Template compilation caching",
+          "Lazy loading of conventions",
+          "Parallel generation for multiple targets",
+          "Incremental validation"
+        ],
+        "instrumentation_strategy": "Minimal overhead OTel instrumentation"
+      },
+      "recommendations": [
+        "Implement aggressive caching at all levels",
+        "Use async/await for I/O operations",
+        "Optimize template parsing and compilation"
+      ],
+      "critical_risks": [
+        "Cache invalidation complexity",
+        "Memory leaks in long-running processes"
+      ]
+    },
+    {
+      "role": "Layer Integration Specialist",
+      "analysis_id": "a70bbc65_layer",
+      "key_findings": {
+        "layer_mapping": {
+          "contracts": {
+            "models": "SemanticConventionTestAgent",
+            "validation": "test.agent_validation_schema",
+            "types": "Pydantic field types and validators"
+          },
+          "runtime": {
+            "engine": "WeaverGenEngine with semantic convention support",
+            "execution": "Template rendering and code generation",
+            "caching": "Convention and template caching"
+          },
+          "operations": {
+            "workflows": "BPMN workflows for generation pipeline",
+            "business_logic": "Convention parsing and validation logic",
+            "orchestration": "Multi-step generation coordination"
+          },
+          "commands": {
+            "cli": "weavergen generate test.agent",
+            "api": "REST API endpoints for web integration",
+            "batch": "Batch processing for multiple conventions"
+          }
+        },
+        "integration_points": [
+          "contracts.py: Add semantic convention models",
+          "runtime.py: Extend engine with convention support",
+          "operations.py: Add convention workflow logic",
+          "commands.py: Add convention-specific CLI commands"
+        ]
+      },
+      "recommendations": [
+        "Extend existing layer contracts rather than replacing",
+        "Maintain separation of concerns between layers",
+        "Use dependency injection for layer communication"
+      ],
+      "critical_risks": []
+    },
+    {
+      "role": "Weaver Integration Planner",
+      "analysis_id": "a70bbc65_weaver",
+      "key_findings": {
+        "weaver_requirements": {
+          "binary": "otellib-weaver-cli installed via cargo",
+          "templates": "Jinja2 templates with JQ expressions",
+          "configuration": "weaver.yaml configuration file",
+          "conventions": "OpenTelemetry semantic convention YAML files"
+        },
+        "template_structure": {
+          "models.j2": "Pydantic model generation template",
+          "validators.j2": "Validation logic template",
+          "constants.j2": "Attribute constants template",
+          "tests.j2": "Test case generation template"
+        },
+        "forge_configuration": {
+          "output_dir": "generated/",
+          "template_dir": "templates/",
+          "convention_dir": "semantic_conventions/"
+        }
+      },
+      "recommendations": [
+        "Create convention-specific template variants",
+        "Design template inheritance hierarchy",
+        "Implement template testing framework"
+      ],
+      "critical_risks": []
+    },
+    {
+      "role": "Implementation Coordinator",
+      "analysis_id": "a70bbc65_coord",
+      "key_findings": {
+        "synthesis": "Analysis of 7 specialist perspectives",
+        "priority_order": [
+          "1. Semantic convention parsing and validation",
+          "2. Template system design and implementation",
+          "3. 4-layer architecture integration",
+          "4. Performance optimization and caching",
+          "5. CLI and API design",
+          "6. Testing and validation framework"
+        ],
+        "implementation_phases": {
+          "phase_1": "Core convention processing (weeks 1-2)",
+          "phase_2": "Template system and generation (weeks 3-4)",
+          "phase_3": "Integration and optimization (weeks 5-6)",
+          "phase_4": "Testing and validation (weeks 7-8)"
+        }
+      },
+      "recommendations": [
+        "Start with minimal viable convention support",
+        "Prioritize test coverage from beginning",
+        "Implement performance monitoring early"
+      ],
+      "critical_risks": [
+        "Scope creep beyond core requirements",
+        "Performance degradation with complex conventions"
+      ]
+    }
+  ],
+  "implementation_roadmap": {
+    "immediate_actions": [
+      "Set up semantic convention parser",
+      "Create basic template structure",
+      "Integrate with existing WeaverGen architecture"
+    ],
+    "short_term_goals": [
+      "Implement full convention support",
+      "Add validation framework",
+      "Create CLI commands"
+    ],
+    "long_term_vision": [
+      "Support all OpenTelemetry conventions",
+      "Multi-language code generation",
+      "AI-powered convention optimization"
+    ]
+  },
+  "architecture_integration": {
+    "contracts_layer": "Semantic convention models and validation schemas",
+    "runtime_layer": "Convention processing and template rendering engine",
+    "operations_layer": "BPMN workflows for convention generation pipeline",
+    "commands_layer": "CLI commands and API endpoints for convention management"
+  }
+}

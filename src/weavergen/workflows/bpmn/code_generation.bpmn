@@ -1,152 +1,292 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
-                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
-                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
-                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
-                  id="Definitions_1" 
-                  targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:weaver="http://weavergen.io/schema/bpmn/extensions"
+                  id="Definitions_1"
+                  targetNamespace="http://weavergen.io/bpmn">
   
-  <bpmn:process id="code_generation" name="WeaverGen Code Generation Workflow" isExecutable="true">
+  <!-- BPMN-Driven Code Generation Process -->
+  <bpmn:process id="WeaverGenCodeGeneration" name="BPMN-Driven Code Generation" isExecutable="true">
     
-    <!-- Start Event -->
-    <bpmn:startEvent id="StartEvent_1" name="Start Code Generation">
+    <!-- Start Event: Receive Semantic Convention -->
+    <bpmn:startEvent id="StartEvent_1" name="Receive Semantic Convention">
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
+      <bpmn:dataOutputAssociation>
+        <bpmn:targetRef>SemanticConvention</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:startEvent>
     
-    <!-- Validate Semantic Convention -->
-    <bpmn:serviceTask id="Task_ValidateSemantic" name="Validate Semantic Convention">
+    <!-- Data Objects -->
+    <bpmn:dataObjectReference id="SemanticConvention" name="Semantic Convention" dataObjectRef="DO_SemanticConvention"/>
+    <bpmn:dataObject id="DO_SemanticConvention">
+      <bpmn:extensionElements>
+        <weaver:schema>
+          {
+            "id": "string",
+            "type": "string",
+            "attributes": "array",
+            "stability": "string"
+          }
+        </weaver:schema>
+      </bpmn:extensionElements>
+    </bpmn:dataObject>
+    
+    <!-- Service Task: Validate Convention -->
+    <bpmn:serviceTask id="ValidateConvention" name="Validate Semantic Convention">
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <weaver:agent>validator</weaver:agent>
+        <weaver:prompt>
+          Validate this semantic convention:
+          - Check all required fields are present
+          - Verify attribute types are valid
+          - Ensure stability levels are correct
+          Return validation result with any issues found.
+        </weaver:prompt>
+      </bpmn:extensionElements>
+      <bpmn:dataOutputAssociation>
+        <bpmn:targetRef>ValidationResult</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:serviceTask>
     
-    <!-- Initialize Environment -->
-    <bpmn:serviceTask id="Task_InitEnvironment" name="Initialize Generation Environment">
+    <!-- Exclusive Gateway: Is Valid? -->
+    <bpmn:exclusiveGateway id="Gateway_Valid" name="Is Valid?">
       <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Valid</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Invalid</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Service Task: Analyze Structure -->
+    <bpmn:serviceTask id="AnalyzeStructure" name="Analyze Semantic Structure">
+      <bpmn:incoming>Flow_Valid</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <bpmn:extensionElements>
+        <weaver:agent>analyzer</weaver:agent>
+        <weaver:prompt>
+          Analyze the semantic convention structure:
+          - Identify attribute patterns
+          - Determine appropriate data structures
+          - Map types to language-specific types
+          Return detailed analysis for code generation.
+        </weaver:prompt>
+      </bpmn:extensionElements>
+      <bpmn:dataOutputAssociation>
+        <bpmn:targetRef>StructureAnalysis</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
     </bpmn:serviceTask>
     
-    <!-- Multi-Agent Decision Gateway -->
-    <bpmn:exclusiveGateway id="Gateway_MultiAgent" name="Use Multi-Agent?">
+    <!-- Parallel Gateway: Split for Languages -->
+    <bpmn:parallelGateway id="Gateway_Languages" name="Generate for Each Language">
       <bpmn:incoming>Flow_3</bpmn:incoming>
-      <bpmn:outgoing>Flow_MultiAgent_Yes</bpmn:outgoing>
-      <bpmn:outgoing>Flow_MultiAgent_No</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
+      <bpmn:outgoing>Flow_Python</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Go</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Rust</bpmn:outgoing>
+    </bpmn:parallelGateway>
     
-    <!-- Multi-Agent Generation Path -->
-    <bpmn:serviceTask id="Task_MultiAgentGeneration" name="Multi-Agent Code Generation">
-      <bpmn:incoming>Flow_MultiAgent_Yes</bpmn:incoming>
-      <bpmn:outgoing>Flow_4a</bpmn:outgoing>
-    </bpmn:serviceTask>
+    <!-- Python Generation Subprocess -->
+    <bpmn:subProcess id="GeneratePython" name="Generate Python Code">
+      <bpmn:incoming>Flow_Python</bpmn:incoming>
+      <bpmn:outgoing>Flow_Python_Done</bpmn:outgoing>
+      
+      <bpmn:startEvent id="Python_Start">
+        <bpmn:outgoing>Python_Flow_1</bpmn:outgoing>
+      </bpmn:startEvent>
+      
+      <bpmn:serviceTask id="Python_TypeMapping" name="Map Types to Python">
+        <bpmn:incoming>Python_Flow_1</bpmn:incoming>
+        <bpmn:outgoing>Python_Flow_2</bpmn:outgoing>
+        <bpmn:extensionElements>
+          <weaver:agent>python_specialist</weaver:agent>
+          <weaver:typeMapping>
+            <map from="string" to="str"/>
+            <map from="int" to="int"/>
+            <map from="double" to="float"/>
+            <map from="boolean" to="bool"/>
+          </weaver:typeMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      
+      <bpmn:serviceTask id="Python_CodeGen" name="Generate Python Classes">
+        <bpmn:incoming>Python_Flow_2</bpmn:incoming>
+        <bpmn:outgoing>Python_Flow_3</bpmn:outgoing>
+        <bpmn:extensionElements>
+          <weaver:agent>python_generator</weaver:agent>
+          <weaver:template>
+            Generate Python dataclasses with:
+            - Type hints for all attributes
+            - Docstrings from descriptions
+            - Property decorators for getters
+            - Validation in __post_init__
+          </weaver:template>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      
+      <bpmn:endEvent id="Python_End">
+        <bpmn:incoming>Python_Flow_3</bpmn:incoming>
+      </bpmn:endEvent>
+      
+      <bpmn:sequenceFlow id="Python_Flow_1" sourceRef="Python_Start" targetRef="Python_TypeMapping"/>
+      <bpmn:sequenceFlow id="Python_Flow_2" sourceRef="Python_TypeMapping" targetRef="Python_CodeGen"/>
+      <bpmn:sequenceFlow id="Python_Flow_3" sourceRef="Python_CodeGen" targetRef="Python_End"/>
+    </bpmn:subProcess>
     
-    <!-- Direct Generation Path -->
-    <bpmn:serviceTask id="Task_DirectGeneration" name="Direct Code Generation">
-      <bpmn:incoming>Flow_MultiAgent_No</bpmn:incoming>
-      <bpmn:outgoing>Flow_4b</bpmn:outgoing>
-    </bpmn:serviceTask>
+    <!-- Go Generation Subprocess -->
+    <bpmn:subProcess id="GenerateGo" name="Generate Go Code">
+      <bpmn:incoming>Flow_Go</bpmn:incoming>
+      <bpmn:outgoing>Flow_Go_Done</bpmn:outgoing>
+      
+      <bpmn:startEvent id="Go_Start">
+        <bpmn:outgoing>Go_Flow_1</bpmn:outgoing>
+      </bpmn:startEvent>
+      
+      <bpmn:serviceTask id="Go_TypeMapping" name="Map Types to Go">
+        <bpmn:incoming>Go_Flow_1</bpmn:incoming>
+        <bpmn:outgoing>Go_Flow_2</bpmn:outgoing>
+        <bpmn:extensionElements>
+          <weaver:agent>go_specialist</weaver:agent>
+          <weaver:typeMapping>
+            <map from="string" to="string"/>
+            <map from="int" to="int64"/>
+            <map from="double" to="float64"/>
+            <map from="boolean" to="bool"/>
+          </weaver:typeMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      
+      <bpmn:serviceTask id="Go_CodeGen" name="Generate Go Structs">
+        <bpmn:incoming>Go_Flow_2</bpmn:incoming>
+        <bpmn:outgoing>Go_Flow_3</bpmn:outgoing>
+        <bpmn:extensionElements>
+          <weaver:agent>go_generator</weaver:agent>
+          <weaver:template>
+            Generate Go structs with:
+            - Exported fields (PascalCase)
+            - JSON tags for serialization
+            - Comments from descriptions
+            - Validation methods
+          </weaver:template>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      
+      <bpmn:endEvent id="Go_End">
+        <bpmn:incoming>Go_Flow_3</bpmn:incoming>
+      </bpmn:endEvent>
+      
+      <bpmn:sequenceFlow id="Go_Flow_1" sourceRef="Go_Start" targetRef="Go_TypeMapping"/>
+      <bpmn:sequenceFlow id="Go_Flow_2" sourceRef="Go_TypeMapping" targetRef="Go_CodeGen"/>
+      <bpmn:sequenceFlow id="Go_Flow_3" sourceRef="Go_CodeGen" targetRef="Go_End"/>
+    </bpmn:subProcess>
     
-    <!-- Merge Gateway -->
-    <bpmn:exclusiveGateway id="Gateway_Merge" name="Merge Generation Paths">
-      <bpmn:incoming>Flow_4a</bpmn:incoming>
-      <bpmn:incoming>Flow_4b</bpmn:incoming>
+    <!-- Rust Generation Subprocess -->
+    <bpmn:subProcess id="GenerateRust" name="Generate Rust Code">
+      <bpmn:incoming>Flow_Rust</bpmn:incoming>
+      <bpmn:outgoing>Flow_Rust_Done</bpmn:outgoing>
+      
+      <bpmn:startEvent id="Rust_Start">
+        <bpmn:outgoing>Rust_Flow_1</bpmn:outgoing>
+      </bpmn:startEvent>
+      
+      <bpmn:serviceTask id="Rust_TypeMapping" name="Map Types to Rust">
+        <bpmn:incoming>Rust_Flow_1</bpmn:incoming>
+        <bpmn:outgoing>Rust_Flow_2</bpmn:outgoing>
+        <bpmn:extensionElements>
+          <weaver:agent>rust_specialist</weaver:agent>
+          <weaver:typeMapping>
+            <map from="string" to="String"/>
+            <map from="int" to="i64"/>
+            <map from="double" to="f64"/>
+            <map from="boolean" to="bool"/>
+          </weaver:typeMapping>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      
+      <bpmn:serviceTask id="Rust_CodeGen" name="Generate Rust Structs">
+        <bpmn:incoming>Rust_Flow_2</bpmn:incoming>
+        <bpmn:outgoing>Rust_Flow_3</bpmn:outgoing>
+        <bpmn:extensionElements>
+          <weaver:agent>rust_generator</weaver:agent>
+          <weaver:template>
+            Generate Rust structs with:
+            - Derive macros (Debug, Clone, Serialize)
+            - Doc comments from descriptions
+            - Builder pattern implementation
+            - Validation in constructors
+          </weaver:template>
+        </bpmn:extensionElements>
+      </bpmn:serviceTask>
+      
+      <bpmn:endEvent id="Rust_End">
+        <bpmn:incoming>Rust_Flow_3</bpmn:incoming>
+      </bpmn:endEvent>
+      
+      <bpmn:sequenceFlow id="Rust_Flow_1" sourceRef="Rust_Start" targetRef="Rust_TypeMapping"/>
+      <bpmn:sequenceFlow id="Rust_Flow_2" sourceRef="Rust_TypeMapping" targetRef="Rust_CodeGen"/>
+      <bpmn:sequenceFlow id="Rust_Flow_3" sourceRef="Rust_CodeGen" targetRef="Rust_End"/>
+    </bpmn:subProcess>
+    
+    <!-- Parallel Gateway: Merge Results -->
+    <bpmn:parallelGateway id="Gateway_Merge" name="Merge Generated Code">
+      <bpmn:incoming>Flow_Python_Done</bpmn:incoming>
+      <bpmn:incoming>Flow_Go_Done</bpmn:incoming>
+      <bpmn:incoming>Flow_Rust_Done</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Business Rule Task: Quality Check -->
+    <bpmn:businessRuleTask id="QualityCheck" name="Quality Assurance Check">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
+      <bpmn:extensionElements>
+        <weaver:agent>qa_specialist</weaver:agent>
+        <weaver:rules>
+          <rule>All generated code must be syntactically valid</rule>
+          <rule>Code must follow language-specific conventions</rule>
+          <rule>Documentation must be complete</rule>
+          <rule>Type mappings must be consistent</rule>
+          <rule>All attributes must be represented</rule>
+        </weaver:rules>
+      </bpmn:extensionElements>
+    </bpmn:businessRuleTask>
     
-    <!-- Template Processing -->
-    <bpmn:serviceTask id="Task_ProcessTemplates" name="Process Templates">
+    <!-- End Event: Success -->
+    <bpmn:endEvent id="EndEvent_Success" name="Code Generated Successfully">
       <bpmn:incoming>Flow_5</bpmn:incoming>
-      <bpmn:outgoing>Flow_6</bpmn:outgoing>
-    </bpmn:serviceTask>
-    
-    <!-- File Generation -->
-    <bpmn:serviceTask id="Task_GenerateFiles" name="Generate Files">
-      <bpmn:incoming>Flow_6</bpmn:incoming>
-      <bpmn:outgoing>Flow_7</bpmn:outgoing>
-    </bpmn:serviceTask>
-    
-    <!-- Parallel Gateway for Validation -->
-    <bpmn:parallelGateway id="Gateway_ValidationStart" name="Start Parallel Validation">
-      <bpmn:incoming>Flow_7</bpmn:incoming>
-      <bpmn:outgoing>Flow_Validate_Code</bpmn:outgoing>
-      <bpmn:outgoing>Flow_Validate_Spans</bpmn:outgoing>
-      <bpmn:outgoing>Flow_Validate_QA</bpmn:outgoing>
-    </bpmn:parallelGateway>
-    
-    <!-- Code Validation -->
-    <bpmn:serviceTask id="Task_ValidateCode" name="Validate Generated Code">
-      <bpmn:incoming>Flow_Validate_Code</bpmn:incoming>
-      <bpmn:outgoing>Flow_Validate_Code_Complete</bpmn:outgoing>
-    </bpmn:serviceTask>
-    
-    <!-- Span Validation -->
-    <bpmn:serviceTask id="Task_ValidateSpans" name="OpenTelemetry Span Validation">
-      <bpmn:incoming>Flow_Validate_Spans</bpmn:incoming>
-      <bpmn:outgoing>Flow_Validate_Spans_Complete</bpmn:outgoing>
-    </bpmn:serviceTask>
-    
-    <!-- Quality Assurance -->
-    <bpmn:serviceTask id="Task_QualityAssurance" name="Quality Assurance">
-      <bpmn:incoming>Flow_Validate_QA</bpmn:incoming>
-      <bpmn:outgoing>Flow_Validate_QA_Complete</bpmn:outgoing>
-    </bpmn:serviceTask>
-    
-    <!-- Parallel Gateway End -->
-    <bpmn:parallelGateway id="Gateway_ValidationEnd" name="End Parallel Validation">
-      <bpmn:incoming>Flow_Validate_Code_Complete</bpmn:incoming>
-      <bpmn:incoming>Flow_Validate_Spans_Complete</bpmn:incoming>
-      <bpmn:incoming>Flow_Validate_QA_Complete</bpmn:incoming>
-      <bpmn:outgoing>Flow_8</bpmn:outgoing>
-    </bpmn:parallelGateway>
-    
-    <!-- Finalization -->
-    <bpmn:serviceTask id="Task_Finalize" name="Finalize Generation">
-      <bpmn:incoming>Flow_8</bpmn:incoming>
-      <bpmn:outgoing>Flow_9</bpmn:outgoing>
-    </bpmn:serviceTask>
-    
-    <!-- End Event -->
-    <bpmn:endEvent id="EndEvent_1" name="Code Generation Complete">
-      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:dataInputAssociation>
+        <bpmn:sourceRef>GeneratedCode</bpmn:sourceRef>
+      </bpmn:dataInputAssociation>
     </bpmn:endEvent>
     
-    <!-- Error End Event -->
+    <!-- End Event: Error -->
     <bpmn:endEvent id="EndEvent_Error" name="Generation Failed">
-      <bpmn:incoming>Flow_Error</bpmn:incoming>
-      <bpmn:errorEventDefinition />
+      <bpmn:incoming>Flow_Invalid</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_Validation"/>
     </bpmn:endEvent>
     
     <!-- Sequence Flows -->
-    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_ValidateSemantic" />
-    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_ValidateSemantic" targetRef="Task_InitEnvironment" />
-    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_InitEnvironment" targetRef="Gateway_MultiAgent" />
-    
-    <bpmn:sequenceFlow id="Flow_MultiAgent_Yes" sourceRef="Gateway_MultiAgent" targetRef="Task_MultiAgentGeneration">
-      <bpmn:conditionExpression>use_multi_agent == true</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="ValidateConvention"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="ValidateConvention" targetRef="Gateway_Valid"/>
+    <bpmn:sequenceFlow id="Flow_Valid" sourceRef="Gateway_Valid" targetRef="AnalyzeStructure">
+      <bpmn:conditionExpression>ValidationResult.isValid == true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    
-    <bpmn:sequenceFlow id="Flow_MultiAgent_No" sourceRef="Gateway_MultiAgent" targetRef="Task_DirectGeneration">
-      <bpmn:conditionExpression>use_multi_agent == false</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_Invalid" sourceRef="Gateway_Valid" targetRef="EndEvent_Error">
+      <bpmn:conditionExpression>ValidationResult.isValid == false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    
-    <bpmn:sequenceFlow id="Flow_4a" sourceRef="Task_MultiAgentGeneration" targetRef="Gateway_Merge" />
-    <bpmn:sequenceFlow id="Flow_4b" sourceRef="Task_DirectGeneration" targetRef="Gateway_Merge" />
-    <bpmn:sequenceFlow id="Flow_5" sourceRef="Gateway_Merge" targetRef="Task_ProcessTemplates" />
-    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_ProcessTemplates" targetRef="Task_GenerateFiles" />
-    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_GenerateFiles" targetRef="Gateway_ValidationStart" />
-    
-    <bpmn:sequenceFlow id="Flow_Validate_Code" sourceRef="Gateway_ValidationStart" targetRef="Task_ValidateCode" />
-    <bpmn:sequenceFlow id="Flow_Validate_Spans" sourceRef="Gateway_ValidationStart" targetRef="Task_ValidateSpans" />
-    <bpmn:sequenceFlow id="Flow_Validate_QA" sourceRef="Gateway_ValidationStart" targetRef="Task_QualityAssurance" />
-    
-    <bpmn:sequenceFlow id="Flow_Validate_Code_Complete" sourceRef="Task_ValidateCode" targetRef="Gateway_ValidationEnd" />
-    <bpmn:sequenceFlow id="Flow_Validate_Spans_Complete" sourceRef="Task_ValidateSpans" targetRef="Gateway_ValidationEnd" />
-    <bpmn:sequenceFlow id="Flow_Validate_QA_Complete" sourceRef="Task_QualityAssurance" targetRef="Gateway_ValidationEnd" />
-    
-    <bpmn:sequenceFlow id="Flow_8" sourceRef="Gateway_ValidationEnd" targetRef="Task_Finalize" />
-    <bpmn:sequenceFlow id="Flow_9" sourceRef="Task_Finalize" targetRef="EndEvent_1" />
-    
-    <!-- Error Flow (can be triggered from any task) -->
-    <bpmn:sequenceFlow id="Flow_Error" sourceRef="Task_ValidateSemantic" targetRef="EndEvent_Error" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="AnalyzeStructure" targetRef="Gateway_Languages"/>
+    <bpmn:sequenceFlow id="Flow_Python" sourceRef="Gateway_Languages" targetRef="GeneratePython"/>
+    <bpmn:sequenceFlow id="Flow_Go" sourceRef="Gateway_Languages" targetRef="GenerateGo"/>
+    <bpmn:sequenceFlow id="Flow_Rust" sourceRef="Gateway_Languages" targetRef="GenerateRust"/>
+    <bpmn:sequenceFlow id="Flow_Python_Done" sourceRef="GeneratePython" targetRef="Gateway_Merge"/>
+    <bpmn:sequenceFlow id="Flow_Go_Done" sourceRef="GenerateGo" targetRef="Gateway_Merge"/>
+    <bpmn:sequenceFlow id="Flow_Rust_Done" sourceRef="GenerateRust" targetRef="Gateway_Merge"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Gateway_Merge" targetRef="QualityCheck"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="QualityCheck" targetRef="EndEvent_Success"/>
     
   </bpmn:process>
+  
+  <!-- Error Definition -->
+  <bpmn:error id="Error_Validation" name="ValidationError" errorCode="VALIDATION_FAILED"/>
   
 </bpmn:definitions>

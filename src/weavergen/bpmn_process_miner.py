@@ -511,6 +511,190 @@ class BPMNProcessMiner:
         self.console.print(f"[green]✅ Generated BPMN: {output_file}[/green]")
         
         return str(output_file)
+    
+    def patterns_to_bpmn(self, discovered_workflow: DiscoveredWorkflow, output_path: str) -> str:
+        """
+        Generate executable BPMN workflow from discovered patterns.
+        
+        Args:
+            discovered_workflow: Discovered workflow with patterns
+            output_path: Path to save BPMN file
+            
+        Returns:
+            Path to generated BPMN file
+        """
+        
+        self.console.print(f"\n[cyan]🏗️  Generating BPMN from mined patterns: {discovered_workflow.name}[/cyan]")
+        
+        # Create BPMN structure
+        bpmn = ET.Element("definitions", {
+            "xmlns": "http://www.omg.org/spec/BPMN/20100524/MODEL",
+            "xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI",
+            "xmlns:dc": "http://www.omg.org/spec/DD/20100524/DC",
+            "xmlns:di": "http://www.omg.org/spec/DD/20100524/DI",
+            "targetNamespace": "http://weavergen.ai/mined",
+            "id": f"mined_{discovered_workflow.name}"
+        })
+        
+        process = ET.SubElement(bpmn, "process", {
+            "id": f"Process_{discovered_workflow.name}",
+            "name": f"Mined Process: {discovered_workflow.name}",
+            "isExecutable": "true"
+        })
+        
+        # Add start event
+        start_event = ET.SubElement(process, "startEvent", {
+            "id": "StartEvent_1",
+            "name": "Start"
+        })
+        
+        # Track flows and generate IDs
+        flow_id = 1
+        task_positions = {}
+        
+        # Add start tasks (nodes with no predecessors)
+        start_tasks = [name for name, node in discovered_workflow.nodes.items() 
+                      if not node.previous_tasks]
+        
+        if not start_tasks:
+            start_tasks = list(discovered_workflow.start_tasks) if discovered_workflow.start_tasks else [list(discovered_workflow.nodes.keys())[0]]
+        
+        # Generate service tasks for each discovered node
+        for task_name, node in discovered_workflow.nodes.items():
+            task_id = f"Task_{task_name.replace(' ', '_')}"
+            
+            # Determine task type based on patterns
+            task_type = "serviceTask"
+            parallel_patterns = [p for p in discovered_workflow.patterns if p.pattern_type == "parallel" and task_name in p.description]
+            
+            if parallel_patterns:
+                task_type = "parallelGateway"
+            
+            task_elem = ET.SubElement(process, task_type, {
+                "id": task_id,
+                "name": task_name
+            })
+            
+            # Add task documentation with mining metadata
+            documentation = ET.SubElement(task_elem, "documentation")
+            doc_text = f"""
+Mined Task Metadata:
+- Frequency: {node.frequency}
+- Avg Duration: {node.avg_duration}ms
+- Quality Score: {node.attributes.get('quality.score', ['N/A'])[0]}
+- Next Tasks: {', '.join(node.next_tasks.keys())}
+            """.strip()
+            documentation.text = doc_text
+            
+            task_positions[task_name] = task_id
+        
+        # Generate sequence flows based on discovered patterns
+        sequential_patterns = [p for p in discovered_workflow.patterns if p.pattern_type == "sequential"]
+        
+        # Connect start event to start tasks
+        for start_task in start_tasks[:1]:  # Connect to first start task
+            if start_task in task_positions:
+                flow = ET.SubElement(process, "sequenceFlow", {
+                    "id": f"Flow_{flow_id}",
+                    "sourceRef": "StartEvent_1",
+                    "targetRef": task_positions[start_task]
+                })
+                flow_id += 1
+        
+        # Add sequence flows from patterns
+        for pattern in sequential_patterns:
+            if "→" in pattern.description:
+                parts = pattern.description.split("→")
+                for i in range(len(parts) - 1):
+                    source_task = parts[i].strip()
+                    target_task = parts[i + 1].strip()
+                    
+                    if source_task in task_positions and target_task in task_positions:
+                        flow = ET.SubElement(process, "sequenceFlow", {
+                            "id": f"Flow_{flow_id}",
+                            "sourceRef": task_positions[source_task],
+                            "targetRef": task_positions[target_task]
+                        })
+                        
+                        # Add condition if pattern has low confidence
+                        if pattern.confidence < 0.8:
+                            condition = ET.SubElement(flow, "conditionExpression")
+                            condition.text = f"${{quality_score >= {pattern.confidence}}}"
+                        
+                        flow_id += 1
+        
+        # Add end event connected to end tasks
+        end_event = ET.SubElement(process, "endEvent", {
+            "id": "EndEvent_1",
+            "name": "End"
+        })
+        
+        end_tasks = [name for name, node in discovered_workflow.nodes.items() 
+                    if not node.next_tasks]
+        
+        if not end_tasks:
+            end_tasks = list(discovered_workflow.end_tasks) if discovered_workflow.end_tasks else [list(discovered_workflow.nodes.keys())[-1]]
+        
+        # Connect end tasks to end event
+        for end_task in end_tasks:
+            if end_task in task_positions:
+                flow = ET.SubElement(process, "sequenceFlow", {
+                    "id": f"Flow_{flow_id}",
+                    "sourceRef": task_positions[end_task],
+                    "targetRef": "EndEvent_1"
+                })
+                flow_id += 1
+        
+        # Add parallel gateways for parallel patterns
+        parallel_patterns = [p for p in discovered_workflow.patterns if p.pattern_type == "parallel"]
+        gateway_id = 1
+        
+        for pattern in parallel_patterns[:3]:  # Limit to 3 parallel patterns
+            if "parallel:" in pattern.description and "→" in pattern.description:
+                gateway_split_id = f"ParallelGateway_Split_{gateway_id}"
+                gateway_join_id = f"ParallelGateway_Join_{gateway_id}"
+                
+                # Add split gateway
+                split_gateway = ET.SubElement(process, "parallelGateway", {
+                    "id": gateway_split_id,
+                    "name": f"Split {gateway_id}"
+                })
+                
+                # Add join gateway  
+                join_gateway = ET.SubElement(process, "parallelGateway", {
+                    "id": gateway_join_id,
+                    "name": f"Join {gateway_id}"
+                })
+                
+                gateway_id += 1
+        
+        # Save BPMN file
+        output_file = Path(output_path)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        xml_str = minidom.parseString(ET.tostring(bpmn)).toprettyxml(indent="  ")
+        
+        with open(output_file, 'w') as f:
+            f.write(xml_str)
+        
+        self.console.print(f"[green]✅ Generated executable BPMN: {output_file}[/green]")
+        
+        # Generate execution statistics
+        stats = {
+            "total_tasks": len(discovered_workflow.nodes),
+            "sequential_patterns": len([p for p in discovered_workflow.patterns if p.pattern_type == "sequential"]),
+            "parallel_patterns": len([p for p in discovered_workflow.patterns if p.pattern_type == "parallel"]),
+            "start_tasks": len(start_tasks),
+            "end_tasks": len(end_tasks),
+            "quality_score": discovered_workflow.quality_metrics.get("overall_quality", 0.0),
+            "generated_flows": flow_id - 1
+        }
+        
+        stats_file = output_file.with_suffix('.stats.json')
+        with open(stats_file, 'w') as f:
+            json.dump(stats, f, indent=2)
+        
+        return str(output_file)
         
     def _sanitize_id(self, task_name: str) -> str:
         """Sanitize task name for use as BPMN ID"""

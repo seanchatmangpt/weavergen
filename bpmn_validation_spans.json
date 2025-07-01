@@ -1,0 +1,56 @@
+{
+  "spans": [
+    {
+      "name": "weaver.registry.validate",
+      "trace_id": "0x186ebbf9ef42d6adaa102672ecf6611b",
+      "span_id": "0x63eed83eb951db6b",
+      "parent_id": "0x7641ea9f2c3fa384",
+      "start_time": 1751340823242487000,
+      "end_time": 1751340823242502000,
+      "duration_ns": 15000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/bpmn_weaver_forge.py",
+        "code.lineno": 89,
+        "weaver.command": "registry validate",
+        "bpmn.workflow.file": "src/weavergen/workflows/bpmn/weavergen_orchestration.bpmn",
+        "bpmn.task.id": "Task_ValidateRegistry",
+        "bpmn.task.type": "serviceTask",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.workflow.execute",
+      "trace_id": "0x186ebbf9ef42d6adaa102672ecf6611b",
+      "span_id": "0x7641ea9f2c3fa384",
+      "parent_id": null,
+      "start_time": 1751340823242441000,
+      "end_time": 1751340823242513000,
+      "duration_ns": 72000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/bpmn_first_engine.py",
+        "code.lineno": 42,
+        "code.function": "execute_workflow",
+        "bpmn.workflow.file": "src/weavergen/workflows/bpmn/weavergen_orchestration.bpmn",
+        "bpmn.workflow.id": "WeaverGenOrchestration",
+        "bpmn.task.id": "Task_InitializeWeaver",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-06-30T20:35:00.000Z",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    }
+  ],
+  "validation": {
+    "trust_score": 0.5,
+    "is_done": false,
+    "violations": 3,
+    "lies": 2
+  }
+}

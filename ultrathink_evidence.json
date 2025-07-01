@@ -1,0 +1,113 @@
+{
+  "claims": [
+    {
+      "claim": "20 spans were generated",
+      "type": "count",
+      "expected": 20,
+      "actual": 2,
+      "validated": false,
+      "source_file": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+      "line_number": 388,
+      "evidence_span_count": 0
+    },
+    {
+      "claim": "All operations succeeded",
+      "type": "success",
+      "expected": true,
+      "actual": true,
+      "validated": true,
+      "source_file": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+      "line_number": 389,
+      "evidence_span_count": 2
+    },
+    {
+      "claim": "This file executed",
+      "type": "file_execution",
+      "expected": "ultrathink_validator.py",
+      "actual": 2,
+      "validated": true,
+      "source_file": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+      "line_number": 393,
+      "evidence_span_count": 2
+    },
+    {
+      "claim": "BPMN workflow executed",
+      "type": "execution",
+      "expected": "bpmn",
+      "actual": null,
+      "validated": false,
+      "source_file": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+      "line_number": 390,
+      "evidence_span_count": 0
+    },
+    {
+      "claim": "Weaver Forge ran",
+      "type": "execution",
+      "expected": "weaver",
+      "actual": null,
+      "validated": false,
+      "source_file": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+      "line_number": 391,
+      "evidence_span_count": 0
+    },
+    {
+      "claim": "Everything was super fast",
+      "type": "performance",
+      "expected": 10,
+      "actual": null,
+      "validated": false,
+      "source_file": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+      "line_number": 392,
+      "evidence_span_count": 0
+    }
+  ],
+  "spans": [
+    {
+      "name": "example.function.one",
+      "trace_id": "0xbe8aea17fa7e2be7c5b908a0a8b87f93",
+      "span_id": "0x2f1a93864bdc5a44",
+      "parent_id": null,
+      "start_time": 1751340747190592000,
+      "end_time": 1751340747203166000,
+      "duration_ns": 12574000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+        "code.lineno": 397,
+        "code.function": "example_function_one",
+        "code.module": "src.weavergen.ultrathink_validator",
+        "execution.timestamp": "2025-06-30T20:32:27.190609",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      },
+      "events": [],
+      "resource": {}
+    },
+    {
+      "name": "example.function.two",
+      "trace_id": "0xf916a77902aac0035ddabc903c3a124e",
+      "span_id": "0xbd8f05acac346aca",
+      "parent_id": null,
+      "start_time": 1751340747203228000,
+      "end_time": 1751340747224345000,
+      "duration_ns": 21117000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/ultrathink_validator.py",
+        "code.lineno": 398,
+        "code.function": "example_function_two",
+        "code.module": "src.weavergen.ultrathink_validator",
+        "execution.timestamp": "2025-06-30T20:32:27.203239",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      },
+      "events": [],
+      "resource": {}
+    }
+  ],
+  "trust_score": 0.3333333333333333
+}

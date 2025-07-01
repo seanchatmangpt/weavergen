@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_AgentGeneration"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="AgentGeneration" name="Agent System Generation" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="Start_AgentGen" name="Start Agent Generation">
+      <bpmn:outgoing>Flow_AG1</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Extract Agent Semantics -->
+    <bpmn:serviceTask id="Task_ExtractAgentSemantics" name="Extract Agent Semantics">
+      <bpmn:documentation>Extract agent-specific semantic conventions</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ExtractAgentSemanticsTask</weavergen:class>
+          <weavergen:span>agent.extract_semantics</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_AG1</bpmn:incoming>
+      <bpmn:outgoing>Flow_AG2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Agent Roles -->
+    <bpmn:serviceTask id="Task_GenerateRoles" name="Generate Agent Roles">
+      <bpmn:documentation>Generate role definitions from semantics</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateAgentRolesTask</weavergen:class>
+          <weavergen:span>agent.generate_roles</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_AG2</bpmn:incoming>
+      <bpmn:outgoing>Flow_AG3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Multi-Instance Agent Creation -->
+    <bpmn:subProcess id="SubProcess_CreateAgents" name="Create Agent Classes">
+      <bpmn:documentation>Create agent class for each role</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:span>agent.create_classes</weavergen:span>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_AG3</bpmn:incoming>
+      <bpmn:outgoing>Flow_AG4</bpmn:outgoing>
+      
+      <bpmn:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn:loopDataInputRef>agent_roles</bpmn:loopDataInputRef>
+        <bpmn:inputDataItem id="agent_role" name="agent_role"/>
+      </bpmn:multiInstanceLoopCharacteristics>
+      
+      <!-- Inside subprocess -->
+      <bpmn:startEvent id="Start_AgentCreate">
+        <bpmn:outgoing>Flow_AC1</bpmn:outgoing>
+      </bpmn:startEvent>
+      
+      <bpmn:serviceTask id="Task_GenerateAgentClass" name="Generate Agent Class">
+        <bpmn:extensionElements>
+          <weavergen:serviceTaskConfig>
+            <weavergen:class>GenerateAgentClassTask</weavergen:class>
+            <weavergen:span>agent.generate_class</weavergen:span>
+          </weavergen:serviceTaskConfig>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_AC1</bpmn:incoming>
+        <bpmn:outgoing>Flow_AC2</bpmn:outgoing>
+      </bpmn:serviceTask>
+      
+      <bpmn:serviceTask id="Task_AddInstrumentation" name="Add OTel Instrumentation">
+        <bpmn:extensionElements>
+          <weavergen:serviceTaskConfig>
+            <weavergen:class>AddInstrumentationTask</weavergen:class>
+            <weavergen:span>agent.add_instrumentation</weavergen:span>
+          </weavergen:serviceTaskConfig>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_AC2</bpmn:incoming>
+        <bpmn:outgoing>Flow_AC3</bpmn:outgoing>
+      </bpmn:serviceTask>
+      
+      <bpmn:endEvent id="End_AgentCreate">
+        <bpmn:incoming>Flow_AC3</bpmn:incoming>
+      </bpmn:endEvent>
+      
+      <bpmn:sequenceFlow id="Flow_AC1" sourceRef="Start_AgentCreate" targetRef="Task_GenerateAgentClass"/>
+      <bpmn:sequenceFlow id="Flow_AC2" sourceRef="Task_GenerateAgentClass" targetRef="Task_AddInstrumentation"/>
+      <bpmn:sequenceFlow id="Flow_AC3" sourceRef="Task_AddInstrumentation" targetRef="End_AgentCreate"/>
+    </bpmn:subProcess>
+    
+    <!-- Generate Orchestrator -->
+    <bpmn:serviceTask id="Task_GenerateOrchestrator" name="Generate Agent Orchestrator">
+      <bpmn:documentation>Generate orchestrator to coordinate agents</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateOrchestratorTask</weavergen:class>
+          <weavergen:span>agent.generate_orchestrator</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_AG4</bpmn:incoming>
+      <bpmn:outgoing>Flow_AG5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Test Agent Communication -->
+    <bpmn:serviceTask id="Task_TestAgents" name="Test Agent Communication">
+      <bpmn:documentation>Run test communication between agents</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>TestAgentCommunicationTask</weavergen:class>
+          <weavergen:span>agent.test_communication</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_AG5</bpmn:incoming>
+      <bpmn:outgoing>Flow_AG6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Spans -->
+    <bpmn:serviceTask id="Task_ValidateSpans" name="Validate Agent Spans">
+      <bpmn:documentation>Validate generated OTel spans</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ValidateAgentSpansTask</weavergen:class>
+          <weavergen:span>agent.validate_spans</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_AG6</bpmn:incoming>
+      <bpmn:outgoing>Flow_AG7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="End_AgentGen" name="Agent Generation Complete">
+      <bpmn:incoming>Flow_AG7</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_AG1" sourceRef="Start_AgentGen" targetRef="Task_ExtractAgentSemantics"/>
+    <bpmn:sequenceFlow id="Flow_AG2" sourceRef="Task_ExtractAgentSemantics" targetRef="Task_GenerateRoles"/>
+    <bpmn:sequenceFlow id="Flow_AG3" sourceRef="Task_GenerateRoles" targetRef="SubProcess_CreateAgents"/>
+    <bpmn:sequenceFlow id="Flow_AG4" sourceRef="SubProcess_CreateAgents" targetRef="Task_GenerateOrchestrator"/>
+    <bpmn:sequenceFlow id="Flow_AG5" sourceRef="Task_GenerateOrchestrator" targetRef="Task_TestAgents"/>
+    <bpmn:sequenceFlow id="Flow_AG6" sourceRef="Task_TestAgents" targetRef="Task_ValidateSpans"/>
+    <bpmn:sequenceFlow id="Flow_AG7" sourceRef="Task_ValidateSpans" targetRef="End_AgentGen"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

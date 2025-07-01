@@ -1,0 +1,788 @@
+{
+  "command": "execute",
+  "context": {
+    "cli.command": "execute",
+    "cli.module": "__main__",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli_dod_enforcer.py",
+    "cli.timestamp": "2025-06-30T20:40:31.052802",
+    "cli.args": [
+      "bpmn",
+      "execute",
+      "WeaverGenOrchestration",
+      "--trace"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.4222222222222222,
+    "is_done": false,
+    "total_spans": 18,
+    "level1_pass": 18,
+    "level2_pass": 0,
+    "level3_pass": 11,
+    "lies_detected": [
+      {
+        "claim": "Executed BPMN workflow workflows/bpmn/{workflow}.bpmn",
+        "reality": "BPMN file does not exist",
+        "span_id": "0xa943b8d800c1a066",
+        "type": "fake_bpmn"
+      }
+    ],
+    "violations": [
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "File Must Exist",
+        "description": "Missing code.filepath attribute",
+        "severity": "critical"
+      },
+      {
+        "level": "L2",
+        "rule": "Valid Line Number",
+        "description": "Invalid or missing line number",
+        "severity": "major"
+      },
+      {
+        "level": "L2",
+        "rule": "Timestamp Required",
+        "description": "Missing execution.timestamp",
+        "severity": "major"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.workflow.id",
+        "severity": "minor"
+      },
+      {
+        "level": "L3",
+        "rule": "Semantic Compliance",
+        "description": "Missing required BPMN attribute: bpmn.task.type",
+        "severity": "minor"
+      },
+      {
+        "level": "L2",
+        "rule": "BPMN Must Match",
+        "description": "BPMN file does not exist: workflows/bpmn/{workflow}.bpmn",
+        "severity": "critical"
+      }
+    ]
+  },
+  "spans": [
+    {
+      "name": "forge.self.regenerate",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0xa94dc43fabe03b39",
+      "parent_id": "0xa943b8d800c1a066",
+      "start_time": 1751341231066947000,
+      "end_time": 1751341231066982000,
+      "duration_ns": 35000,
+      "attributes": {
+        "regeneration.cycle.id": "bpmn_execution",
+        "regeneration.start_time": "2025-06-30T20:40:31.066949",
+        "semantic.output.hash": "ae2b4fc8d45a2174946bc0d72d5fe02c",
+        "semantic.output.size": 66,
+        "regeneration.success": true,
+        "regeneration.end_time": "2025-06-30T20:40:31.066971",
+        "regeneration.cycle_count": 1
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "semantic.execute_workflow",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x54dd9ce7fe9fcfa6",
+      "parent_id": "0xa943b8d800c1a066",
+      "start_time": 1751341231066920000,
+      "end_time": 1751341231066999000,
+      "duration_ns": 79000,
+      "attributes": {
+        "semantic.group.id": "bpmn",
+        "semantic.operation": "execute_workflow",
+        "semantic.compliance.required": true,
+        "semantic.timestamp": "2025-06-30T20:40:31.066928",
+        "semantic.compliance.validated": true
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "semantic.load_semantics",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x879e91c102fac7bd",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231067367000,
+      "end_time": 1751341231067382000,
+      "duration_ns": 15000,
+      "attributes": {
+        "semantic.group.id": "bpmn",
+        "semantic.operation": "load_semantics",
+        "semantic.compliance.required": true,
+        "semantic.timestamp": "2025-06-30T20:40:31.067372",
+        "semantic.previous_operations": 1,
+        "semantic.compliance.validated": true
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.load_semantics",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x70224fb98f947294",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231067397000,
+      "end_time": 1751341231073501000,
+      "duration_ns": 6104000,
+      "attributes": {
+        "semantic.file": "semantic_conventions/weavergen_system.yaml",
+        "semantic.groups.count": 5,
+        "semantic.metrics.count": 3
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "semantic.validate_semantics",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x07239f3257725899",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073527000,
+      "end_time": 1751341231073540000,
+      "duration_ns": 13000,
+      "attributes": {
+        "semantic.group.id": "bpmn",
+        "semantic.operation": "validate_semantics",
+        "semantic.compliance.required": true,
+        "semantic.timestamp": "2025-06-30T20:40:31.073531",
+        "semantic.previous_operations": 2,
+        "semantic.compliance.validated": true
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.validate_semantics",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x5e0198048b7d60d2",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073552000,
+      "end_time": 1751341231073561000,
+      "duration_ns": 9000,
+      "attributes": {
+        "semantic.valid": true,
+        "semantic.issues.count": 0
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "semantic.extract_agent_semantics",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0xa6d9a7c9a220bad6",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073577000,
+      "end_time": 1751341231073588000,
+      "duration_ns": 11000,
+      "attributes": {
+        "semantic.group.id": "bpmn",
+        "semantic.operation": "extract_agent_semantics",
+        "semantic.compliance.required": true,
+        "semantic.timestamp": "2025-06-30T20:40:31.073581",
+        "semantic.previous_operations": 3,
+        "semantic.compliance.validated": true
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.extract_agent_semantics",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x848e57536ad96832",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073597000,
+      "end_time": 1751341231073604000,
+      "duration_ns": 7000,
+      "attributes": {
+        "agent.roles.count": 4
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.generate",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0xef7f7fb5c2798ec4",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073629000,
+      "end_time": 1751341231073651000,
+      "duration_ns": 22000,
+      "attributes": {
+        "pydantic_ai.model": "qwen3:latest",
+        "pydantic_ai.expected_schema": "AgentRoleGeneration",
+        "ai.start_time": 1751341231.0736299,
+        "ai.output.validation_errors": "[]",
+        "ai.output.schema_compliant": true,
+        "ai.end_time": 1751341231.073647,
+        "ai.inference_time_seconds": 1.8358230590820312e-05
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "semantic.generate_agent_roles",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x49973bf696efea71",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073618000,
+      "end_time": 1751341231073656000,
+      "duration_ns": 38000,
+      "attributes": {
+        "semantic.group.id": "bpmn",
+        "semantic.operation": "generate_agent_roles",
+        "semantic.compliance.required": true,
+        "semantic.timestamp": "2025-06-30T20:40:31.073620",
+        "semantic.previous_operations": 4,
+        "semantic.compliance.validated": true
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.generate_agent_roles",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x16b2ab3aa3ca366f",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073665000,
+      "end_time": 1751341231073674000,
+      "duration_ns": 9000,
+      "attributes": {
+        "agent.roles.generating": 4,
+        "agent.roles.generated": 4
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "semantic.generate_span_validator",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0xcff6645cbc058077",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073686000,
+      "end_time": 1751341231073695000,
+      "duration_ns": 9000,
+      "attributes": {
+        "semantic.group.id": "bpmn",
+        "semantic.operation": "generate_span_validator",
+        "semantic.compliance.required": true,
+        "semantic.timestamp": "2025-06-30T20:40:31.073689",
+        "semantic.previous_operations": 5,
+        "semantic.compliance.validated": true
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.generate_span_validator",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x3bb542cb3df99385",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073703000,
+      "end_time": 1751341231073707000,
+      "duration_ns": 4000,
+      "attributes": {
+        "validator.type": "span"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "pydantic_ai.generate",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x454d27bcf66d02a8",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073730000,
+      "end_time": 1751341231073744000,
+      "duration_ns": 14000,
+      "attributes": {
+        "pydantic_ai.model": "qwen3:latest",
+        "pydantic_ai.expected_schema": "HealthScoringLogic",
+        "ai.start_time": 1751341231.0737312,
+        "ai.output.validation_errors": "[]",
+        "ai.output.schema_compliant": true,
+        "ai.end_time": 1751341231.07374,
+        "ai.inference_time_seconds": 9.775161743164062e-06
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "semantic.generate_health_scoring",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0xca28aef8d1b26f69",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073718000,
+      "end_time": 1751341231073749000,
+      "duration_ns": 31000,
+      "attributes": {
+        "semantic.group.id": "bpmn",
+        "semantic.operation": "generate_health_scoring",
+        "semantic.compliance.required": true,
+        "semantic.timestamp": "2025-06-30T20:40:31.073721",
+        "semantic.previous_operations": 6,
+        "semantic.compliance.validated": true
+      },
+      "status": {
+        "status_code": "OK",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.generate_health_scoring",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0xc81b3c4da5027030",
+      "parent_id": "0x6316971f5fb3f8a7",
+      "start_time": 1751341231073757000,
+      "end_time": 1751341231073763000,
+      "duration_ns": 6000,
+      "attributes": {
+        "health.scoring.enabled": true,
+        "health.formula.components": 4
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.execute.WeaverGenOrchestration",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0x6316971f5fb3f8a7",
+      "parent_id": "0xa943b8d800c1a066",
+      "start_time": 1751341231067163000,
+      "end_time": 1751341231073771000,
+      "duration_ns": 6608000,
+      "attributes": {
+        "bpmn.workflow.name": "WeaverGenOrchestration",
+        "bpmn.workflow.start": "2025-06-30T20:40:31.067170",
+        "bpmn.workflow.success": true,
+        "bpmn.workflow.end": "2025-06-30T20:40:31.073769"
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    },
+    {
+      "name": "bpmn.execute",
+      "trace_id": "0x751998275acf4e9ec12c7f7554ea6005",
+      "span_id": "0xa943b8d800c1a066",
+      "parent_id": "0x29b3e8a3ce35088a",
+      "start_time": 1751341231053122000,
+      "end_time": 1751341231078887000,
+      "duration_ns": 25765000,
+      "attributes": {
+        "code.filepath": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+        "code.lineno": 2095,
+        "code.function": "execute",
+        "code.module": "__main__",
+        "bpmn.workflow.file": "workflows/bpmn/{workflow}.bpmn",
+        "bpmn.workflow.id": "{workflow}",
+        "bpmn.task.id": "Dynamic",
+        "bpmn.task.type": "serviceTask",
+        "execution.timestamp": "2025-06-30T20:40:31.053855",
+        "execution.success": true
+      },
+      "status": {
+        "status_code": "UNSET",
+        "description": null
+      }
+    }
+  ]
+}

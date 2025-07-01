@@ -1,0 +1,11 @@
+[
+  {
+    "name": "weaver.generate.metrics",
+    "timestamp": "2025-06-30T20:16:43.030179",
+    "attributes": {
+      "target": "metrics",
+      "language": "python",
+      "success": false
+    }
+  }
+]

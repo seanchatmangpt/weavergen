@@ -1,0 +1,394 @@
+[
+  {
+    "name": "weaver.initialize",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x00f13edc7f3d0fb0",
+    "parent_id": "0x5bc1c2c6f2aa48c1",
+    "start_time": 1751339867767023000,
+    "end_time": 1751339867872128000,
+    "duration_ns": 105105000,
+    "attributes": {
+      "weaver.path": "/usr/local/bin/weaver",
+      "weaver.version": "0.1.0",
+      "weaver.initialized": true
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "weaver.load_registry",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0xe9b6b0ffd7add0f9",
+    "parent_id": "0x5bc1c2c6f2aa48c1",
+    "start_time": 1751339867872289000,
+    "end_time": 1751339867927376000,
+    "duration_ns": 55087000,
+    "attributes": {
+      "registry.source": "semantic_conventions/weavergen_system.yaml",
+      "registry.files": 1,
+      "registry.groups": 5
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "weaver.validate_registry",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x394e69220bc36ed2",
+    "parent_id": "0x5bc1c2c6f2aa48c1",
+    "start_time": 1751339867927479000,
+    "end_time": 1751339867982527000,
+    "duration_ns": 55048000,
+    "attributes": {
+      "weaver.command": "registry check",
+      "registry.valid": true,
+      "registry.check.returncode": 0
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "python.select_templates",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0xf88d8e59dd083572",
+    "parent_id": "0x87274ed8dae254d3",
+    "start_time": 1751339867982619000,
+    "end_time": 1751339868006941000,
+    "duration_ns": 24322000,
+    "attributes": {
+      "templates.count": 5,
+      "templates.type": "python"
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "python.generate_metrics",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x378bd9b38290269d",
+    "parent_id": "0x87274ed8dae254d3",
+    "start_time": 1751339868007008000,
+    "end_time": 1751339868108392000,
+    "duration_ns": 101384000,
+    "attributes": {
+      "generation.target": "metrics",
+      "generation.language": "python",
+      "generation.success": true,
+      "generation.files": 3
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "python.generate_attributes",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0xd88d856e72a27ee1",
+    "parent_id": "0x87274ed8dae254d3",
+    "start_time": 1751339868108489000,
+    "end_time": 1751339868193320000,
+    "duration_ns": 84831000,
+    "attributes": {
+      "generation.target": "attributes",
+      "generation.language": "python",
+      "generation.success": true,
+      "generation.files": 2
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "python.generate_resources",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x3e97c938a1cded51",
+    "parent_id": "0x87274ed8dae254d3",
+    "start_time": 1751339868193408000,
+    "end_time": 1751339868258504000,
+    "duration_ns": 65096000,
+    "attributes": {
+      "generation.target": "resources",
+      "generation.language": "python",
+      "generation.success": true,
+      "generation.files": 1
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "python.generate_spans",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x154a0314df50e409",
+    "parent_id": "0x87274ed8dae254d3",
+    "start_time": 1751339868258781000,
+    "end_time": 1751339868333922000,
+    "duration_ns": 75141000,
+    "attributes": {
+      "generation.target": "spans",
+      "generation.language": "python",
+      "generation.success": true,
+      "generation.files": 2
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "bpmn.execute.PythonForgeGeneration",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x87274ed8dae254d3",
+    "parent_id": "0x5bc1c2c6f2aa48c1",
+    "start_time": 1751339867982599000,
+    "end_time": 1751339868333946000,
+    "duration_ns": 351347000,
+    "attributes": {
+      "bpmn.subprocess": true,
+      "generation.language": "python"
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "weaver.capture_spans",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x7cfccd9df57bdb7b",
+    "parent_id": "0x5bc1c2c6f2aa48c1",
+    "start_time": 1751339868334002000,
+    "end_time": 1751339868366958000,
+    "duration_ns": 32956000,
+    "attributes": {
+      "spans.captured": 12,
+      "spans.file": "generation_spans.json"
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "weaver.validate_code",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0xdbc99eca5b250eaa",
+    "parent_id": "0x5bc1c2c6f2aa48c1",
+    "start_time": 1751339868367210000,
+    "end_time": 1751339868421485000,
+    "duration_ns": 54275000,
+    "attributes": {
+      "validation.files": 8,
+      "validation.score": 0.95,
+      "validation.passed": true
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "weaver.span_report",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x76479dd383ec81f4",
+    "parent_id": "0x5bc1c2c6f2aa48c1",
+    "start_time": 1751339868421608000,
+    "end_time": 1751339868443256000,
+    "duration_ns": 21648000,
+    "attributes": {
+      "report.generated": true,
+      "report.components": 4
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "bpmn.execute.WeaverForgeOrchestration",
+    "trace_id": "0x743c0f9c573aea4e0cd2fcdd67b9e74a",
+    "span_id": "0x5bc1c2c6f2aa48c1",
+    "parent_id": null,
+    "start_time": 1751339867766988000,
+    "end_time": 1751339868443289000,
+    "duration_ns": 676301000,
+    "attributes": {
+      "bpmn.workflow.name": "WeaverForgeOrchestration",
+      "bpmn.workflow.type": "weaver_forge"
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "validation.collect_spans",
+    "trace_id": "0x4883531119a5d3f0fa98232678fb2e9c",
+    "span_id": "0x3b05fef0fb1d336d",
+    "parent_id": "0x29819c008feb27c8",
+    "start_time": 1751339868443402000,
+    "end_time": 1751339868468431000,
+    "duration_ns": 25029000,
+    "attributes": {
+      "validation.method": "span",
+      "spans.collected": 15
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "validation.analyze_hierarchy",
+    "trace_id": "0x4883531119a5d3f0fa98232678fb2e9c",
+    "span_id": "0x41e8bcdf1f0901ca",
+    "parent_id": "0x29819c008feb27c8",
+    "start_time": 1751339868468474000,
+    "end_time": 1751339868503526000,
+    "duration_ns": 35052000,
+    "attributes": {
+      "hierarchy.valid": true,
+      "hierarchy.depth": 3
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "validation.semantic_compliance",
+    "trace_id": "0x4883531119a5d3f0fa98232678fb2e9c",
+    "span_id": "0xbe3d6e15061dee02",
+    "parent_id": "0x29819c008feb27c8",
+    "start_time": 1751339868503723000,
+    "end_time": 1751339868548763000,
+    "duration_ns": 45040000,
+    "attributes": {
+      "validation.method": "semantic",
+      "compliance.score": 0.92
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "validation.span_coverage",
+    "trace_id": "0x4883531119a5d3f0fa98232678fb2e9c",
+    "span_id": "0x8bdc2d048d30da07",
+    "parent_id": "0x29819c008feb27c8",
+    "start_time": 1751339868548914000,
+    "end_time": 1751339868579133000,
+    "duration_ns": 30219000,
+    "attributes": {
+      "validation.method": "coverage",
+      "coverage.score": 0.88
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "validation.span_performance",
+    "trace_id": "0x4883531119a5d3f0fa98232678fb2e9c",
+    "span_id": "0xd17d0aad17ea5591",
+    "parent_id": "0x29819c008feb27c8",
+    "start_time": 1751339868579296000,
+    "end_time": 1751339868602217000,
+    "duration_ns": 22921000,
+    "attributes": {
+      "validation.method": "performance",
+      "performance.score": 0.95
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "validation.health_score",
+    "trace_id": "0x4883531119a5d3f0fa98232678fb2e9c",
+    "span_id": "0x7e1081a2b6dab887",
+    "parent_id": "0x29819c008feb27c8",
+    "start_time": 1751339868602353000,
+    "end_time": 1751339868614849000,
+    "duration_ns": 12496000,
+    "attributes": {
+      "validation.score": 0.91,
+      "health.score": 0.91,
+      "validation.passed": true
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  },
+  {
+    "name": "bpmn.execute.SpanValidationWorkflow",
+    "trace_id": "0x4883531119a5d3f0fa98232678fb2e9c",
+    "span_id": "0x29819c008feb27c8",
+    "parent_id": null,
+    "start_time": 1751339868443366000,
+    "end_time": 1751339868614897000,
+    "duration_ns": 171531000,
+    "attributes": {
+      "bpmn.workflow.name": "SpanValidationWorkflow"
+    },
+    "status": {
+      "status_code": "UNSET",
+      "description": null
+    },
+    "events": [],
+    "resource": {}
+  }
+]

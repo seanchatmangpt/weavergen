@@ -1,0 +1,42 @@
+sequenceDiagram
+    participant U as User
+    participant B as BPMN Engine
+    participant S as Service Tasks
+    participant G as Generated Code
+    
+    U->>B: Execute LoadSemanticsTask
+    B->>S: LoadSemanticsTask
+    S->>G: Generate Components
+    G-->>S: Components Ready
+    S-->>B: Task Complete
+    Note over B: Continue to next task
+    U->>B: Execute ValidateSemanticsTask
+    B->>S: ValidateSemanticsTask
+    S->>G: Generate Components
+    G-->>S: Components Ready
+    S-->>B: Task Complete
+    Note over B: Continue to next task
+    U->>B: Execute ExtractAgentSemanticsTask
+    B->>S: ExtractAgentSemanticsTask
+    S->>G: Generate Components
+    G-->>S: Components Ready
+    S-->>B: Task Complete
+    Note over B: Continue to next task
+    U->>B: Execute GenerateAgentRolesTask
+    B->>S: GenerateAgentRolesTask
+    S->>G: Generate Components
+    G-->>S: Components Ready
+    S-->>B: Task Complete
+    Note over B: Continue to next task
+    U->>B: Execute GenerateSpanValidatorTask
+    B->>S: GenerateSpanValidatorTask
+    S->>G: Generate Components
+    G-->>S: Components Ready
+    S-->>B: Task Complete
+    Note over B: Continue to next task
+    U->>B: Execute GenerateHealthScoringTask
+    B->>S: GenerateHealthScoringTask
+    S->>G: Generate Components
+    G-->>S: Components Ready
+    S-->>B: Task Complete
+    B-->>U: Workflow Complete

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_ValidationGeneration"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="ValidationGeneration" name="Validation System Generation" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="Start_ValGen" name="Start Validation Generation">
+      <bpmn:outgoing>Flow_VG1</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Extract Validation Semantics -->
+    <bpmn:serviceTask id="Task_ExtractValSemantics" name="Extract Validation Semantics">
+      <bpmn:documentation>Extract validation-specific semantic conventions</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ExtractValidationSemanticsTask</weavergen:class>
+          <weavergen:span>validation.extract_semantics</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_VG1</bpmn:incoming>
+      <bpmn:outgoing>Flow_VG2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for Validation Methods -->
+    <bpmn:parallelGateway id="Gateway_ValSplit" name="Split Validation Methods">
+      <bpmn:incoming>Flow_VG2</bpmn:incoming>
+      <bpmn:outgoing>Flow_SpanVal</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ContractVal</bpmn:outgoing>
+      <bpmn:outgoing>Flow_SemanticVal</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Span Validation Branch -->
+    <bpmn:serviceTask id="Task_GenerateSpanVal" name="Generate Span Validator">
+      <bpmn:documentation>Generate span-based validation logic</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateSpanValidatorTask</weavergen:class>
+          <weavergen:span>validation.generate_span</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SpanVal</bpmn:incoming>
+      <bpmn:outgoing>Flow_SpanDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Contract Validation Branch -->
+    <bpmn:serviceTask id="Task_GenerateContractVal" name="Generate Contract Validator">
+      <bpmn:documentation>Generate contract validation logic</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateContractValidatorTask</weavergen:class>
+          <weavergen:span>validation.generate_contract</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ContractVal</bpmn:incoming>
+      <bpmn:outgoing>Flow_ContractDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Semantic Validation Branch -->
+    <bpmn:serviceTask id="Task_GenerateSemanticVal" name="Generate Semantic Validator">
+      <bpmn:documentation>Generate semantic compliance validation</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateSemanticValidatorTask</weavergen:class>
+          <weavergen:span>validation.generate_semantic</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SemanticVal</bpmn:incoming>
+      <bpmn:outgoing>Flow_SemanticDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Join Gateway -->
+    <bpmn:parallelGateway id="Gateway_ValJoin" name="Join Validators">
+      <bpmn:incoming>Flow_SpanDone</bpmn:incoming>
+      <bpmn:incoming>Flow_ContractDone</bpmn:incoming>
+      <bpmn:incoming>Flow_SemanticDone</bpmn:incoming>
+      <bpmn:outgoing>Flow_VG3</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Generate Validation Engine -->
+    <bpmn:serviceTask id="Task_GenerateEngine" name="Generate Validation Engine">
+      <bpmn:documentation>Generate unified validation engine</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateValidationEngineTask</weavergen:class>
+          <weavergen:span>validation.generate_engine</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_VG3</bpmn:incoming>
+      <bpmn:outgoing>Flow_VG4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Health Scoring -->
+    <bpmn:serviceTask id="Task_GenerateHealthScore" name="Generate Health Scoring">
+      <bpmn:documentation>Generate health score calculation logic</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateHealthScoringTask</weavergen:class>
+          <weavergen:span>validation.generate_health</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_VG4</bpmn:incoming>
+      <bpmn:outgoing>Flow_VG5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Report Generator -->
+    <bpmn:serviceTask id="Task_GenerateReporter" name="Generate Report Generator">
+      <bpmn:documentation>Generate validation report generator</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateReportGeneratorTask</weavergen:class>
+          <weavergen:span>validation.generate_reporter</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_VG5</bpmn:incoming>
+      <bpmn:outgoing>Flow_VG6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Test Validation System -->
+    <bpmn:serviceTask id="Task_TestValidation" name="Test Validation System">
+      <bpmn:documentation>Run self-validation test</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>TestValidationSystemTask</weavergen:class>
+          <weavergen:span>validation.test_system</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_VG6</bpmn:incoming>
+      <bpmn:outgoing>Flow_VG7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="End_ValGen" name="Validation Generation Complete">
+      <bpmn:incoming>Flow_VG7</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_VG1" sourceRef="Start_ValGen" targetRef="Task_ExtractValSemantics"/>
+    <bpmn:sequenceFlow id="Flow_VG2" sourceRef="Task_ExtractValSemantics" targetRef="Gateway_ValSplit"/>
+    <bpmn:sequenceFlow id="Flow_SpanVal" sourceRef="Gateway_ValSplit" targetRef="Task_GenerateSpanVal"/>
+    <bpmn:sequenceFlow id="Flow_ContractVal" sourceRef="Gateway_ValSplit" targetRef="Task_GenerateContractVal"/>
+    <bpmn:sequenceFlow id="Flow_SemanticVal" sourceRef="Gateway_ValSplit" targetRef="Task_GenerateSemanticVal"/>
+    <bpmn:sequenceFlow id="Flow_SpanDone" sourceRef="Task_GenerateSpanVal" targetRef="Gateway_ValJoin"/>
+    <bpmn:sequenceFlow id="Flow_ContractDone" sourceRef="Task_GenerateContractVal" targetRef="Gateway_ValJoin"/>
+    <bpmn:sequenceFlow id="Flow_SemanticDone" sourceRef="Task_GenerateSemanticVal" targetRef="Gateway_ValJoin"/>
+    <bpmn:sequenceFlow id="Flow_VG3" sourceRef="Gateway_ValJoin" targetRef="Task_GenerateEngine"/>
+    <bpmn:sequenceFlow id="Flow_VG4" sourceRef="Task_GenerateEngine" targetRef="Task_GenerateHealthScore"/>
+    <bpmn:sequenceFlow id="Flow_VG5" sourceRef="Task_GenerateHealthScore" targetRef="Task_GenerateReporter"/>
+    <bpmn:sequenceFlow id="Flow_VG6" sourceRef="Task_GenerateReporter" targetRef="Task_TestValidation"/>
+    <bpmn:sequenceFlow id="Flow_VG7" sourceRef="Task_TestValidation" targetRef="End_ValGen"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

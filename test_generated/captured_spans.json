@@ -1,1 +1,131 @@
-[]
+[
+  {
+    "name": "agent_coordinator_interaction",
+    "context": {
+      "trace_id": "0xa341987f4a8cf9bd190c2c656bf3a9a5",
+      "span_id": "0xe9ffcd89fc43b65f",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-07-01T02:53:54.426847Z",
+    "end_time": "2025-07-01T02:53:54.427705Z",
+    "status": {
+      "status_code": "UNSET"
+    },
+    "attributes": {
+      "agent.role": "coordinator",
+      "agent.id": "generated_coordinator_0",
+      "message.content": "Generated coordinator message 0",
+      "message.structured": "true"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.34.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "agent_analyst_interaction",
+    "context": {
+      "trace_id": "0x26bf0dc6db93e62432133e9ea63f374e",
+      "span_id": "0xd6f0d5667aa4d02b",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-07-01T02:53:54.427887Z",
+    "end_time": "2025-07-01T02:53:54.427906Z",
+    "status": {
+      "status_code": "UNSET"
+    },
+    "attributes": {
+      "agent.role": "analyst",
+      "agent.id": "generated_analyst_1",
+      "message.content": "Generated analyst message 1",
+      "message.structured": "true"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.34.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "agent_facilitator_interaction",
+    "context": {
+      "trace_id": "0x66b560d0a04caf0c605b7441f399de99",
+      "span_id": "0x46f1ef7a86a30f2f",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-07-01T02:53:54.427973Z",
+    "end_time": "2025-07-01T02:53:54.427986Z",
+    "status": {
+      "status_code": "UNSET"
+    },
+    "attributes": {
+      "agent.role": "facilitator",
+      "agent.id": "generated_facilitator_2",
+      "message.content": "Generated facilitator message 2",
+      "message.structured": "true"
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.34.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  },
+  {
+    "name": "generated_agent_communication",
+    "context": {
+      "trace_id": "0x369b30a05aa12f535f7b2014162853ef",
+      "span_id": "0xba0d354af4af0fe5",
+      "trace_state": "[]"
+    },
+    "kind": "SpanKind.INTERNAL",
+    "parent_id": null,
+    "start_time": "2025-07-01T02:53:54.426814Z",
+    "end_time": "2025-07-01T02:53:54.428034Z",
+    "status": {
+      "status_code": "UNSET"
+    },
+    "attributes": {
+      "agent.count": 3,
+      "communication.mode": "enhanced",
+      "result.interactions": 3,
+      "result.spans_created": 4,
+      "result.success": true
+    },
+    "events": [],
+    "links": [],
+    "resource": {
+      "attributes": {
+        "telemetry.sdk.language": "python",
+        "telemetry.sdk.name": "opentelemetry",
+        "telemetry.sdk.version": "1.34.1",
+        "service.name": "unknown_service"
+      },
+      "schema_url": ""
+    }
+  }
+]

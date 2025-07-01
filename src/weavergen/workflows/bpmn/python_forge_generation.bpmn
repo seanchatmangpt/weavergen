@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_PythonForgeGeneration"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="PythonForgeGeneration" name="Python Forge Generation" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="Start_PythonGen" name="Start Python Generation">
+      <bpmn:outgoing>Flow_PG1</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Select Python Templates -->
+    <bpmn:serviceTask id="Task_SelectTemplates" name="Select Python Templates">
+      <bpmn:documentation>Select appropriate Jinja2 templates for Python</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>SelectPythonTemplatesTask</weavergen:class>
+          <weavergen:span>python.select_templates</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PG1</bpmn:incoming>
+      <bpmn:outgoing>Flow_PG2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Prepare Weaver Config -->
+    <bpmn:serviceTask id="Task_PrepareConfig" name="Prepare Weaver Config">
+      <bpmn:documentation>Create weaver.yaml configuration for Python generation</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>PrepareWeaverConfigTask</weavergen:class>
+          <weavergen:span>python.prepare_config</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PG2</bpmn:incoming>
+      <bpmn:outgoing>Flow_PG3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for Component Generation -->
+    <bpmn:parallelGateway id="Gateway_PythonSplit" name="Split Components">
+      <bpmn:incoming>Flow_PG3</bpmn:incoming>
+      <bpmn:outgoing>Flow_Metrics</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Attributes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Resources</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Spans</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Generate Metrics -->
+    <bpmn:serviceTask id="Task_GenMetrics" name="Generate Metrics">
+      <bpmn:documentation>Generate Python metric classes with Weaver</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GeneratePythonMetricsTask</weavergen:class>
+          <weavergen:span>python.generate_metrics</weavergen:span>
+          <weavergen:weaverCommand>registry generate --target metrics</weavergen:weaverCommand>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Metrics</bpmn:incoming>
+      <bpmn:outgoing>Flow_MetricsDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Attributes -->
+    <bpmn:serviceTask id="Task_GenAttributes" name="Generate Attributes">
+      <bpmn:documentation>Generate Python attribute constants with Weaver</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GeneratePythonAttributesTask</weavergen:class>
+          <weavergen:span>python.generate_attributes</weavergen:span>
+          <weavergen:weaverCommand>registry generate --target attributes</weavergen:weaverCommand>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Attributes</bpmn:incoming>
+      <bpmn:outgoing>Flow_AttributesDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Resources -->
+    <bpmn:serviceTask id="Task_GenResources" name="Generate Resources">
+      <bpmn:documentation>Generate Python resource providers with Weaver</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GeneratePythonResourcesTask</weavergen:class>
+          <weavergen:span>python.generate_resources</weavergen:span>
+          <weavergen:weaverCommand>registry generate --target resources</weavergen:weaverCommand>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Resources</bpmn:incoming>
+      <bpmn:outgoing>Flow_ResourcesDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Spans -->
+    <bpmn:serviceTask id="Task_GenSpans" name="Generate Span Factories">
+      <bpmn:documentation>Generate Python span factory classes with Weaver</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GeneratePythonSpansTask</weavergen:class>
+          <weavergen:span>python.generate_spans</weavergen:span>
+          <weavergen:weaverCommand>registry generate --target spans</weavergen:weaverCommand>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Spans</bpmn:incoming>
+      <bpmn:outgoing>Flow_SpansDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Join Gateway -->
+    <bpmn:parallelGateway id="Gateway_PythonJoin" name="Join Components">
+      <bpmn:incoming>Flow_MetricsDone</bpmn:incoming>
+      <bpmn:incoming>Flow_AttributesDone</bpmn:incoming>
+      <bpmn:incoming>Flow_ResourcesDone</bpmn:incoming>
+      <bpmn:incoming>Flow_SpansDone</bpmn:incoming>
+      <bpmn:outgoing>Flow_PG4</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Add Type Hints -->
+    <bpmn:serviceTask id="Task_AddTypeHints" name="Add Python Type Hints">
+      <bpmn:documentation>Enhance generated code with type hints</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>AddPythonTypeHintsTask</weavergen:class>
+          <weavergen:span>python.add_type_hints</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PG4</bpmn:incoming>
+      <bpmn:outgoing>Flow_PG5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Format Code -->
+    <bpmn:serviceTask id="Task_FormatCode" name="Format Python Code">
+      <bpmn:documentation>Format code with Black/Ruff</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>FormatPythonCodeTask</weavergen:class>
+          <weavergen:span>python.format_code</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PG5</bpmn:incoming>
+      <bpmn:outgoing>Flow_PG6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate __init__ Files -->
+    <bpmn:serviceTask id="Task_GenInit" name="Generate __init__ Files">
+      <bpmn:documentation>Create proper Python package structure</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateInitFilesTask</weavergen:class>
+          <weavergen:span>python.generate_init</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PG6</bpmn:incoming>
+      <bpmn:outgoing>Flow_PG7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Capture Python Spans -->
+    <bpmn:serviceTask id="Task_CapturePySpans" name="Capture Python Generation Spans">
+      <bpmn:documentation>Capture all spans from Python generation</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>CapturePythonSpansTask</weavergen:class>
+          <weavergen:span>python.capture_spans</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PG7</bpmn:incoming>
+      <bpmn:outgoing>Flow_PG8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="End_PythonGen" name="Python Generation Complete">
+      <bpmn:incoming>Flow_PG8</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_PG1" sourceRef="Start_PythonGen" targetRef="Task_SelectTemplates"/>
+    <bpmn:sequenceFlow id="Flow_PG2" sourceRef="Task_SelectTemplates" targetRef="Task_PrepareConfig"/>
+    <bpmn:sequenceFlow id="Flow_PG3" sourceRef="Task_PrepareConfig" targetRef="Gateway_PythonSplit"/>
+    <bpmn:sequenceFlow id="Flow_Metrics" sourceRef="Gateway_PythonSplit" targetRef="Task_GenMetrics"/>
+    <bpmn:sequenceFlow id="Flow_Attributes" sourceRef="Gateway_PythonSplit" targetRef="Task_GenAttributes"/>
+    <bpmn:sequenceFlow id="Flow_Resources" sourceRef="Gateway_PythonSplit" targetRef="Task_GenResources"/>
+    <bpmn:sequenceFlow id="Flow_Spans" sourceRef="Gateway_PythonSplit" targetRef="Task_GenSpans"/>
+    <bpmn:sequenceFlow id="Flow_MetricsDone" sourceRef="Task_GenMetrics" targetRef="Gateway_PythonJoin"/>
+    <bpmn:sequenceFlow id="Flow_AttributesDone" sourceRef="Task_GenAttributes" targetRef="Gateway_PythonJoin"/>
+    <bpmn:sequenceFlow id="Flow_ResourcesDone" sourceRef="Task_GenResources" targetRef="Gateway_PythonJoin"/>
+    <bpmn:sequenceFlow id="Flow_SpansDone" sourceRef="Task_GenSpans" targetRef="Gateway_PythonJoin"/>
+    <bpmn:sequenceFlow id="Flow_PG4" sourceRef="Gateway_PythonJoin" targetRef="Task_AddTypeHints"/>
+    <bpmn:sequenceFlow id="Flow_PG5" sourceRef="Task_AddTypeHints" targetRef="Task_FormatCode"/>
+    <bpmn:sequenceFlow id="Flow_PG6" sourceRef="Task_FormatCode" targetRef="Task_GenInit"/>
+    <bpmn:sequenceFlow id="Flow_PG7" sourceRef="Task_GenInit" targetRef="Task_CapturePySpans"/>
+    <bpmn:sequenceFlow id="Flow_PG8" sourceRef="Task_CapturePySpans" targetRef="End_PythonGen"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

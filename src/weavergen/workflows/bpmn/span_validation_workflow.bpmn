@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_SpanValidationWorkflow"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="SpanValidationWorkflow" name="Span-Based Validation Workflow" isExecutable="true">
+    
+    <!-- Start Event with Message -->
+    <bpmn:startEvent id="Start_SpanValidation" name="Validation Request">
+      <bpmn:outgoing>Flow_SV1</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_ValidationRequest"/>
+    </bpmn:startEvent>
+    
+    <!-- Collect Spans -->
+    <bpmn:serviceTask id="Task_CollectSpans" name="Collect OTel Spans">
+      <bpmn:documentation>Collect all spans from generated system</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>CollectSpansTask</weavergen:class>
+          <weavergen:span>validation.collect_spans</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SV1</bpmn:incoming>
+      <bpmn:outgoing>Flow_SV2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Analyze Span Hierarchy -->
+    <bpmn:serviceTask id="Task_AnalyzeHierarchy" name="Analyze Span Hierarchy">
+      <bpmn:documentation>Analyze parent-child relationships in spans</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>AnalyzeSpanHierarchyTask</weavergen:class>
+          <weavergen:span>validation.analyze_hierarchy</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SV2</bpmn:incoming>
+      <bpmn:outgoing>Flow_SV3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for Validation Types -->
+    <bpmn:parallelGateway id="Gateway_ValidationSplit" name="Split Validation">
+      <bpmn:incoming>Flow_SV3</bpmn:incoming>
+      <bpmn:outgoing>Flow_Semantic</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Coverage</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Performance</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Semantic Compliance Check -->
+    <bpmn:serviceTask id="Task_SemanticCheck" name="Check Semantic Compliance">
+      <bpmn:documentation>Verify spans follow semantic conventions</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>CheckSemanticComplianceTask</weavergen:class>
+          <weavergen:span>validation.semantic_compliance</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Semantic</bpmn:incoming>
+      <bpmn:outgoing>Flow_SemanticDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Coverage Analysis -->
+    <bpmn:serviceTask id="Task_CoverageAnalysis" name="Analyze Span Coverage">
+      <bpmn:documentation>Check if all components generate spans</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>AnalyzeSpanCoverageTask</weavergen:class>
+          <weavergen:span>validation.span_coverage</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Coverage</bpmn:incoming>
+      <bpmn:outgoing>Flow_CoverageDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Performance Analysis -->
+    <bpmn:serviceTask id="Task_PerformanceCheck" name="Analyze Span Performance">
+      <bpmn:documentation>Check span durations and frequencies</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>AnalyzeSpanPerformanceTask</weavergen:class>
+          <weavergen:span>validation.span_performance</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Performance</bpmn:incoming>
+      <bpmn:outgoing>Flow_PerformanceDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Join Gateway -->
+    <bpmn:parallelGateway id="Gateway_ValidationJoin" name="Join Results">
+      <bpmn:incoming>Flow_SemanticDone</bpmn:incoming>
+      <bpmn:incoming>Flow_CoverageDone</bpmn:incoming>
+      <bpmn:incoming>Flow_PerformanceDone</bpmn:incoming>
+      <bpmn:outgoing>Flow_SV4</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Calculate Health Score -->
+    <bpmn:serviceTask id="Task_HealthScore" name="Calculate Health Score">
+      <bpmn:documentation>Calculate overall system health from spans</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>CalculateHealthScoreTask</weavergen:class>
+          <weavergen:span>validation.health_score</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SV4</bpmn:incoming>
+      <bpmn:outgoing>Flow_SV5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Decision: Health Check -->
+    <bpmn:exclusiveGateway id="Gateway_HealthCheck" name="Health OK?">
+      <bpmn:incoming>Flow_SV5</bpmn:incoming>
+      <bpmn:outgoing>Flow_Healthy</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Unhealthy</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Generate Success Report -->
+    <bpmn:serviceTask id="Task_SuccessReport" name="Generate Success Report">
+      <bpmn:documentation>Generate detailed success report with spans</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateSuccessReportTask</weavergen:class>
+          <weavergen:span>validation.success_report</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Healthy</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReportDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Generate Issue Report -->
+    <bpmn:serviceTask id="Task_IssueReport" name="Generate Issue Report">
+      <bpmn:documentation>Generate report with span-based issues</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateIssueReportTask</weavergen:class>
+          <weavergen:span>validation.issue_report</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Unhealthy</bpmn:incoming>
+      <bpmn:outgoing>Flow_SV6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- AI Fix Suggestions -->
+    <bpmn:serviceTask id="Task_AIFixes" name="Generate AI Fix Suggestions">
+      <bpmn:documentation>Use AI to suggest fixes based on span issues</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateAIFixesTask</weavergen:class>
+          <weavergen:span>validation.ai_fixes</weavergen:span>
+          <weavergen:aiModel>qwen3:latest</weavergen:aiModel>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SV6</bpmn:incoming>
+      <bpmn:outgoing>Flow_FixesDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Events -->
+    <bpmn:endEvent id="End_Success" name="Validation Passed">
+      <bpmn:incoming>Flow_ReportDone</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="End_WithFixes" name="Validation Failed with Fixes">
+      <bpmn:incoming>Flow_FixesDone</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_SV1" sourceRef="Start_SpanValidation" targetRef="Task_CollectSpans"/>
+    <bpmn:sequenceFlow id="Flow_SV2" sourceRef="Task_CollectSpans" targetRef="Task_AnalyzeHierarchy"/>
+    <bpmn:sequenceFlow id="Flow_SV3" sourceRef="Task_AnalyzeHierarchy" targetRef="Gateway_ValidationSplit"/>
+    <bpmn:sequenceFlow id="Flow_Semantic" sourceRef="Gateway_ValidationSplit" targetRef="Task_SemanticCheck"/>
+    <bpmn:sequenceFlow id="Flow_Coverage" sourceRef="Gateway_ValidationSplit" targetRef="Task_CoverageAnalysis"/>
+    <bpmn:sequenceFlow id="Flow_Performance" sourceRef="Gateway_ValidationSplit" targetRef="Task_PerformanceCheck"/>
+    <bpmn:sequenceFlow id="Flow_SemanticDone" sourceRef="Task_SemanticCheck" targetRef="Gateway_ValidationJoin"/>
+    <bpmn:sequenceFlow id="Flow_CoverageDone" sourceRef="Task_CoverageAnalysis" targetRef="Gateway_ValidationJoin"/>
+    <bpmn:sequenceFlow id="Flow_PerformanceDone" sourceRef="Task_PerformanceCheck" targetRef="Gateway_ValidationJoin"/>
+    <bpmn:sequenceFlow id="Flow_SV4" sourceRef="Gateway_ValidationJoin" targetRef="Task_HealthScore"/>
+    <bpmn:sequenceFlow id="Flow_SV5" sourceRef="Task_HealthScore" targetRef="Gateway_HealthCheck"/>
+    <bpmn:sequenceFlow id="Flow_Healthy" sourceRef="Gateway_HealthCheck" targetRef="Task_SuccessReport">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">health_score >= 0.8</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Unhealthy" sourceRef="Gateway_HealthCheck" targetRef="Task_IssueReport">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">health_score < 0.8</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ReportDone" sourceRef="Task_SuccessReport" targetRef="End_Success"/>
+    <bpmn:sequenceFlow id="Flow_SV6" sourceRef="Task_IssueReport" targetRef="Task_AIFixes"/>
+    <bpmn:sequenceFlow id="Flow_FixesDone" sourceRef="Task_AIFixes" targetRef="End_WithFixes"/>
+    
+  </bpmn:process>
+  
+  <!-- Message Definition -->
+  <bpmn:message id="Message_ValidationRequest" name="ValidationRequest"/>
+  
+</bpmn:definitions>

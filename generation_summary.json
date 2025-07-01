@@ -1,0 +1,22 @@
+{
+  "generated_files": [
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/python/contracts/forge.py",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/python/runtime/forge.py",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/python/operations/forge.py",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/python/templates/python.j2",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/python/commands/forge.py",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/go/semantic_attributes.go",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/rust/semantic_attributes.rs",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/java/semantic_attributes.java",
+    "/Users/sac/.cache/tmp/tmpg3lldzlq/generated/typescript/semantic_attributes.ts"
+  ],
+  "languages": [
+    "python",
+    "go",
+    "rust",
+    "java",
+    "typescript"
+  ],
+  "errors": [],
+  "timestamp": 1751340914.969719
+}

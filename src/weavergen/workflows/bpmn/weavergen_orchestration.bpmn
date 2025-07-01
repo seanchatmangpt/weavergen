@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:weavergen="http://weavergen.ai/bpmn/extensions"
+                  id="Definitions_WeaverGenOrchestration"
+                  targetNamespace="http://weavergen.ai/bpmn">
+  
+  <bpmn:process id="WeaverGenOrchestration" name="WeaverGen 80/20 Orchestration" isExecutable="true">
+    
+    <!-- Start Event -->
+    <bpmn:startEvent id="StartEvent_1" name="Start Generation">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <!-- Load Semantic Conventions -->
+    <bpmn:serviceTask id="Task_LoadSemantics" name="Load Semantic Conventions">
+      <bpmn:documentation>Load and parse semantic convention YAML</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>LoadSemanticsTask</weavergen:class>
+          <weavergen:span>semantic.load</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Validate Semantics -->
+    <bpmn:serviceTask id="Task_ValidateSemantics" name="Validate Semantic Conventions">
+      <bpmn:documentation>Validate semantic convention structure</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ValidateSemanticsTask</weavergen:class>
+          <weavergen:span>semantic.validate</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway for Component Generation -->
+    <bpmn:parallelGateway id="Gateway_Split" name="Split for Components">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_Agents</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Workflows</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Validation</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Models</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Agent Generation Branch -->
+    <bpmn:callActivity id="CallActivity_Agents" name="Generate Agent System" calledElement="AgentGeneration">
+      <bpmn:documentation>Generate AI agent system from semantics</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:span>generation.agents</weavergen:span>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Agents</bpmn:incoming>
+      <bpmn:outgoing>Flow_AgentsDone</bpmn:outgoing>
+    </bpmn:callActivity>
+    
+    <!-- Workflow Generation Branch -->
+    <bpmn:callActivity id="CallActivity_Workflows" name="Generate Workflow System" calledElement="WorkflowGeneration">
+      <bpmn:documentation>Generate workflow orchestration from semantics</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:span>generation.workflows</weavergen:span>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Workflows</bpmn:incoming>
+      <bpmn:outgoing>Flow_WorkflowsDone</bpmn:outgoing>
+    </bpmn:callActivity>
+    
+    <!-- Validation Generation Branch -->
+    <bpmn:callActivity id="CallActivity_Validation" name="Generate Validation System" calledElement="ValidationGeneration">
+      <bpmn:documentation>Generate validation engine from semantics</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:span>generation.validation</weavergen:span>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Validation</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidationDone</bpmn:outgoing>
+    </bpmn:callActivity>
+    
+    <!-- Models Generation Branch -->
+    <bpmn:serviceTask id="Task_GenerateModels" name="Generate Pydantic Models">
+      <bpmn:documentation>Generate data models from semantics</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateModelsTask</weavergen:class>
+          <weavergen:span>generation.models</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Models</bpmn:incoming>
+      <bpmn:outgoing>Flow_ModelsDone</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Join Gateway -->
+    <bpmn:parallelGateway id="Gateway_Join" name="Join Components">
+      <bpmn:incoming>Flow_AgentsDone</bpmn:incoming>
+      <bpmn:incoming>Flow_WorkflowsDone</bpmn:incoming>
+      <bpmn:incoming>Flow_ValidationDone</bpmn:incoming>
+      <bpmn:incoming>Flow_ModelsDone</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Run Integration Tests -->
+    <bpmn:callActivity id="CallActivity_IntegrationTest" name="Run Integration Tests" calledElement="IntegrationTesting">
+      <bpmn:documentation>Test generated components together</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:span>testing.integration</weavergen:span>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:callActivity>
+    
+    <!-- Validation Decision -->
+    <bpmn:exclusiveGateway id="Gateway_ValidationCheck" name="All Tests Pass?">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_Success</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Failure</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Generate Report -->
+    <bpmn:serviceTask id="Task_GenerateReport" name="Generate Validation Report">
+      <bpmn:documentation>Generate comprehensive validation report</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateReportTask</weavergen:class>
+          <weavergen:span>reporting.generate</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Success</bpmn:incoming>
+      <bpmn:incoming>Flow_FixApplied</bpmn:incoming>
+      <bpmn:outgoing>Flow_End</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- AI Fix Generation -->
+    <bpmn:serviceTask id="Task_GenerateFixes" name="Generate AI Fixes">
+      <bpmn:documentation>Use AI to generate fixes for failures</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>GenerateFixesTask</weavergen:class>
+          <weavergen:span>ai.generate_fixes</weavergen:span>
+          <weavergen:aiModel>qwen3:latest</weavergen:aiModel>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Failure</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Apply Fixes -->
+    <bpmn:serviceTask id="Task_ApplyFixes" name="Apply Generated Fixes">
+      <bpmn:documentation>Apply AI-generated fixes to code</bpmn:documentation>
+      <bpmn:extensionElements>
+        <weavergen:serviceTaskConfig>
+          <weavergen:class>ApplyFixesTask</weavergen:class>
+          <weavergen:span>fixes.apply</weavergen:span>
+        </weavergen:serviceTaskConfig>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_FixApplied</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Event -->
+    <bpmn:endEvent id="EndEvent_1" name="Generation Complete">
+      <bpmn:incoming>Flow_End</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_LoadSemantics"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_LoadSemantics" targetRef="Task_ValidateSemantics"/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_ValidateSemantics" targetRef="Gateway_Split"/>
+    <bpmn:sequenceFlow id="Flow_Agents" sourceRef="Gateway_Split" targetRef="CallActivity_Agents"/>
+    <bpmn:sequenceFlow id="Flow_Workflows" sourceRef="Gateway_Split" targetRef="CallActivity_Workflows"/>
+    <bpmn:sequenceFlow id="Flow_Validation" sourceRef="Gateway_Split" targetRef="CallActivity_Validation"/>
+    <bpmn:sequenceFlow id="Flow_Models" sourceRef="Gateway_Split" targetRef="Task_GenerateModels"/>
+    <bpmn:sequenceFlow id="Flow_AgentsDone" sourceRef="CallActivity_Agents" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_WorkflowsDone" sourceRef="CallActivity_Workflows" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_ValidationDone" sourceRef="CallActivity_Validation" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_ModelsDone" sourceRef="Task_GenerateModels" targetRef="Gateway_Join"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Gateway_Join" targetRef="CallActivity_IntegrationTest"/>
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="CallActivity_IntegrationTest" targetRef="Gateway_ValidationCheck"/>
+    <bpmn:sequenceFlow id="Flow_Success" sourceRef="Gateway_ValidationCheck" targetRef="Task_GenerateReport">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">validation_passed == true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Failure" sourceRef="Gateway_ValidationCheck" targetRef="Task_GenerateFixes">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">validation_passed == false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_GenerateFixes" targetRef="Task_ApplyFixes"/>
+    <bpmn:sequenceFlow id="Flow_FixApplied" sourceRef="Task_ApplyFixes" targetRef="Task_GenerateReport"/>
+    <bpmn:sequenceFlow id="Flow_End" sourceRef="Task_GenerateReport" targetRef="EndEvent_1"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

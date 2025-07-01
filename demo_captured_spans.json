@@ -1,0 +1,56 @@
+[
+  {
+    "name": "bpmn.task.LoadSemanticsTask",
+    "timestamp": "2025-06-30T20:40:03.500218",
+    "attributes": {
+      "bpmn.task.type": "service",
+      "bpmn.task.class": "LoadSemanticsTask",
+      "bpmn.task.span": "loadsemanticstask"
+    }
+  },
+  {
+    "name": "bpmn.task.ValidateSemanticsTask",
+    "timestamp": "2025-06-30T20:40:03.500242",
+    "attributes": {
+      "bpmn.task.type": "service",
+      "bpmn.task.class": "ValidateSemanticsTask",
+      "bpmn.task.span": "validatesemanticstask"
+    }
+  },
+  {
+    "name": "bpmn.task.ExtractAgentSemanticsTask",
+    "timestamp": "2025-06-30T20:40:03.500255",
+    "attributes": {
+      "bpmn.task.type": "service",
+      "bpmn.task.class": "ExtractAgentSemanticsTask",
+      "bpmn.task.span": "extractagentsemanticstask"
+    }
+  },
+  {
+    "name": "bpmn.task.GenerateAgentRolesTask",
+    "timestamp": "2025-06-30T20:40:03.500289",
+    "attributes": {
+      "bpmn.task.type": "service",
+      "bpmn.task.class": "GenerateAgentRolesTask",
+      "bpmn.task.span": "generateagentrolestask"
+    }
+  },
+  {
+    "name": "bpmn.task.GenerateSpanValidatorTask",
+    "timestamp": "2025-06-30T20:40:03.500298",
+    "attributes": {
+      "bpmn.task.type": "service",
+      "bpmn.task.class": "GenerateSpanValidatorTask",
+      "bpmn.task.span": "generatespanvalidatortask"
+    }
+  },
+  {
+    "name": "bpmn.task.GenerateHealthScoringTask",
+    "timestamp": "2025-06-30T20:40:03.500315",
+    "attributes": {
+      "bpmn.task.type": "service",
+      "bpmn.task.class": "GenerateHealthScoringTask",
+      "bpmn.task.span": "generatehealthscoringtask"
+    }
+  }
+]

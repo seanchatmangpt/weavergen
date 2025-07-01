@@ -1,0 +1,15 @@
+{
+  "validation_result": {
+    "total_spans": 20,
+    "valid_spans": 20,
+    "health_score": 0.7449999999999999,
+    "semantic_compliance": 0.35,
+    "coverage_score": 0.8,
+    "hierarchy_valid": true,
+    "performance_score": 1.0
+  },
+  "issues": [],
+  "recommendations": [
+    "Improve semantic attribute compliance"
+  ]
+}

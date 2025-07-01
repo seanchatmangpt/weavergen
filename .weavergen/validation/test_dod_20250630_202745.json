@@ -1,0 +1,23 @@
+{
+  "command": "test_dod",
+  "context": {
+    "cli.command": "test_dod",
+    "cli.module": "weavergen.cli",
+    "cli.file": "/Users/sac/dev/weavergen/src/weavergen/cli.py",
+    "cli.timestamp": "2025-06-30T20:27:45.069974",
+    "cli.args": [
+      "test-dod"
+    ]
+  },
+  "validation": {
+    "trust_score": 0.0,
+    "is_done": false,
+    "total_spans": 0,
+    "level1_pass": 0,
+    "level2_pass": 0,
+    "level3_pass": 0,
+    "lies_detected": [],
+    "violations": []
+  },
+  "spans": []
+}

@@ -24,6 +24,7 @@ from .forge_generator import (
     ForgeGenerationConfig,
     WeaverForgeGenerator
 )
+from .cli_dod_enforcer import enforce_dod, cli_span
 # from .semantic import SemanticGenerator  # TODO: Enable when pydantic-ai is configured
 
 app = typer.Typer(
@@ -45,6 +46,7 @@ demo_app = typer.Typer(help="🎭 Demonstrations")
 conversation_app = typer.Typer(help="💬 Generated conversation systems")
 debug_app = typer.Typer(help="🐛 Debugging and diagnostics")
 spiff_app = typer.Typer(help="🔗 Command chaining and workflow orchestration")
+bpmn_app = typer.Typer(help="📋 BPMN-first workflow execution")
 
 app.add_typer(semantic_app, name="semantic")
 app.add_typer(validate_app, name="validate")
@@ -55,9 +57,12 @@ app.add_typer(demo_app, name="demo")
 app.add_typer(conversation_app, name="conversation")
 app.add_typer(debug_app, name="debug")
 app.add_typer(spiff_app, name="spiff")
+app.add_typer(bpmn_app, name="bpmn")
 
 
 @app.command()
+@enforce_dod(require_bpmn=False, min_trust_score=0.7)  # Basic commands don't need BPMN
+@cli_span("cli.generate", bpmn_file="workflows/bpmn/code_generation.bpmn", bpmn_task="Task_Generate")
 def generate(
     registry_url: str = typer.Argument(
         ..., 
@@ -2083,6 +2088,490 @@ def learn_templates(
     else:
         rprint("\n[bold]Template Library Preview:[/bold]")
         rprint(library_code[:500] + "...")
+
+
+# ============= BPMN Commands =============
+
+@bpmn_app.command()
+@enforce_dod(require_bpmn=True, min_trust_score=0.9)  # BPMN commands must have BPMN attribution
+@cli_span("bpmn.execute", bpmn_file="workflows/bpmn/{workflow}.bpmn", bpmn_task="Dynamic")
+def execute(
+    workflow: str = typer.Argument("WeaverGenOrchestration", help="BPMN workflow to execute"),
+    semantic_file: Path = typer.Option(
+        Path("semantic_conventions/weavergen_system.yaml"),
+        "--semantic", "-s",
+        help="Semantic convention file"
+    ),
+    output_dir: Path = typer.Option(
+        Path("bpmn_generated"),
+        "--output", "-o",
+        help="Output directory"
+    ),
+    show_trace: bool = typer.Option(
+        False,
+        "--trace",
+        help="Show execution trace as Mermaid diagram"
+    )
+):
+    """📋 Execute BPMN workflow with full span tracking"""
+    import asyncio
+    from .bpmn_first_engine import BPMNFirstEngine, BPMNExecutionContext
+    
+    rprint(f"[bold cyan]📋 BPMN-FIRST EXECUTION[/bold cyan]")
+    rprint(f"[cyan]🔄 Workflow: {workflow}[/cyan]")
+    rprint(f"[cyan]📄 Semantics: {semantic_file}[/cyan]")
+    rprint(f"[cyan]📁 Output: {output_dir}[/cyan]")
+    
+    # Create engine
+    engine = BPMNFirstEngine()
+    
+    # Create context
+    context = BPMNExecutionContext()
+    context.set("semantic_file", str(semantic_file))
+    context.set("output_dir", str(output_dir))
+    
+    # Execute workflow
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        console=console,
+    ) as progress:
+        task = progress.add_task(f"[cyan]Executing {workflow}...", total=None)
+        
+        result = asyncio.run(engine.execute_workflow(workflow, context))
+        
+        progress.update(task, completed=True)
+    
+    # Show results
+    rprint(f"[green]✅ Workflow completed[/green]")
+    rprint(f"[cyan]📊 Spans generated: {len(result.spans)}[/cyan]")
+    
+    # Show execution report
+    report = engine.generate_execution_report(result)
+    console.print(report)
+    
+    # Show trace if requested
+    if show_trace:
+        mermaid = engine.generate_mermaid_trace(result)
+        rprint("\n[bold cyan]🔍 Execution Trace (Mermaid):[/bold cyan]")
+        rprint(mermaid)
+
+@bpmn_app.command()
+@enforce_dod(require_bpmn=True, min_trust_score=0.85, fail_on_lies=True)
+@cli_span("bpmn.weaver", bpmn_file="workflows/bpmn/weaver_forge_orchestration.bpmn", bpmn_task="Task_InitWeaver")
+def weaver(
+    registry_url: str = typer.Option(
+        "https://github.com/open-telemetry/semantic-conventions",
+        "--registry", "-r",
+        help="Semantic registry URL or path"
+    ),
+    language: str = typer.Option(
+        "python",
+        "--language", "-l",
+        help="Target language (python, multi)"
+    ),
+    output_dir: Path = typer.Option(
+        Path("weaver_generated"),
+        "--output", "-o",
+        help="Output directory"
+    )
+):
+    """🔨 Run BPMN-driven Weaver Forge generation"""
+    import asyncio
+    from .bpmn_weaver_forge import WeaverBPMNEngine
+    
+    rprint("[bold cyan]🔨 BPMN-DRIVEN WEAVER FORGE[/bold cyan]")
+    rprint(f"[cyan]📚 Registry: {registry_url}[/cyan]")
+    rprint(f"[cyan]🐍 Language: {language}[/cyan]")
+    rprint(f"[cyan]📁 Output: {output_dir}[/cyan]")
+    
+    # Create engine
+    engine = WeaverBPMNEngine()
+    
+    # Create context
+    context = {
+        "registry_url": registry_url,
+        "language": language,
+        "output_dir": str(output_dir),
+        "semantic_file": registry_url
+    }
+    
+    try:
+        # Execute Weaver workflow
+        result = asyncio.run(engine.execute_weaver_workflow("WeaverForgeOrchestration", context))
+        
+        if result.get("validation_passed"):
+            rprint("[green]✅ Weaver Forge generation successful[/green]")
+            rprint(f"[cyan]📊 Validation score: {result.get('validation_score', 0):.2%}[/cyan]")
+        else:
+            rprint("[yellow]⚠️ Generation completed with warnings[/yellow]")
+            
+    except Exception as e:
+        rprint(f"[red]❌ Weaver Forge failed: {e}[/red]")
+        raise typer.Exit(1)
+
+@bpmn_app.command()
+def orchestrate(
+    semantic_file: Path = typer.Option(
+        Path("semantic_conventions/weavergen_system.yaml"),
+        "--semantic", "-s",
+        help="Semantic convention file"
+    ),
+    output_dir: Path = typer.Option(
+        Path("bpmn_generated"),
+        "--output", "-o", 
+        help="Output directory"
+    ),
+    test: bool = typer.Option(
+        True,
+        "--test/--no-test",
+        help="Run tests after generation"
+    )
+):
+    """🎯 Run full BPMN orchestration workflow"""
+    import asyncio
+    from .bpmn_first_engine import run_bpmn_first_generation
+    
+    rprint("[bold cyan]🎯 BPMN-FIRST ORCHESTRATION[/bold cyan]")
+    
+    try:
+        result = asyncio.run(run_bpmn_first_generation(semantic_file, output_dir))
+        
+        if result["success"]:
+            rprint(f"[green]✅ Orchestration successful[/green]")
+            rprint(f"[cyan]📊 Total spans: {result['spans_generated']}[/cyan]")
+            
+            if test:
+                # Run generated agent test
+                rprint("\n[cyan]🧪 Testing generated system...[/cyan]")
+                subprocess.run(["weavergen", "agents", "communicate", "--agents", "3"])
+        else:
+            rprint("[red]❌ Orchestration failed[/red]")
+            
+    except Exception as e:
+        rprint(f"[red]❌ Error: {e}[/red]")
+        raise typer.Exit(1)
+
+@bpmn_app.command()
+def list():
+    """📝 List available BPMN workflows"""
+    from pathlib import Path
+    
+    bpmn_dir = Path("src/weavergen/workflows/bpmn")
+    
+    table = Table(title="Available BPMN Workflows", show_header=True, header_style="bold magenta")
+    table.add_column("Workflow", style="cyan", width=30)
+    table.add_column("File", style="green")
+    table.add_column("Type", style="yellow")
+    
+    if bpmn_dir.exists():
+        for bpmn_file in bpmn_dir.glob("*.bpmn"):
+            workflow_name = bpmn_file.stem
+            workflow_type = "Orchestration" if "orchestration" in workflow_name else "Generation"
+            table.add_row(workflow_name, bpmn_file.name, workflow_type)
+    else:
+        table.add_row("No workflows found", "-", "-")
+    
+    console.print(table)
+
+@bpmn_app.command()
+def validate_spans(
+    span_file: Optional[Path] = typer.Option(None, "--file", "-f", help="Span file to validate"),
+    capture: bool = typer.Option(False, "--capture", help="Capture new spans"),
+    output_dir: Path = typer.Option(Path("."), "--output", "-o", help="Output directory for reports")
+):
+    """🔍 Validate spans from BPMN executions"""
+    import asyncio
+    from .span_validator import SpanCaptureSystem, SpanValidator, SpanReportGenerator
+    
+    rprint("[bold cyan]🔍 SPAN VALIDATION[/bold cyan]")
+    
+    if capture:
+        # Capture new spans
+        rprint("[cyan]📡 Capturing spans from execution...[/cyan]")
+        capture_system = SpanCaptureSystem()
+        
+        # Run a test workflow to generate spans
+        from .bpmn_weaver_forge import WeaverBPMNEngine
+        engine = WeaverBPMNEngine()
+        context = {
+            "registry_url": "semantic_conventions/weavergen_system.yaml",
+            "language": "python",
+            "output_dir": str(output_dir)
+        }
+        
+        try:
+            asyncio.run(engine.execute_weaver_workflow("WeaverForgeOrchestration", context))
+        except:
+            pass  # Continue even if workflow fails
+        
+        # Save captured spans
+        span_file = output_dir / "captured_spans.json"
+        count = capture_system.save_spans(span_file)
+        rprint(f"[green]✅ Captured {count} spans to {span_file}[/green]")
+    
+    # Load spans
+    if not span_file or not span_file.exists():
+        rprint("[red]❌ No span file provided or found[/red]")
+        raise typer.Exit(1)
+    
+    with open(span_file) as f:
+        spans = json.load(f)
+    
+    rprint(f"[cyan]📊 Loaded {len(spans)} spans from {span_file}[/cyan]")
+    
+    # Validate spans
+    validator = SpanValidator()
+    result = validator.validate_spans(spans)
+    
+    # Generate reports
+    reporter = SpanReportGenerator()
+    
+    # Table report
+    table = reporter.generate_table_report(result)
+    console.print(table)
+    
+    # Tree report
+    if len(spans) > 0:
+        tree = reporter.generate_tree_report(spans)
+        console.print("\n[bold]Span Hierarchy:[/bold]")
+        console.print(tree)
+    
+    # Issues and recommendations
+    if result.issues:
+        rprint("\n[red]Issues:[/red]")
+        for issue in result.issues:
+            rprint(f"  • {issue}")
+    
+    if result.recommendations:
+        rprint("\n[yellow]Recommendations:[/yellow]")
+        for rec in result.recommendations:
+            rprint(f"  • {rec}")
+    
+    # Save reports
+    report_file = output_dir / "span_validation_report.json"
+    with open(report_file, 'w') as f:
+        json.dump({
+            "validation_result": {
+                "total_spans": result.total_spans,
+                "valid_spans": result.valid_spans,
+                "health_score": result.health_score,
+                "semantic_compliance": result.semantic_compliance,
+                "coverage_score": result.coverage_score,
+                "hierarchy_valid": result.hierarchy_valid,
+                "performance_score": result.performance_score
+            },
+            "issues": result.issues,
+            "recommendations": result.recommendations
+        }, f, indent=2)
+    
+    rprint(f"\n[cyan]💾 Report saved to {report_file}[/cyan]")
+    
+    if result.health_score >= 0.8:
+        rprint(f"[green]✅ Validation PASSED with health score: {result.health_score:.1%}[/green]")
+    else:
+        rprint(f"[red]❌ Validation FAILED with health score: {result.health_score:.1%}[/red]")
+
+@bpmn_app.command()
+def validate(
+    bpmn_file: Path = typer.Argument(..., help="BPMN file to validate")
+):
+    """✅ Validate BPMN workflow definition"""
+    import xml.etree.ElementTree as ET
+    
+    rprint(f"[cyan]🔍 Validating BPMN: {bpmn_file}[/cyan]")
+    
+    try:
+        # Parse XML
+        tree = ET.parse(bpmn_file)
+        root = tree.getroot()
+        
+        # Extract process info
+        namespaces = {'bpmn': 'http://www.omg.org/spec/BPMN/20100524/MODEL'}
+        processes = root.findall('.//bpmn:process', namespaces)
+        
+        rprint(f"[green]✅ Valid BPMN 2.0 file[/green]")
+        rprint(f"[cyan]📋 Processes found: {len(processes)}[/cyan]")
+        
+        for process in processes:
+            process_id = process.get('id', 'Unknown')
+            process_name = process.get('name', 'Unnamed')
+            
+            # Count elements
+            tasks = process.findall('.//bpmn:serviceTask', namespaces)
+            gateways = process.findall('.//bpmn:parallelGateway', namespaces) + \
+                      process.findall('.//bpmn:exclusiveGateway', namespaces)
+            
+            rprint(f"\n[bold]Process: {process_name}[/bold]")
+            rprint(f"  ID: {process_id}")
+            rprint(f"  Service Tasks: {len(tasks)}")
+            rprint(f"  Gateways: {len(gateways)}")
+            
+    except Exception as e:
+        rprint(f"[red]❌ Invalid BPMN: {e}[/red]")
+        raise typer.Exit(1)
+
+@bpmn_app.command()
+def ultralight(
+    workflow: str = typer.Option("demo", "--workflow", "-w", help="Workflow: demo, orchestrate, 8020"),
+    semantic_file: Path = typer.Option(Path("test_semantic.yaml"), "--semantic", "-s", help="Semantic file"),
+    output_dir: Path = typer.Option(Path("generated_8020"), "--output", "-o", help="Output directory")
+):
+    """⚡ 80/20 BPMN Ultralight Engine - Minimal BPMN with Maximum Impact"""
+    import asyncio
+    
+    rprint("[bold cyan]⚡ 80/20 BPMN ULTRALIGHT ENGINE[/bold cyan]")
+    rprint(f"[cyan]🔄 Workflow: {workflow}[/cyan]")
+    rprint(f"[cyan]📄 Semantics: {semantic_file}[/cyan]")
+    rprint(f"[cyan]📁 Output: {output_dir}[/cyan]")
+    
+    async def run_ultralight():
+        if workflow == "demo" or workflow == "8020":
+            from .bpmn_ultralight_engine import demo_8020_bpmn_workflow
+            await demo_8020_bpmn_workflow()
+        elif workflow == "orchestrate":
+            from .bpmn_orchestrator import run_bpmn_orchestration
+            result = await run_bpmn_orchestration(semantic_file, output_dir)
+            rprint(f"\n[bold green]🎯 Ultralight Orchestration Complete[/bold green]")
+            rprint(f"Success: {result.success}")
+            rprint(f"Spans Generated: {result.spans_generated}")
+            rprint(f"Health Score: {result.health_score}")
+            rprint(f"Execution Time: {result.execution_time:.2f}s")
+        else:
+            rprint(f"[red]Unknown ultralight workflow: {workflow}[/red]")
+    
+    asyncio.run(run_ultralight())
+
+@bpmn_app.command()
+def spans_live(
+    workflow: str = typer.Option("WeaverGen8020", "--workflow", "-w", help="Workflow to run"),
+    format: str = typer.Option("mermaid", "--format", "-f", help="Output format: table, mermaid, json")
+):
+    """📊 Run BPMN workflow and analyze spans in real-time"""
+    import asyncio
+    
+    rprint("[bold cyan]📊 LIVE SPAN ANALYSIS[/bold cyan]")
+    
+    async def run_live_analysis():
+        from .bpmn_ultralight_engine import BPMNUltralightEngine, create_weavergen_8020_workflow
+        
+        # Create engine and workflow
+        engine = BPMNUltralightEngine()
+        workflow_name = create_weavergen_8020_workflow(engine)
+        
+        # Execute workflow
+        context = await engine.execute_workflow(workflow_name)
+        
+        # Analyze spans
+        rprint(f"\n[bold green]📊 Spans Analysis ({format})[/bold green]")
+        
+        if format == "table":
+            table = engine.generate_execution_report(context)
+            console.print(table)
+        elif format == "mermaid":
+            mermaid = engine.generate_mermaid_diagram(context)
+            rprint(f"```mermaid\n{mermaid}\n```")
+        elif format == "json":
+            import json
+            spans_data = {
+                "spans": context.spans,
+                "variables": context.variables,
+                "total_spans": len(context.spans)
+            }
+            rprint(json.dumps(spans_data, indent=2))
+        
+        rprint(f"\n[bold magenta]✅ Live analysis complete: {len(context.spans)} spans processed[/bold magenta]")
+    
+    asyncio.run(run_live_analysis())
+
+@bpmn_app.command()
+def validate_8020(
+    capture: bool = typer.Option(True, "--capture/--no-capture", help="Capture spans during execution"),
+    health_threshold: float = typer.Option(0.7, "--threshold", "-t", help="Health score threshold")
+):
+    """🎯 Validate 80/20 BPMN implementation with spans"""
+    import asyncio
+    
+    rprint("[bold cyan]🎯 80/20 BPMN VALIDATION[/bold cyan]")
+    
+    async def validate_8020():
+        from .bpmn_orchestrator import BPMNWeaverGenOrchestrator
+        
+        # Run orchestration
+        orchestrator = BPMNWeaverGenOrchestrator(
+            Path("test_semantic.yaml"), 
+            Path("generated_8020_validation")
+        )
+        
+        result = await orchestrator.execute_full_workflow()
+        
+        # Validate results
+        rprint(f"\n[bold green]📊 Validation Results[/bold green]")
+        rprint(f"Success: {'✅' if result.success else '❌'} {result.success}")
+        rprint(f"Spans Generated: 📊 {result.spans_generated}")
+        rprint(f"Health Score: {'🟢' if result.health_score >= health_threshold else '🔴'} {result.health_score:.2f}")
+        rprint(f"Execution Time: ⏱️ {result.execution_time:.2f}s")
+        
+        if result.errors:
+            rprint(f"\n[red]❌ Errors:[/red]")
+            for error in result.errors:
+                rprint(f"  • {error}")
+        
+        # Mermaid diagram
+        if result.mermaid_diagram:
+            rprint(f"\n[bold blue]🎯 Execution Flow[/bold blue]")
+            rprint(f"```mermaid\n{result.mermaid_diagram}\n```")
+        
+        # Final assessment
+        if result.success and result.health_score >= health_threshold:
+            rprint(f"\n[bold green]🎉 80/20 BPMN VALIDATION PASSED![/bold green]")
+        else:
+            rprint(f"\n[bold red]❌ 80/20 BPMN VALIDATION FAILED[/bold red]")
+            raise typer.Exit(1)
+    
+    asyncio.run(validate_8020())
+
+
+@app.command()
+@enforce_dod(require_bpmn=True, min_trust_score=0.95, fail_on_lies=True)
+def test_dod():
+    """🧪 Test Definition of Done enforcement"""
+    rprint("[cyan]Testing DoD enforcement...[/cyan]")
+    
+    # This command will FAIL because:
+    # 1. No @cli_span decorator with BPMN attribution
+    # 2. No spans generated inside the function
+    # 3. Trust score will be 0%
+    
+    rprint("[yellow]This command should fail DoD validation![/yellow]")
+    return "This won't matter"
+
+
+@app.command()
+@enforce_dod(require_bpmn=True, min_trust_score=0.8)
+@cli_span("test.dod_valid", 
+          bpmn_file="src/weavergen/workflows/bpmn/weavergen_orchestration.bpmn", 
+          bpmn_task="Task_LoadSemantics")
+def test_dod_valid():
+    """✅ Test DoD with proper attribution"""
+    from opentelemetry import trace
+    
+    rprint("[green]Testing DoD with proper BPMN attribution...[/green]")
+    
+    tracer = trace.get_tracer(__name__)
+    
+    # Generate some child spans
+    with tracer.start_as_current_span("test.operation") as span:
+        span.set_attribute("test.type", "validation")
+        span.set_attribute("execution.success", True)
+        rprint("  ✓ Generated child span")
+    
+    with tracer.start_as_current_span("test.verification") as span:
+        span.set_attribute("verification.passed", True)
+        rprint("  ✓ Verification complete")
+    
+    rprint("[green]This command should PASS DoD validation![/green]")
+    return "Success"
 
 
 if __name__ == "__main__":

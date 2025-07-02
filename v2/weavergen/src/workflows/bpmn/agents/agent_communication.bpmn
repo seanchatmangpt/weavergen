@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  id="Definitions_AgentCommunication" 
+                  targetNamespace="http://weavergen.com/agents">
+  
+  <bpmn:process id="AgentCommunicationTest" name="Agent Communication Test" isExecutable="true">
+    
+    <bpmn:startEvent id="StartEvent" name="Start Communication Test">
+      <bpmn:outgoing>Flow_ToSetupModels</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <bpmn:scriptTask id="Task_SetupModels" name="Setup Test Models">
+      <bpmn:incoming>Flow_ToSetupModels</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCoordinate</bpmn:outgoing>
+      <bpmn:script>agent_setup_models()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_CoordinateAgents" name="Initialize Agent Coordination">
+      <bpmn:incoming>Flow_ToCoordinate</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToTestComm</bpmn:outgoing>
+      <bpmn:script>agent_coordinate_agents()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_TestCommunication" name="Test Agent Communication">
+      <bpmn:incoming>Flow_ToTestComm</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToDisplayResults</bpmn:outgoing>
+      <bpmn:script>agent_test_communication()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_DisplayResults" name="Display Test Results">
+      <bpmn:incoming>Flow_ToDisplayResults</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEnd</bpmn:outgoing>
+      <bpmn:script>agent_display_results()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:endEvent id="EndEvent" name="Test Complete">
+      <bpmn:incoming>Flow_ToEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToSetupModels" sourceRef="StartEvent" targetRef="Task_SetupModels"/>
+    <bpmn:sequenceFlow id="Flow_ToCoordinate" sourceRef="Task_SetupModels" targetRef="Task_CoordinateAgents"/>
+    <bpmn:sequenceFlow id="Flow_ToTestComm" sourceRef="Task_CoordinateAgents" targetRef="Task_TestCommunication"/>
+    <bpmn:sequenceFlow id="Flow_ToDisplayResults" sourceRef="Task_TestCommunication" targetRef="Task_DisplayResults"/>
+    <bpmn:sequenceFlow id="Flow_ToEnd" sourceRef="Task_DisplayResults" targetRef="EndEvent"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

@@ -1,0 +1,7 @@
+name: test-registry
+description: Semantic conventions for test-registry telemetry
+semconv_version: 0.1.0
+schema_base_url: https://test-registry.com/schemas/
+dependencies:
+  - name: otel
+    registry_path: https://github.com/open-telemetry/semantic-conventions/archive/refs/tags/v1.34.0.zip[model]

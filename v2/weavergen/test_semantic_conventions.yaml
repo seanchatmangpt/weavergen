@@ -1,0 +1,51 @@
+groups:
+  # Example semantic convention for testing agents
+  - id: test.system
+    prefix: test.sys
+    type: attribute_group
+    brief: 'Test system semantic conventions for agent testing'
+    attributes:
+      - id: service.name
+        type: string
+        requirement_level: required
+        brief: 'The name of the service'
+        examples: ['api-gateway', 'user-service', 'payment-processor']
+      
+      - id: service.version
+        type: string
+        requirement_level: recommended
+        brief: 'The version of the service'
+        examples: ['1.0.0', '2.1.3', '3.0.0-beta']
+  
+  # Test span conventions
+  - id: test.database
+    prefix: test.db
+    type: span
+    brief: 'Database operation spans for testing'
+    span_kind: client
+    attributes:
+      - ref: test.sys.service.name
+      - id: db.operation
+        type: string
+        requirement_level: required
+        brief: 'The database operation type'
+        examples: ['select', 'insert', 'update', 'delete']
+      
+      - id: db.table.name
+        type: string
+        requirement_level: recommended
+        brief: 'The database table name'
+        examples: ['users', 'orders', 'products']
+
+  # Test metrics conventions  
+  - id: test.metrics
+    prefix: test.metric
+    type: metric_group
+    brief: 'Test metrics for agent validation'
+    attributes:
+      - ref: test.sys.service.name
+      - id: metric.type
+        type: string
+        requirement_level: required
+        brief: 'The type of metric'
+        examples: ['counter', 'gauge', 'histogram']

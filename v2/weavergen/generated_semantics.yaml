@@ -1,0 +1,33 @@
+# Generated semantic conventions for: test API service
+groups:
+  - id: generated.service
+    prefix: service
+    type: attribute_group
+    brief: 'Generated attributes for service identification'
+    attributes:
+      - id: name
+        type: string
+        requirement_level: required
+        brief: 'Service name'
+        examples: ['api-gateway', 'user-service']
+      - id: version
+        type: string
+        requirement_level: recommended
+        brief: 'Service version'
+        examples: ['1.0.0', '2.1.3']
+
+  - id: generated.operation
+    prefix: operation
+    type: span
+    brief: 'Generated span for test API service'
+    attributes:
+      - ref: service.name
+      - id: duration_ms
+        type: int
+        requirement_level: recommended
+        brief: 'Operation duration in milliseconds'
+      - id: status
+        type: string
+        requirement_level: required
+        brief: 'Operation status'
+        examples: ['success', 'failure', 'timeout']

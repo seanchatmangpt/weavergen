@@ -1,0 +1,40 @@
+# Weaver configuration for generating WeaverGen tool-based CLI
+
+schema_url: https://weavergen.dev/schemas/1.0.0
+registry_base_url: semantic_conventions/
+
+excluded_namespaces: []
+excluded_attributes: []
+
+text_maps:
+  - type: markdown
+    output: CLI_GENERATED_README.md
+
+templates:
+  # Main CLI application
+  - pattern: tool_cli_main.j2
+    filter: >
+      groups | selectattr("type", "equalto", "application") | first
+    output: src/weavergen/cli_generated.py
+    
+  # Tool command groups
+  - pattern: tool_command_group.j2
+    filter: >
+      groups | selectattr("type", "equalto", "command_group")
+    output: >
+      src/weavergen/tools/{{ (groups | selectattr("type", "equalto", "command_group") | first).attributes | selectattr("id", "equalto", "tool.name") | first | attr("value") }}.py
+    apply_for_each: true
+    
+  # CLI metrics instrumentation
+  - pattern: cli_metrics.j2
+    filter: >
+      groups | selectattr("type", "equalto", "metric")
+    output: src/weavergen/cli_metrics.py
+
+# Template rendering parameters
+params:
+  cli:
+    enable_telemetry: true
+    enable_rich_output: true
+    enable_progress_bars: true
+    single_binary_mode: true

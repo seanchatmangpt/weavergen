@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  id="Definitions_AgentAnalysis" 
+                  targetNamespace="http://weavergen.com/agents">
+  
+  <bpmn:process id="AgentAnalysisProcess" name="AI Agent Semantic Analysis" isExecutable="true">
+    
+    <bpmn:startEvent id="StartEvent" name="Start Analysis">
+      <bpmn:outgoing>Flow_ToLoadSemantics</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <bpmn:scriptTask id="Task_LoadSemantics" name="Load Semantic Conventions">
+      <bpmn:incoming>Flow_ToLoadSemantics</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToSetupModels</bpmn:outgoing>
+      <bpmn:script>agent_load_semantic_conventions()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_SetupModels" name="Setup AI Models">
+      <bpmn:incoming>Flow_ToSetupModels</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToAnalyze</bpmn:outgoing>
+      <bpmn:script>agent_setup_models()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_AnalyzeQuality" name="AI Quality Analysis">
+      <bpmn:incoming>Flow_ToAnalyze</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCheckDeep</bpmn:outgoing>
+      <bpmn:script>agent_analyze_semantic_quality()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:exclusiveGateway id="Gateway_CheckDeep" name="Deep Analysis?">
+      <bpmn:incoming>Flow_ToCheckDeep</bpmn:incoming>
+      <bpmn:outgoing>Flow_YesDeep</bpmn:outgoing>
+      <bpmn:outgoing>Flow_NoDeep</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <bpmn:scriptTask id="Task_DeepAnalysis" name="Deep AI Analysis">
+      <bpmn:incoming>Flow_YesDeep</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromDeep</bpmn:outgoing>
+      <bpmn:script>agent_analyze_semantic_quality()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_DisplayResults" name="Display Analysis Results">
+      <bpmn:incoming>Flow_NoDeep</bpmn:incoming>
+      <bpmn:incoming>Flow_FromDeep</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEnd</bpmn:outgoing>
+      <bpmn:script>agent_display_results()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:endEvent id="EndEvent" name="Analysis Complete">
+      <bpmn:incoming>Flow_ToEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToLoadSemantics" sourceRef="StartEvent" targetRef="Task_LoadSemantics"/>
+    <bpmn:sequenceFlow id="Flow_ToSetupModels" sourceRef="Task_LoadSemantics" targetRef="Task_SetupModels"/>
+    <bpmn:sequenceFlow id="Flow_ToAnalyze" sourceRef="Task_SetupModels" targetRef="Task_AnalyzeQuality"/>
+    <bpmn:sequenceFlow id="Flow_ToCheckDeep" sourceRef="Task_AnalyzeQuality" targetRef="Gateway_CheckDeep"/>
+    <bpmn:sequenceFlow id="Flow_YesDeep" name="Yes" sourceRef="Gateway_CheckDeep" targetRef="Task_DeepAnalysis">
+      <bpmn:conditionExpression>deep_analysis == True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_NoDeep" name="No" sourceRef="Gateway_CheckDeep" targetRef="Task_DisplayResults">
+      <bpmn:conditionExpression>deep_analysis == False</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_FromDeep" sourceRef="Task_DeepAnalysis" targetRef="Task_DisplayResults"/>
+    <bpmn:sequenceFlow id="Flow_ToEnd" sourceRef="Task_DisplayResults" targetRef="EndEvent"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

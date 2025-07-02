@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:spiffworkflow="http://spiffworkflow.org/bpmn/schema/1.0/core" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.0.0">
+  <bpmn:process id="SemanticGeneration" name="Semantic Code Generation" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start Generation">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <bpmn:serviceTask id="ValidateInput" name="Validate Semantic Convention">
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          <spiffworkflow:parameters>
+            <spiffworkflow:parameter id="operation_name" type="str">validate_semantic_convention</spiffworkflow:parameter>
+            <spiffworkflow:parameter id="semantic_file" type="str">semantic_file</spiffworkflow:parameter>
+          </spiffworkflow:parameters>
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <bpmn:exclusiveGateway id="ValidationGateway" name="Valid?">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Valid</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Invalid</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <bpmn:serviceTask id="GenerateCode" name="Generate Semantic Code">
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          <spiffworkflow:parameters>
+            <spiffworkflow:parameter id="operation_name" type="str">generate_semantic_code</spiffworkflow:parameter>
+            <spiffworkflow:parameter id="semantic_file" type="str">semantic_file</spiffworkflow:parameter>
+            <spiffworkflow:parameter id="target_language" type="str">target_language</spiffworkflow:parameter>
+          </spiffworkflow:parameters>
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Valid</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <bpmn:serviceTask id="ExecuteWeaver" name="Execute Weaver Forge">
+      <bpmn:extensionElements>
+        <spiffworkflow:serviceTaskOperator>
+          <spiffworkflow:parameters>
+            <spiffworkflow:parameter id="operation_name" type="str">execute_weaver_forge</spiffworkflow:parameter>
+            <spiffworkflow:parameter id="generated_files" type="str">generated_files</spiffworkflow:parameter>
+          </spiffworkflow:parameters>
+        </spiffworkflow:serviceTaskOperator>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <bpmn:endEvent id="EndSuccess" name="Generation Complete">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="EndError" name="Validation Failed">
+      <bpmn:incoming>Flow_Invalid</bpmn:incoming>
+      <bpmn:errorEventDefinition errorRef="Error_ValidationFailed" />
+    </bpmn:endEvent>
+    
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="ValidateInput" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="ValidateInput" targetRef="ValidationGateway" />
+    <bpmn:sequenceFlow id="Flow_Valid" name="Valid" sourceRef="ValidationGateway" targetRef="GenerateCode">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">validation_result['valid'] == True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Invalid" name="Invalid" sourceRef="ValidationGateway" targetRef="EndError">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">validation_result['valid'] == False</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="GenerateCode" targetRef="ExecuteWeaver" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="ExecuteWeaver" targetRef="EndSuccess" />
+  </bpmn:process>
+  
+  <bpmn:error id="Error_ValidationFailed" name="ValidationFailed" errorCode="VALIDATION_FAILED" />
+  
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="SemanticGeneration">
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="270" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="370" y="117" />
+        <di:waypoint x="425" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Valid_di" bpmnElement="Flow_Valid">
+        <di:waypoint x="475" y="117" />
+        <di:waypoint x="530" y="117" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="491" y="99" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Invalid_di" bpmnElement="Flow_Invalid">
+        <di:waypoint x="450" y="142" />
+        <di:waypoint x="450" y="222" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="452" y="179" width="33" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="630" y="117" />
+        <di:waypoint x="690" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="790" y="117" />
+        <di:waypoint x="852" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="157" y="142" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kl0xit_di" bpmnElement="ValidateInput">
+        <dc:Bounds x="270" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0xg9zzm_di" bpmnElement="ValidationGateway" isMarkerVisible="true">
+        <dc:Bounds x="425" y="92" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="435" y="62" width="31" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jkl2mn_di" bpmnElement="GenerateCode">
+        <dc:Bounds x="530" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_2abc3de_di" bpmnElement="ExecuteWeaver">
+        <dc:Bounds x="690" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0x6hw2c_di" bpmnElement="EndSuccess">
+        <dc:Bounds x="852" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="844" y="142" width="52" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1abc2de_di" bpmnElement="EndError">
+        <dc:Bounds x="432" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="409" y="265" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

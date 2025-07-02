@@ -1,0 +1,44 @@
+groups:
+  # Service-specific spans
+  - id: myapp.database
+    prefix: myapp.db
+    type: span
+    brief: 'Database operations in MyApp service'
+    stability: development
+    span_kind: client
+    attributes:
+      - ref: myapp.common.service.component
+        requirement_level: required
+      - ref: db.system
+        requirement_level: required
+      - ref: db.operation.name
+        requirement_level: required
+      - ref: db.operation.batch.size
+        requirement_level:
+          conditionally_required: If using batch operations
+      - id: cache.hit
+        type: boolean
+        requirement_level: recommended
+        brief: 'Whether the query result was served from cache'
+
+  # Service-specific events
+  - id: myapp.cache_invalidation
+    prefix: myapp.cache
+    type: event
+    brief: 'Cache invalidation event'
+    stability: development
+    attributes:
+      - id: cache.key
+        type: string
+        requirement_level: required
+        brief: 'The cache key that was invalidated'
+      - id: cache.reason
+        type: string
+        requirement_level: recommended
+        brief: 'Reason for cache invalidation'
+        examples: ['ttl_expired', 'manual_flush', 'memory_pressure']
+
+# Import database attributes from OTEL
+imports:
+  attributes:
+    - db.*

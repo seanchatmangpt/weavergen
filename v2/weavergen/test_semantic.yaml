@@ -1,0 +1,47 @@
+groups:
+  - id: weavergen.system
+    prefix: weavergen
+    type: attribute_group
+    brief: 'Core attributes for WeaverGen system operations'
+    attributes:
+      - id: agent.role
+        type: string
+        requirement_level: required
+        brief: 'The role of the agent in the system'
+        examples: ['orchestrator', 'validator', 'generator']
+      - id: operation.type
+        type: 
+          allow_custom_values: true
+          members:
+            - id: generate
+              value: "generate"
+              brief: 'Code generation operation'
+            - id: validate
+              value: "validate"
+              brief: 'Validation operation'
+            - id: transform
+              value: "transform"
+              brief: 'Transformation operation'
+        requirement_level: required
+        brief: 'Type of operation being performed'
+      - id: semantic.version
+        type: string
+        requirement_level: recommended
+        brief: 'Version of semantic conventions'
+        examples: ['1.0.0', '2.0.0']
+
+  - id: weavergen.forge
+    prefix: forge
+    type: span
+    brief: 'Spans for Weaver Forge operations'
+    attributes:
+      - ref: weavergen.system.operation.type
+      - id: language
+        type: string
+        requirement_level: recommended
+        brief: 'Target programming language'
+        examples: ['python', 'go', 'rust']
+      - id: template
+        type: string
+        requirement_level: optional
+        brief: 'Template used for generation'

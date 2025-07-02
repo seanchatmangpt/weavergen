@@ -1,0 +1,607 @@
+# Semantic conventions for WeaverGen tool-based CLI structure
+
+groups:
+  # Root CLI Application
+  - id: cli.weavergen
+    type: application
+    brief: "WeaverGen CLI - Tool-based semantic command structure"
+    attributes:
+      - id: app.name
+        type: string
+        value: "weavergen"
+      - id: app.help
+        type: string
+        value: "🌟 WeaverGen: OpenTelemetry-powered code generation toolkit"
+      - id: app.version
+        type: string
+        value: "2.0.0"
+
+  # Tool: workflow (combines BPMN + SpiffWorkflow)
+  - id: cli.tool.workflow
+    type: command_group
+    brief: "BPMN workflow operations"
+    attributes:
+      - id: tool.name
+        value: "workflow"
+      - id: tool.help
+        value: "BPMN workflow operations (SpiffWorkflow + BPMN)"
+      - id: tool.commands
+        value: ["create", "run", "validate", "list", "debug", "visualize", "export"]
+
+  - id: cli.tool.workflow.create
+    type: command
+    brief: "Create new BPMN workflow"
+    attributes:
+      - id: name
+        value: "create"
+      - id: help
+        value: "Create a new BPMN workflow from template or scratch"
+      - id: arguments
+        value:
+          - name: "name"
+            type: "str"
+            help: "Workflow name"
+      - id: options
+        value:
+          - name: "template"
+            type: "Optional[str]"
+            default: "null"
+            help: "Template to use (basic, semantic-processing, agent-orchestration)"
+          - name: "output"
+            type: "Path"
+            default: "Path('./workflows')"
+            short: "-o"
+            help: "Output directory"
+
+  - id: cli.tool.workflow.run
+    type: command
+    brief: "Execute BPMN workflow"
+    attributes:
+      - id: name
+        value: "run"
+      - id: help
+        value: "Execute a BPMN workflow with full telemetry"
+      - id: arguments
+        value:
+          - name: "workflow"
+            type: "str"
+            help: "Workflow name or file"
+      - id: options
+        value:
+          - name: "data"
+            type: "Optional[Path]"
+            default: "null"
+            short: "-d"
+            help: "Input data file (JSON/YAML)"
+          - name: "trace"
+            type: "bool"
+            default: "false"
+            short: "-t"
+            help: "Enable execution tracing"
+          - name: "output"
+            type: "Optional[Path]"
+            default: "null"
+            short: "-o"
+            help: "Output directory for results"
+
+  # Tool: weaver (OTel Weaver operations)
+  - id: cli.tool.weaver
+    type: command_group
+    brief: "OTel Weaver operations"
+    attributes:
+      - id: tool.name
+        value: "weaver"
+      - id: tool.help
+        value: "OpenTelemetry Weaver code generation"
+      - id: tool.commands
+        value: ["generate", "validate", "templates", "install", "check"]
+
+  - id: cli.tool.weaver.generate
+    type: command
+    brief: "Generate code using Weaver"
+    attributes:
+      - id: name
+        value: "generate"
+      - id: help
+        value: "Generate code from semantic conventions using OTel Weaver"
+      - id: arguments
+        value:
+          - name: "semantic_file"
+            type: "Path"
+            help: "Semantic convention YAML file"
+      - id: options
+        value:
+          - name: "language"
+            type: "str"
+            default: "'python'"
+            short: "-l"
+            help: "Target language (python, go, rust, java)"
+          - name: "output"
+            type: "Path"
+            default: "Path('./generated')"
+            short: "-o"
+            help: "Output directory"
+          - name: "template"
+            type: "Optional[str]"
+            default: "null"
+            short: "-t"
+            help: "Custom template name"
+
+  - id: cli.tool.weaver.validate
+    type: command
+    brief: "Validate semantic conventions"
+    attributes:
+      - id: name
+        value: "validate"
+      - id: help
+        value: "Validate semantic convention files"
+      - id: arguments
+        value:
+          - name: "semantic_file"
+            type: "Path"
+            help: "Semantic convention file or directory"
+      - id: options
+        value:
+          - name: "strict"
+            type: "bool"
+            default: "false"
+            short: "-s"
+            help: "Enable strict validation"
+          - name: "format"
+            type: "str"
+            default: "'table'"
+            short: "-f"
+            help: "Output format (table, json, yaml)"
+
+  # Tool: forge (Advanced Weaver Forge operations)
+  - id: cli.tool.forge
+    type: command_group
+    brief: "Weaver Forge advanced operations"
+    attributes:
+      - id: tool.name
+        value: "forge"
+      - id: tool.help
+        value: "Advanced Weaver Forge operations"
+      - id: tool.commands
+        value: ["init", "pipeline", "agents", "optimize"]
+
+  - id: cli.tool.forge.init
+    type: command
+    brief: "Initialize semantic registry"
+    attributes:
+      - id: name
+        value: "init"
+      - id: help
+        value: "Initialize a new semantic convention registry"
+      - id: arguments
+        value:
+          - name: "name"
+            type: "str"
+            help: "Registry name"
+      - id: options
+        value:
+          - name: "template"
+            type: "str"
+            default: "'enterprise'"
+            help: "Registry template (basic, enterprise, microservices)"
+          - name: "output"
+            type: "Path"
+            default: "Path('./semantic_conventions')"
+            short: "-o"
+            help: "Output directory"
+
+  - id: cli.tool.forge.pipeline
+    type: command
+    brief: "Run complete Forge pipeline"
+    attributes:
+      - id: name
+        value: "pipeline"
+      - id: help
+        value: "Execute complete Forge pipeline: semantics → code → agents → validation"
+      - id: arguments
+        value:
+          - name: "semantic_file"
+            type: "Path"
+            help: "Semantic convention file"
+      - id: options
+        value:
+          - name: "agents"
+            type: "int"
+            default: "5"
+            short: "-a"
+            help: "Number of agents to generate"
+          - name: "languages"
+            type: "List[str]"
+            default: "['python']"
+            short: "-l"
+            help: "Target languages"
+
+  # Tool: otel (OpenTelemetry operations)
+  - id: cli.tool.otel
+    type: command_group
+    brief: "OpenTelemetry operations"
+    attributes:
+      - id: tool.name
+        value: "otel"
+      - id: tool.help
+        value: "OpenTelemetry span and metric operations"
+      - id: tool.commands
+        value: ["spans", "trace", "metrics", "export", "validate"]
+
+  - id: cli.tool.otel.spans
+    type: command
+    brief: "View and analyze spans"
+    attributes:
+      - id: name
+        value: "spans"
+      - id: help
+        value: "View and analyze OpenTelemetry spans"
+      - id: options
+        value:
+          - name: "format"
+            type: "str"
+            default: "'table'"
+            short: "-f"
+            help: "Output format (table, tree, json, mermaid)"
+          - name: "filter"
+            type: "Optional[str]"
+            default: "null"
+            help: "Filter expression"
+          - name: "limit"
+            type: "int"
+            default: "20"
+            short: "-l"
+            help: "Maximum spans to display"
+          - name: "live"
+            type: "bool"
+            default: "false"
+            help: "Live update mode"
+
+  - id: cli.tool.otel.trace
+    type: command
+    brief: "Trace operation execution"
+    attributes:
+      - id: name
+        value: "trace"
+      - id: help
+        value: "Trace execution with detailed telemetry"
+      - id: arguments
+        value:
+          - name: "operation"
+            type: "str"
+            help: "Operation to trace"
+      - id: options
+        value:
+          - name: "detailed"
+            type: "bool"
+            default: "false"
+            short: "-d"
+            help: "Show detailed trace"
+          - name: "export"
+            type: "Optional[Path]"
+            default: "null"
+            short: "-e"
+            help: "Export trace to file"
+
+  # Tool: mermaid (Diagram generation)
+  - id: cli.tool.mermaid
+    type: command_group
+    brief: "Mermaid diagram generation"
+    attributes:
+      - id: tool.name
+        value: "mermaid"
+      - id: tool.help
+        value: "Generate Mermaid diagrams for visualization"
+      - id: tool.commands
+        value: ["workflow", "spans", "agents", "lifecycle", "architecture"]
+
+  - id: cli.tool.mermaid.workflow
+    type: command
+    brief: "Generate workflow diagram"
+    attributes:
+      - id: name
+        value: "workflow"
+      - id: help
+        value: "Generate Mermaid diagram for BPMN workflow"
+      - id: arguments
+        value:
+          - name: "workflow"
+            type: "str"
+            help: "Workflow name or file"
+      - id: options
+        value:
+          - name: "style"
+            type: "str"
+            default: "'flow'"
+            short: "-s"
+            help: "Diagram style (flow, sequence, state)"
+          - name: "output"
+            type: "Optional[Path]"
+            default: "null"
+            short: "-o"
+            help: "Save diagram to file"
+
+  - id: cli.tool.mermaid.spans
+    type: command
+    brief: "Generate span flow diagram"
+    attributes:
+      - id: name
+        value: "spans"
+      - id: help
+        value: "Generate Mermaid diagram from OpenTelemetry spans"
+      - id: options
+        value:
+          - name: "trace_id"
+            type: "Optional[str]"
+            default: "null"
+            short: "-t"
+            help: "Specific trace ID"
+          - name: "last"
+            type: "int"
+            default: "1"
+            short: "-l"
+            help: "Last N traces"
+
+  # Tool: agents (AI agent operations)
+  - id: cli.tool.agents
+    type: command_group
+    brief: "AI agent operations"
+    attributes:
+      - id: tool.name
+        value: "agents"
+      - id: tool.help
+        value: "AI agent creation and orchestration"
+      - id: tool.commands
+        value: ["create", "communicate", "validate", "visualize"]
+
+  # Tool: xes (Process mining and XES operations)
+  - id: cli.tool.xes
+    type: command_group
+    brief: "Process mining and XES operations"
+    attributes:
+      - id: tool.name
+        value: "xes"
+      - id: tool.help
+        value: "Process mining, XES conversion, and process analysis"
+      - id: tool.commands
+        value: ["convert", "discover", "analyze", "conformance", "visualize", "predict"]
+
+  - id: cli.tool.agents.create
+    type: command
+    brief: "Create agent system"
+    attributes:
+      - id: name
+        value: "create"
+      - id: help
+        value: "Create AI agent system from semantic conventions"
+      - id: arguments
+        value:
+          - name: "semantic_file"
+            type: "Path"
+            help: "Semantic convention file"
+      - id: options
+        value:
+          - name: "count"
+            type: "int"
+            default: "5"
+            short: "-c"
+            help: "Number of agents"
+          - name: "roles"
+            type: "Optional[List[str]]"
+            default: "null"
+            short: "-r"
+            help: "Agent roles"
+
+  # XES Commands
+  - id: cli.tool.xes.convert
+    type: command
+    brief: "Convert OpenTelemetry spans to XES format"
+    attributes:
+      - id: name
+        value: "convert"
+      - id: help
+        value: "Convert OpenTelemetry spans to XES format for process mining"
+      - id: arguments
+        value:
+          - name: "spans_file"
+            type: "Path"
+            help: "OpenTelemetry spans JSON file"
+      - id: options
+        value:
+          - name: "output"
+            type: "Path"
+            default: "Path('output.xes')"
+            short: "-o"
+            help: "Output XES file"
+          - name: "case_field"
+            type: "str"
+            default: "'trace_id'"
+            help: "Field to use as case ID"
+          - name: "filter_noise"
+            type: "bool"
+            default: "true"
+            help: "Filter out noise traces"
+
+  - id: cli.tool.xes.discover
+    type: command
+    brief: "Discover process models from XES event logs"
+    attributes:
+      - id: name
+        value: "discover"
+      - id: help
+        value: "Discover process models from XES event logs using mining algorithms"
+      - id: arguments
+        value:
+          - name: "xes_file"
+            type: "Path"
+            help: "XES event log file"
+      - id: options
+        value:
+          - name: "algorithm"
+            type: "str"
+            default: "'alpha'"
+            short: "-a"
+            help: "Discovery algorithm (alpha, heuristic, inductive)"
+          - name: "output_format"
+            type: "str"
+            default: "'bpmn'"
+            short: "-f"
+            help: "Output format (bpmn, petri, graph)"
+          - name: "threshold"
+            type: "float"
+            default: "0.8"
+            short: "-t"
+            help: "Minimum confidence threshold"
+
+  - id: cli.tool.xes.analyze
+    type: command
+    brief: "Analyze process performance and patterns"
+    attributes:
+      - id: name
+        value: "analyze"
+      - id: help
+        value: "Analyze XES event logs for performance metrics and process patterns"
+      - id: arguments
+        value:
+          - name: "xes_file"
+            type: "Path"
+            help: "XES event log file"
+      - id: options
+        value:
+          - name: "metrics"
+            type: "List[str]"
+            default: "['performance', 'frequency', 'bottlenecks']"
+            short: "-m"
+            help: "Analysis metrics to compute"
+          - name: "visualize"
+            type: "bool"
+            default: "true"
+            short: "-v"
+            help: "Generate visualizations"
+          - name: "output"
+            type: "Optional[Path]"
+            default: "null"
+            short: "-o"
+            help: "Save analysis report"
+
+  - id: cli.tool.xes.conformance
+    type: command
+    brief: "Check conformance between logs and process models"
+    attributes:
+      - id: name
+        value: "conformance"
+      - id: help
+        value: "Check conformance between event logs and process models"
+      - id: arguments
+        value:
+          - name: "xes_file"
+            type: "Path"
+            help: "XES event log file"
+          - name: "model_file"
+            type: "Path"
+            help: "Process model file (BPMN/Petri net)"
+      - id: options
+        value:
+          - name: "method"
+            type: "str"
+            default: "'token-replay'"
+            short: "-m"
+            help: "Conformance checking method"
+          - name: "detailed"
+            type: "bool"
+            default: "false"
+            short: "-d"
+            help: "Show detailed deviations"
+
+  - id: cli.tool.xes.visualize
+    type: command
+    brief: "Visualize process models and event logs"
+    attributes:
+      - id: name
+        value: "visualize"
+      - id: help
+        value: "Generate visual representations of processes and event logs"
+      - id: arguments
+        value:
+          - name: "input_file"
+            type: "Path"
+            help: "Input file (XES log or process model)"
+      - id: options
+        value:
+          - name: "output"
+            type: "Path"
+            default: "Path('process_viz.html')"
+            short: "-o"
+            help: "Output visualization file"
+          - name: "viz_type"
+            type: "str"
+            default: "'process-map'"
+            short: "-t"
+            help: "Visualization type (process-map, heatmap, timeline)"
+          - name: "interactive"
+            type: "bool"
+            default: "true"
+            short: "-i"
+            help: "Generate interactive visualization"
+
+  - id: cli.tool.xes.predict
+    type: command
+    brief: "Predict next activities in a process"
+    attributes:
+      - id: name
+        value: "predict"
+      - id: help
+        value: "Predict next activities and process outcomes"
+      - id: arguments
+        value:
+          - name: "model_file"
+            type: "Path"
+            help: "Trained process model"
+          - name: "trace_prefix"
+            type: "str"
+            help: "Partial trace prefix (comma-separated activities)"
+      - id: options
+        value:
+          - name: "top_k"
+            type: "int"
+            default: "3"
+            short: "-k"
+            help: "Number of predictions to show"
+          - name: "with_probability"
+            type: "bool"
+            default: "true"
+            short: "-p"
+            help: "Show prediction probabilities"
+
+  # Metrics for CLI usage
+  - id: cli.metrics.tool_usage
+    type: metric
+    brief: "Tool usage metrics"
+    unit: "{calls}"
+    instrument: counter
+    attributes:
+      - id: tool
+        type: string
+        requirement_level: required
+      - id: command
+        type: string
+        requirement_level: required
+      - id: success
+        type: boolean
+        requirement_level: required
+
+  - id: cli.metrics.generation_time
+    type: metric
+    brief: "Code generation duration"
+    unit: "ms"
+    instrument: histogram
+    attributes:
+      - id: tool
+        type: string
+        requirement_level: required
+      - id: language
+        type: string
+        requirement_level: required
+      - id: file_count
+        type: int
+        requirement_level: recommended

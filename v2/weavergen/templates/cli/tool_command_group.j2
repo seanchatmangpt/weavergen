@@ -1,0 +1,139 @@
+"""{{ tool_group.brief }}
+
+Generated from semantic conventions using OTel Weaver.
+"""
+
+import typer
+from pathlib import Path
+from typing import Optional, List
+from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn
+from opentelemetry import trace
+
+{%- set tool_name = tool_group.attributes | selectattr("id", "equalto", "tool.name") | first | attr("value") %}
+{%- set tool_help = tool_group.attributes | selectattr("id", "equalto", "tool.help") | first | attr("value") %}
+
+# Initialize tool command group
+{{ tool_name }}_app = typer.Typer(help="{{ tool_help }}")
+console = Console()
+tracer = trace.get_tracer(__name__)
+
+{%- for command in groups | selectattr("type", "equalto", "command") | selectattr("id", "startswith", "cli.tool." + tool_name + ".") %}
+{%- set cmd_name = command.attributes | selectattr("id", "equalto", "name") | first | attr("value") %}
+{%- set cmd_help = command.attributes | selectattr("id", "equalto", "help") | first | attr("value") %}
+{%- set cmd_args = command.attributes | selectattr("id", "equalto", "arguments") | first | attr("value") | default([]) %}
+{%- set cmd_opts = command.attributes | selectattr("id", "equalto", "options") | first | attr("value") | default([]) %}
+
+@{{ tool_name }}_app.command()
+def {{ cmd_name }}(
+{%- for arg in cmd_args %}
+    {{ arg.name }}: {{ arg.type }} = typer.Argument(..., help="{{ arg.help }}"),
+{%- endfor %}
+{%- for opt in cmd_opts %}
+    {{ opt.name }}: {{ opt.type }} = typer.Option({{ opt.default }}{% if opt.short %}, "{{ opt.short }}"{% endif %}, help="{{ opt.help }}"),
+{%- endfor %}
+) -> None:
+    """{{ cmd_help }}"""
+    with tracer.start_as_current_span("{{ tool_name }}.{{ cmd_name }}") as span:
+        try:
+            console.print(f"[blue]{{ tool_name | title }}: {{ cmd_help }}[/blue]")
+            
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console,
+            ) as progress:
+                task = progress.add_task("{{ cmd_help }}...", total=None)
+                
+                # TODO: Implement {{ tool_name }}.{{ cmd_name }}
+                # This is generated from semantic convention: {{ command.id }}
+                
+                {%- if tool_name == "workflow" and cmd_name == "run" %}
+                # Execute BPMN workflow
+                from ..engine.simple_engine import SimpleBpmnEngine
+                from ..engine.service_task import WeaverGenServiceEnvironment
+                
+                env = WeaverGenServiceEnvironment()
+                engine = SimpleBpmnEngine(env)
+                
+                # Load and execute workflow
+                instance = engine.start_workflow(workflow)
+                if data:
+                    with open(data) as f:
+                        import json
+                        workflow_data = json.load(f)
+                        instance.workflow.data.update(workflow_data)
+                
+                instance.run_until_user_input_required()
+                
+                if instance.workflow.is_completed():
+                    console.print("[green]✓[/green] Workflow completed successfully")
+                else:
+                    console.print("[yellow]Workflow requires user input[/yellow]")
+                
+                {%- elif tool_name == "weaver" and cmd_name == "generate" %}
+                # Generate code using OTel Weaver
+                import subprocess
+                
+                cmd = [
+                    "weaver", "registry", "generate",
+                    "-r", str(semantic_file),
+                    "-t", f"codegen_{language}",
+                    str(output)
+                ]
+                
+                if template:
+                    cmd.extend(["-p", f"template={template}"])
+                
+                result = subprocess.run(cmd, capture_output=True, text=True)
+                
+                if result.returncode == 0:
+                    console.print(f"[green]✓[/green] Generated {language} code in {output}")
+                else:
+                    console.print("[red]Generation failed![/red]")
+                    console.print(result.stderr)
+                    raise typer.Exit(1)
+                
+                {%- elif tool_name == "otel" and cmd_name == "spans" %}
+                # Display OpenTelemetry spans
+                from ..debug.span_analyzer import analyze_spans
+                
+                spans_data = analyze_spans(filter_expr=filter, limit=limit)
+                
+                if format == "table":
+                    from rich.table import Table
+                    table = Table(title="OpenTelemetry Spans")
+                    table.add_column("Span Name", style="cyan")
+                    table.add_column("Duration", style="yellow")
+                    table.add_column("Status", style="green")
+                    
+                    for span in spans_data[:limit]:
+                        table.add_row(span["name"], span["duration"], span["status"])
+                    
+                    console.print(table)
+                elif format == "mermaid":
+                    from ..visualizers.mermaid import MermaidVisualizer
+                    visualizer = MermaidVisualizer()
+                    diagram = visualizer.generate_span_trace_diagram(spans_data)
+                    console.print("```mermaid")
+                    console.print(diagram)
+                    console.print("```")
+                
+                {%- else %}
+                console.print(f"[yellow]Command {{ tool_name }}.{{ cmd_name }} not yet implemented[/yellow]")
+                {%- endif %}
+                
+                progress.update(task, completed=True)
+            
+            span.set_status(trace.Status(trace.StatusCode.OK))
+            
+        except Exception as e:
+            span.record_exception(e)
+            span.set_status(trace.Status(trace.StatusCode.ERROR, str(e)))
+            console.print(f"[red]Error: {e}[/red]")
+            raise typer.Exit(1)
+
+{%- endfor %}
+
+if __name__ == "__main__":
+    {{ tool_name }}_app()

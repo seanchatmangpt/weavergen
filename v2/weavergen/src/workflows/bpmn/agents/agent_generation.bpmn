@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  id="Definitions_AgentGeneration" 
+                  targetNamespace="http://weavergen.com/agents">
+  
+  <bpmn:process id="AgentGenerationProcess" name="Multi-Agent Code Generation" isExecutable="true">
+    
+    <bpmn:startEvent id="StartEvent" name="Start Generation">
+      <bpmn:outgoing>Flow_ToLoadSemantics</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <bpmn:scriptTask id="Task_LoadSemantics" name="Load Semantic Conventions">
+      <bpmn:incoming>Flow_ToLoadSemantics</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToSetupModels</bpmn:outgoing>
+      <bpmn:script>agent_load_semantic_conventions()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_SetupModels" name="Setup AI Models">
+      <bpmn:incoming>Flow_ToSetupModels</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToParallelGateway</bpmn:outgoing>
+      <bpmn:script>agent_setup_models()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:parallelGateway id="Gateway_ParallelAnalysis" name="Parallel Analysis">
+      <bpmn:incoming>Flow_ToParallelGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToAnalyze</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToCoordinate</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <bpmn:scriptTask id="Task_AnalyzeForGeneration" name="Pre-Generation Analysis">
+      <bpmn:incoming>Flow_ToAnalyze</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromAnalyze</bpmn:outgoing>
+      <bpmn:script>agent_analyze_semantic_quality()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_CoordinateAgents" name="Coordinate Agents">
+      <bpmn:incoming>Flow_ToCoordinate</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromCoordinate</bpmn:outgoing>
+      <bpmn:script>agent_coordinate_agents()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:parallelGateway id="Gateway_ParallelJoin" name="Join Parallel">
+      <bpmn:incoming>Flow_FromAnalyze</bpmn:incoming>
+      <bpmn:incoming>Flow_FromCoordinate</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToGenerate</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <bpmn:scriptTask id="Task_GenerateCode" name="AI-Optimized Code Generation">
+      <bpmn:incoming>Flow_ToGenerate</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToDisplayResults</bpmn:outgoing>
+      <bpmn:script>agent_generate_optimized_code()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_DisplayResults" name="Display Generation Results">
+      <bpmn:incoming>Flow_ToDisplayResults</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEnd</bpmn:outgoing>
+      <bpmn:script>agent_display_results()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:endEvent id="EndEvent" name="Generation Complete">
+      <bpmn:incoming>Flow_ToEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToLoadSemantics" sourceRef="StartEvent" targetRef="Task_LoadSemantics"/>
+    <bpmn:sequenceFlow id="Flow_ToSetupModels" sourceRef="Task_LoadSemantics" targetRef="Task_SetupModels"/>
+    <bpmn:sequenceFlow id="Flow_ToParallelGateway" sourceRef="Task_SetupModels" targetRef="Gateway_ParallelAnalysis"/>
+    <bpmn:sequenceFlow id="Flow_ToAnalyze" sourceRef="Gateway_ParallelAnalysis" targetRef="Task_AnalyzeForGeneration"/>
+    <bpmn:sequenceFlow id="Flow_ToCoordinate" sourceRef="Gateway_ParallelAnalysis" targetRef="Task_CoordinateAgents"/>
+    <bpmn:sequenceFlow id="Flow_FromAnalyze" sourceRef="Task_AnalyzeForGeneration" targetRef="Gateway_ParallelJoin"/>
+    <bpmn:sequenceFlow id="Flow_FromCoordinate" sourceRef="Task_CoordinateAgents" targetRef="Gateway_ParallelJoin"/>
+    <bpmn:sequenceFlow id="Flow_ToGenerate" sourceRef="Gateway_ParallelJoin" targetRef="Task_GenerateCode"/>
+    <bpmn:sequenceFlow id="Flow_ToDisplayResults" sourceRef="Task_GenerateCode" targetRef="Task_DisplayResults"/>
+    <bpmn:sequenceFlow id="Flow_ToEnd" sourceRef="Task_DisplayResults" targetRef="EndEvent"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

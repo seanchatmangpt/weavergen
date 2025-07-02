@@ -1,0 +1,69 @@
+groups:
+  # Example attribute group
+  - id: myapp.common
+    prefix: myapp
+    type: attribute_group
+    brief: 'Common attributes for MyApp telemetry'
+    attributes:
+      - id: service.component
+        type: string
+        requirement_level: required
+        brief: 'The component within the service'
+        examples: ['api', 'worker', 'scheduler']
+      - id: operation.result
+        type:
+          allow_custom_values: true
+          members:
+            - id: success
+              value: "success"
+              brief: 'Operation completed successfully'
+            - id: failure
+              value: "failure"
+              brief: 'Operation failed'
+            - id: partial
+              value: "partial"
+              brief: 'Operation partially completed'
+        requirement_level: recommended
+        brief: 'Result of the operation'
+
+  # Example span definition
+  - id: myapp.request
+    prefix: myapp.request
+    type: span
+    brief: 'Represents an incoming request to MyApp service'
+    stability: development
+    span_kind: server
+    attributes:
+      - ref: myapp.common.service.component
+      - ref: myapp.common.operation.result
+      - ref: http.request.method
+        requirement_level: required
+      - ref: http.route
+        requirement_level: recommended
+      - id: request.priority
+        type: string
+        requirement_level: optional
+        brief: 'Priority level of the request'
+        examples: ['low', 'normal', 'high']
+
+  # Example metric definition  
+  - id: myapp.requests
+    prefix: myapp
+    type: metric
+    metric_name: myapp.requests.duration
+    brief: 'Duration of MyApp requests'
+    instrument: histogram
+    unit: "ms"
+    stability: development
+    attributes:
+      - ref: myapp.common.service.component
+      - ref: myapp.common.operation.result
+      - ref: http.request.method
+
+# Import common attributes from OTEL semantic conventions
+imports:
+  attributes:
+    - http.request.method
+    - http.route
+    - server.address
+    - server.port

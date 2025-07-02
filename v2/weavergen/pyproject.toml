@@ -1,0 +1,189 @@
+[build-system]  # https://docs.astral.sh/uv/concepts/projects/config/#build-systems
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]  # https://packaging.python.org/en/latest/specifications/pyproject-toml/
+name = "weavergen"
+version = "1.0.0"
+description = "Python wrapper for OTel Weaver Forge with Claude Code optimization"
+readme = "README.md"
+authors = [
+  { name = "Sean Chatman", email = "sean@seanchatman.com" },
+]
+requires-python = ">=3.11"
+license = "MIT"
+keywords = [
+    "opentelemetry",
+    "semantic-conventions", 
+    "code-generation",
+    "observability",
+    "weaver",
+    "claude-code"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+  "typer>=0.9.0",
+  "rich>=13.0.0",
+  "pydantic>=2.0.0",
+  "pydantic-ai>=0.1.0",
+  "jinja2>=3.1.0",
+  "pyyaml>=6.0",
+  "httpx>=0.25.0",
+  "opentelemetry-api>=1.20.0",
+  "opentelemetry-sdk>=1.20.0",
+  "psutil>=5.9.0",
+  "spiffworkflow>=1.2.0",
+  "pm4py>=2.7.0",
+  "pandas>=2.0.0",
+]
+
+[project.scripts]  # https://docs.astral.sh/uv/concepts/projects/config/#command-line-interfaces
+weavergen = "weavergen.cli:app"
+weavergen-debug = "weavergen.cli_debug:app"
+
+[project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
+Homepage = "https://github.com/seanchatmangpt/weavergen"
+Documentation = "https://github.com/seanchatmangpt/weavergen#readme"
+Repository = "https://github.com/seanchatmangpt/weavergen.git"
+"Bug Tracker" = "https://github.com/seanchatmangpt/weavergen/issues"
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.1.0",
+  "mypy>=1.0.0",
+  "pre-commit>=3.0.0",
+]
+
+llm = [
+  "ollama>=0.1.0",
+  "openai>=1.0.0",
+  "anthropic>=0.20.0",
+]
+
+examples = [
+  "asyncpg>=0.29.0",
+]
+
+otel = [
+  "opentelemetry-instrumentation>=0.41b0",
+]
+
+all = [
+  "weavergen[dev,llm,otel,examples]",
+  "icontract>=2.6.0",
+]
+
+[dependency-groups]  # https://docs.astral.sh/uv/concepts/projects/dependencies/#development-dependencies
+dev = [
+  "commitizen (>=4.3.0)",
+  "coverage[toml] (>=7.6.10)",
+  "ipykernel (>=6.29.4)",
+  "ipython (>=8.18.0)",
+  "ipywidgets (>=8.1.2)",
+  "mypy (>=1.14.1)",
+  "pdoc (>=15.0.1)",
+  "pre-commit (>=4.0.1)",
+  "pytest (>=8.3.4)",
+  "pytest-mock (>=3.14.0)",
+  "pytest-xdist (>=3.6.1)",
+  "ruff (>=0.9.2)",
+]
+
+[tool.commitizen]  # https://commitizen-tools.github.io/commitizen/config/
+bump_message = "bump: v$current_version → v$new_version"
+tag_format = "v$version"
+update_changelog_on_bump = true
+version_provider = "uv"
+
+[tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
+precision = 1
+show_missing = true
+skip_covered = true
+
+[tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
+branch = true
+command_line = "--module pytest"
+data_file = "reports/.coverage"
+source = ["src"]
+
+[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
+output = "reports/coverage.xml"
+
+[tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
+python_version = "3.11"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first --verbosity=2 --junitxml=reports/pytest.xml"
+testpaths = ["src", "tests"]
+xfail_strict = true
+
+[tool.ruff]  # https://docs.astral.sh/ruff/settings/
+target-version = "py311"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long, handled by black
+    "B008", # do not perform function calls in argument defaults
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/weavergen"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/README.md", 
+    "/LICENSE",
+    "/run_cli.py",
+    "/CLAUDE.md",
+]
+
+[tool.weavergen.validation]
+# Span-based validation configuration
+span_capture_dir = "captured_spans"
+validation_commands = [
+    "debug health --deep",
+    "debug spans --format table", 
+    "debug inspect agents"
+]
+required_span_types = [
+    "semantic_span",
+    "resource_span", 
+    "layer_span",
+    "ai_validation",
+    "quine_span"
+]

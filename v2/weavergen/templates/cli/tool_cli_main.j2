@@ -1,0 +1,78 @@
+"""{{ (groups | selectattr("type", "equalto", "application") | first).brief }}
+
+Generated from semantic conventions using OTel Weaver.
+"""
+
+import typer
+from pathlib import Path
+from typing import Optional, List
+from rich.console import Console
+from opentelemetry import trace
+
+{%- set app_group = groups | selectattr("type", "equalto", "application") | first %}
+{%- set app_attrs = app_group.attributes | map(attribute="id") | map("split", ".") | map("last") | list %}
+
+# Initialize main CLI app
+app = typer.Typer(
+    name="{{ app_group.attributes | selectattr("id", "equalto", "app.name") | first | attr("value") }}",
+    help="{{ app_group.attributes | selectattr("id", "equalto", "app.help") | first | attr("value") }}",
+    rich_markup_mode="rich",
+    no_args_is_help=True,
+)
+
+console = Console()
+tracer = trace.get_tracer(__name__)
+
+# Import tool command groups
+{%- for tool in groups | selectattr("type", "equalto", "command_group") %}
+{%- set tool_name = tool.attributes | selectattr("id", "equalto", "tool.name") | first | attr("value") %}
+from .tools.{{ tool_name }} import {{ tool_name }}_app
+{%- endfor %}
+
+# Register tool command groups
+{%- for tool in groups | selectattr("type", "equalto", "command_group") %}
+{%- set tool_name = tool.attributes | selectattr("id", "equalto", "tool.name") | first | attr("value") %}
+{%- set tool_help = tool.attributes | selectattr("id", "equalto", "tool.help") | first | attr("value") %}
+app.add_typer({{ tool_name }}_app, name="{{ tool_name }}", help="{{ tool_help }}")
+{%- endfor %}
+
+# Global commands
+@app.command()
+def version():
+    """Show WeaverGen version information."""
+    {%- set version = app_group.attributes | selectattr("id", "equalto", "app.version") | first | attr("value") %}
+    console.print(f"[bold cyan]WeaverGen v{{ version }}[/bold cyan]")
+    console.print("OpenTelemetry-powered code generation toolkit")
+    console.print("\nAvailable tools:")
+    {%- for tool in groups | selectattr("type", "equalto", "command_group") %}
+    {%- set tool_name = tool.attributes | selectattr("id", "equalto", "tool.name") | first | attr("value") %}
+    console.print(f"  • {{ tool_name }}: {{ tool.brief }}")
+    {%- endfor %}
+
+
+@app.callback()
+def main_callback(
+    ctx: typer.Context,
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output"),
+    trace_enabled: bool = typer.Option(False, "--trace", "-t", help="Enable OpenTelemetry tracing"),
+    quiet: bool = typer.Option(False, "--quiet", "-q", help="Suppress non-essential output"),
+):
+    """
+    WeaverGen - Tool-based semantic CLI for code generation.
+    
+    Use 'weavergen <tool> --help' for more information on a specific tool.
+    """
+    ctx.obj = {
+        "verbose": verbose,
+        "trace": trace_enabled,
+        "quiet": quiet
+    }
+
+
+def cli():
+    """CLI entry point."""
+    app()
+
+
+if __name__ == "__main__":
+    cli()

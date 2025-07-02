@@ -1,0 +1,169 @@
+[
+  {
+    "spanId": "span-001",
+    "traceId": "trace-abc123",
+    "operationName": "HTTP POST /api/semantic/validate",
+    "serviceName": "weavergen-api",
+    "startTime": "2025-07-02T16:00:00.000Z",
+    "endTime": "2025-07-02T16:00:00.250Z",
+    "duration": 250,
+    "status": "OK",
+    "tags": {
+      "http.method": "POST",
+      "http.url": "/api/semantic/validate",
+      "component": "http-server"
+    },
+    "attributes": {
+      "semantic.file": "minimal.yaml",
+      "validation.type": "schema"
+    }
+  },
+  {
+    "spanId": "span-002",
+    "traceId": "trace-abc123",
+    "parentSpanId": "span-001",
+    "operationName": "semantic.parse_yaml",
+    "serviceName": "semantic-parser",
+    "startTime": "2025-07-02T16:00:00.010Z",
+    "endTime": "2025-07-02T16:00:00.050Z",
+    "duration": 40,
+    "status": "OK",
+    "attributes": {
+      "file.path": "minimal.yaml",
+      "groups.count": 1,
+      "attributes.count": 0
+    }
+  },
+  {
+    "spanId": "span-003",
+    "traceId": "trace-abc123",
+    "parentSpanId": "span-001",
+    "operationName": "weaver.validate_schema",
+    "serviceName": "weaver-forge",
+    "startTime": "2025-07-02T16:00:00.060Z",
+    "endTime": "2025-07-02T16:00:00.180Z",
+    "duration": 120,
+    "status": "OK",
+    "attributes": {
+      "weaver.version": "0.8.0",
+      "schema.valid": true
+    }
+  },
+  {
+    "spanId": "span-004",
+    "traceId": "trace-abc123",
+    "parentSpanId": "span-003",
+    "operationName": "agent.validate_semantics",
+    "serviceName": "ai-agent",
+    "startTime": "2025-07-02T16:00:00.190Z",
+    "endTime": "2025-07-02T16:00:00.240Z",
+    "duration": 50,
+    "status": "OK",
+    "attributes": {
+      "agent.role": "semantic_validator",
+      "confidence": 0.95,
+      "validation.result": "approved"
+    }
+  },
+  {
+    "spanId": "span-005",
+    "traceId": "trace-def456", 
+    "operationName": "BPMN workflow.execute",
+    "serviceName": "spiff-engine",
+    "startTime": "2025-07-02T16:00:01.000Z",
+    "endTime": "2025-07-02T16:00:01.800Z",
+    "duration": 800,
+    "status": "OK",
+    "attributes": {
+      "workflow.name": "semantic_validation_flow",
+      "tasks.completed": 4,
+      "gateway.decisions": 2
+    }
+  },
+  {
+    "spanId": "span-006",
+    "traceId": "trace-def456",
+    "parentSpanId": "span-005",
+    "operationName": "task.generate_code",
+    "serviceName": "code-generator",
+    "startTime": "2025-07-02T16:00:01.100Z",
+    "endTime": "2025-07-02T16:00:01.600Z",
+    "duration": 500,
+    "status": "OK",
+    "attributes": {
+      "language": "python",
+      "template.count": 3,
+      "files.generated": 12
+    }
+  },
+  {
+    "spanId": "span-007",
+    "traceId": "trace-def456",
+    "parentSpanId": "span-005", 
+    "operationName": "otel.capture_spans",
+    "serviceName": "telemetry-collector",
+    "startTime": "2025-07-02T16:00:01.700Z",
+    "endTime": "2025-07-02T16:00:01.750Z",
+    "duration": 50,
+    "status": "ERROR",
+    "tags": {
+      "error": "true"
+    },
+    "attributes": {
+      "error.message": "Connection timeout to OTLP endpoint",
+      "spans.captured": 156,
+      "export.failed": true
+    }
+  },
+  {
+    "spanId": "span-008",
+    "traceId": "trace-ghi789",
+    "operationName": "agent.communicate",
+    "serviceName": "agent-orchestrator", 
+    "startTime": "2025-07-02T16:00:02.000Z",
+    "endTime": "2025-07-02T16:00:02.300Z",
+    "duration": 300,
+    "status": "OK",
+    "attributes": {
+      "agents.participating": 3,
+      "messages.exchanged": 7,
+      "consensus.reached": true,
+      "decision.type": "semantic_approval"
+    }
+  },
+  {
+    "spanId": "span-009",
+    "traceId": "trace-ghi789",
+    "parentSpanId": "span-008",
+    "operationName": "agent.decide",
+    "serviceName": "ceo-agent",
+    "startTime": "2025-07-02T16:00:02.050Z",
+    "endTime": "2025-07-02T16:00:02.150Z", 
+    "duration": 100,
+    "status": "OK",
+    "attributes": {
+      "agent.role": "CEO",
+      "decision": "approve",
+      "confidence": 0.88,
+      "thinking_time_ms": 75
+    }
+  },
+  {
+    "spanId": "span-010",
+    "traceId": "trace-ghi789",
+    "parentSpanId": "span-008",
+    "operationName": "agent.decide", 
+    "serviceName": "cto-agent",
+    "startTime": "2025-07-02T16:00:02.160Z",
+    "endTime": "2025-07-02T16:00:02.280Z",
+    "duration": 120,
+    "status": "OK",
+    "attributes": {
+      "agent.role": "CTO",
+      "decision": "approve_with_conditions",
+      "confidence": 0.92,
+      "thinking_time_ms": 95,
+      "conditions": ["add_performance_tests", "update_documentation"]
+    }
+  }
+]

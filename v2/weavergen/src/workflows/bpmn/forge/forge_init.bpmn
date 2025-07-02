@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                  id="Definitions_ForgeInit" 
+                  targetNamespace="http://weavergen.com/forge">
+  
+  <bpmn:process id="ForgeInitProcess" name="Forge Init Registry" isExecutable="true">
+    
+    <bpmn:startEvent id="StartEvent" name="Start Init">
+      <bpmn:outgoing>Flow_ToValidateInput</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <bpmn:scriptTask id="Task_ValidateInput" name="Validate Input Parameters">
+      <bpmn:incoming>Flow_ToValidateInput</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCreateDirs</bpmn:outgoing>
+      <bpmn:script>forge_validate_init_params()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_CreateDirectories" name="Create Directory Structure">
+      <bpmn:incoming>Flow_ToCreateDirs</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCreateManifest</bpmn:outgoing>
+      <bpmn:script>forge_create_registry_dirs()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_CreateManifest" name="Create Registry Manifest">
+      <bpmn:incoming>Flow_ToCreateManifest</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCheckExamples</bpmn:outgoing>
+      <bpmn:script>forge_create_manifest_yaml()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:exclusiveGateway id="Gateway_CheckExamples" name="Include Examples?">
+      <bpmn:incoming>Flow_ToCheckExamples</bpmn:incoming>
+      <bpmn:outgoing>Flow_YesExamples</bpmn:outgoing>
+      <bpmn:outgoing>Flow_NoExamples</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <bpmn:scriptTask id="Task_CreateExamples" name="Create Example YAML Files">
+      <bpmn:incoming>Flow_YesExamples</bpmn:incoming>
+      <bpmn:outgoing>Flow_FromExamples</bpmn:outgoing>
+      <bpmn:script>forge_create_example_yamls()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:scriptTask id="Task_DisplayNextSteps" name="Display Next Steps">
+      <bpmn:incoming>Flow_NoExamples</bpmn:incoming>
+      <bpmn:incoming>Flow_FromExamples</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEnd</bpmn:outgoing>
+      <bpmn:script>forge_display_next_steps()</bpmn:script>
+    </bpmn:scriptTask>
+    
+    <bpmn:endEvent id="EndEvent" name="Init Complete">
+      <bpmn:incoming>Flow_ToEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_ToValidateInput" sourceRef="StartEvent" targetRef="Task_ValidateInput"/>
+    <bpmn:sequenceFlow id="Flow_ToCreateDirs" sourceRef="Task_ValidateInput" targetRef="Task_CreateDirectories"/>
+    <bpmn:sequenceFlow id="Flow_ToCreateManifest" sourceRef="Task_CreateDirectories" targetRef="Task_CreateManifest"/>
+    <bpmn:sequenceFlow id="Flow_ToCheckExamples" sourceRef="Task_CreateManifest" targetRef="Gateway_CheckExamples"/>
+    <bpmn:sequenceFlow id="Flow_YesExamples" name="Yes" sourceRef="Gateway_CheckExamples" targetRef="Task_CreateExamples">
+      <bpmn:conditionExpression>with_examples == True</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_NoExamples" name="No" sourceRef="Gateway_CheckExamples" targetRef="Task_DisplayNextSteps">
+      <bpmn:conditionExpression>with_examples == False</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_FromExamples" sourceRef="Task_CreateExamples" targetRef="Task_DisplayNextSteps"/>
+    <bpmn:sequenceFlow id="Flow_ToEnd" sourceRef="Task_DisplayNextSteps" targetRef="EndEvent"/>
+    
+  </bpmn:process>
+</bpmn:definitions>

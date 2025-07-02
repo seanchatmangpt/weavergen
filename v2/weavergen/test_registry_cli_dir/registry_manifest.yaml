@@ -1,8 +1,8 @@
 # WeaverGen Registry Manifest
 registry:
-  name: test-real-registry
+  name: test_registry_cli
   version: "1.0.0"
-  description: "Semantic convention registry for test-real-registry"
+  description: "Semantic convention registry for test_registry_cli"
   maintainers:
     - name: "WeaverGen"
       email: "weavergen@example.com"

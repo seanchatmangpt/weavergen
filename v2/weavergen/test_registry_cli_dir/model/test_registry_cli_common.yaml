@@ -1,0 +1,38 @@
+# test_registry_cli Common Semantic Conventions
+groups:
+  - id: test_registry_cli.service
+    prefix: service
+    type: attribute_group
+    brief: 'Common service attributes for test_registry_cli'
+    attributes:
+      - id: name
+        type: string
+        requirement_level: required
+        brief: 'Service name'
+        examples: ['test_registry_cli-api', 'test_registry_cli-worker']
+      - id: version
+        type: string
+        requirement_level: recommended
+        brief: 'Service version'
+        examples: ['1.0.0', '2.1.3']
+      - id: instance.id
+        type: string
+        requirement_level: recommended
+        brief: 'Service instance identifier'
+        examples: ['instance-1', 'pod-abc123']
+
+  - id: test_registry_cli.operation
+    prefix: operation
+    type: span
+    brief: 'Common operation attributes for test_registry_cli'
+    attributes:
+      - ref: test_registry_cli.service.name
+      - id: duration_ms
+        type: int
+        requirement_level: recommended
+        brief: 'Operation duration in milliseconds'
+      - id: status
+        type: string
+        requirement_level: required
+        brief: 'Operation status'
+        examples: ['success', 'failure', 'timeout']

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/weavergen/commands/__init__.py",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1751480317111,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1751480761049,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,9 @@\n \"\"\"WeaverGen v2 CLI commands.\"\"\"\n \n from .forge import forge_app\n from .generate import generate_app\n+from .weaver import weaver_app\n from .agents import agents_app\n from .bpmn import bpmn_app\n from .debug import debug_app\n from .templates import templates_app\n@@ -12,8 +13,9 @@\n \n __all__ = [\n     \"forge_app\",\n     \"generate_app\",\n+    \"weaver_app\",\n     \"agents_app\",\n     \"bpmn_app\",\n     \"debug_app\",\n     \"templates_app\",\n"
+                },
+                {
+                    "date": 1751480840047,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,8 @@\n \n from .forge import forge_app\n from .generate import generate_app\n from .weaver import weaver_app\n-from .agents import agents_app\n from .bpmn import bpmn_app\n from .debug import debug_app\n from .templates import templates_app\n from .semantic import semantic_app\n@@ -14,9 +13,8 @@\n __all__ = [\n     \"forge_app\",\n     \"generate_app\",\n     \"weaver_app\",\n-    \"agents_app\",\n     \"bpmn_app\",\n     \"debug_app\",\n     \"templates_app\",\n     \"semantic_app\",\n"
+                }
+            ],
+            "date": 1751480317111,
+            "name": "Commit-0",
+            "content": "\"\"\"WeaverGen v2 CLI commands.\"\"\"\n\nfrom .forge import forge_app\nfrom .generate import generate_app\nfrom .agents import agents_app\nfrom .bpmn import bpmn_app\nfrom .debug import debug_app\nfrom .templates import templates_app\nfrom .semantic import semantic_app\nfrom .mining import mining_app\nfrom .xes import xes_app\n\n__all__ = [\n    \"forge_app\",\n    \"generate_app\",\n    \"agents_app\",\n    \"bpmn_app\",\n    \"debug_app\",\n    \"templates_app\",\n    \"semantic_app\",\n    \"mining_app\",\n    \"xes_app\",\n]"
+        }
+    ]
+}

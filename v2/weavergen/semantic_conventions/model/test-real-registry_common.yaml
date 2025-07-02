@@ -1,0 +1,38 @@
+# test-real-registry Common Semantic Conventions
+groups:
+  - id: test-real-registry.service
+    prefix: service
+    type: attribute_group
+    brief: 'Common service attributes for test-real-registry'
+    attributes:
+      - id: name
+        type: string
+        requirement_level: required
+        brief: 'Service name'
+        examples: ['test-real-registry-api', 'test-real-registry-worker']
+      - id: version
+        type: string
+        requirement_level: recommended
+        brief: 'Service version'
+        examples: ['1.0.0', '2.1.3']
+      - id: instance.id
+        type: string
+        requirement_level: recommended
+        brief: 'Service instance identifier'
+        examples: ['instance-1', 'pod-abc123']
+
+  - id: test-real-registry.operation
+    prefix: operation
+    type: span
+    brief: 'Common operation attributes for test-real-registry'
+    attributes:
+      - ref: test-real-registry.service.name
+      - id: duration_ms
+        type: int
+        requirement_level: recommended
+        brief: 'Operation duration in milliseconds'
+      - id: status
+        type: string
+        requirement_level: required
+        brief: 'Operation status'
+        examples: ['success', 'failure', 'timeout']

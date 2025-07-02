@@ -9,12 +9,20 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.panel import Panel
 from opentelemetry import trace
 import asyncio
+from pydantic import BaseModel, Field
+from pydantic_ai import agent
+from pydantic_ai.llm.ollama import Ollama
 
 # Initialize CLI app and console
 agents_app = typer.Typer(help="AI agent operations")
 console = Console()
 tracer = trace.get_tracer(__name__)
 
+class AgentResponse(BaseModel):
+    """Model for a single agent's response in a conversation."""
+    agent_name: str = Field(..., description="The name of the agent responding.")
+    message: str = Field(..., description="The agent's message.")
+    confidence_score: float = Field(..., ge=0, le=1, description="Confidence in the response.")
 
 @agents_app.command()
 def communicate(
@@ -31,6 +39,9 @@ def communicate(
         try:
             console.print(f"[blue]Initializing {agents} agent communication system[/blue]")
             
+            # Initialize the Ollama client
+            ollama_client = Ollama(model="llama2")
+
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
@@ -38,14 +49,33 @@ def communicate(
             ) as progress:
                 # Initialize agents
                 task = progress.add_task(f"Spawning {agents} agents...", total=agents)
-                for i in range(agents):
+                agent_names = [f"Agent_{i+1}" for i in range(agents)]
+                for name in agent_names:
                     progress.update(task, advance=1)
                 
                 # Communication rounds
+                conversation_history = []
                 for round_num in range(1, rounds + 1):
-                    progress.add_task(f"Round {round_num}/{rounds}: Agents communicating...", total=None)
-                    # TODO: Implement actual communication
-                
+                    round_task = progress.add_task(f"Round {round_num}/{rounds}: Agents communicating...", total=agents)
+                    
+                    for agent_name in agent_names:
+                        # Create a prompt for the agent
+                        prompt = f"You are {agent_name}. The current topic is the semantic convention file at {semantic_file}. The conversation so far is: {conversation_history}. What is your next message?"
+                        
+                        # Use pydantic-ai to generate a response
+                        ai_engine = agent.PydanticAI(llm=ollama_client, pydantic_model=AgentResponse)
+                        response = ai_engine.run(prompt)
+                        
+                        # Add the response to the conversation history
+                        conversation_history.append(f"{response.agent_name}: {response.message}")
+                        
+                        if verbose:
+                            console.print(f"[cyan]{response.agent_name}:[/cyan] {response.message} (Confidence: {response.confidence_score:.2f})")
+                        
+                        progress.update(round_task, advance=1)
+
+                progress.remove_task(task)
+
             console.print(f"[green]✓[/green] Agent consensus reached after {rounds} rounds")
             
         except Exception as e:

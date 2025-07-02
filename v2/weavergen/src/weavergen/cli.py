@@ -17,8 +17,7 @@ from .cli_workflow import workflow_app
 from .cli_debug import debug_app
 from .commands.forge import forge_app
 from .commands.generate import generate_app
-from .commands.validate import validate_app
-from .commands.agents import agents_app
+from .commands.weaver import weaver_app
 from .commands.bpmn import bpmn_app
 from .commands.debug import debug_app as commands_debug_app
 from .commands.templates import templates_app
@@ -32,10 +31,9 @@ console = Console()
 # Add subcommands
 app.add_typer(workflow_app, name="workflow", help="Manage BPMN workflows")
 app.add_typer(debug_app, name="debug", help="Debug and visualize OpenTelemetry spans")
-app.add_typer(forge_app, name="forge", help="Weaver Forge lifecycle commands")
+app.add_typer(weaver_app, name="weaver", help="Direct Weaver binary commands")
+app.add_typer(forge_app, name="forge", help="Weaver Forge code generation commands")
 app.add_typer(generate_app, name="generate", help="Code generation commands")
-app.add_typer(validate_app, name="validate", help="Validation commands")
-app.add_typer(agents_app, name="agents", help="AI agent operations")
 app.add_typer(bpmn_app, name="bpmn", help="BPMN workflow execution")
 app.add_typer(templates_app, name="templates", help="Template management")
 app.add_typer(semantic_app, name="semantic", help="AI-powered semantic generation")

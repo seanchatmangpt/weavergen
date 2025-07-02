@@ -1,0 +1,17 @@
+{{ params.common_imports }}
+{% if ctx.enums %}
+from enum import StrEnum
+{% endif %}
+{% for enum in ctx.enums %}
+class {{ enum.name | pascal_case }}(StrEnum):
+{% for v in enum.values %}
+    {{ v | upper }} = "{{ v }}"
+{% endfor %}
+{% endfor %}
+
+class {{ ctx.root_namespace | pascal_case }}Attributes(BaseModel):
+{% for attr in ctx.attributes %}
+    {{ attr.name | snake_case }}: {{ params.type_map[attr.type] }}{% if attr.enum %} | {{ attr.enum.name | pascal_case }}{% endif %}{% if not attr.required %} = None{% endif %}  # {{ attr.brief }}
+{% endfor %}
+    class Config:
+        extra = "forbid"

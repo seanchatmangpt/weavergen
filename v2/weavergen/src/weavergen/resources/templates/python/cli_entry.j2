@@ -1,0 +1,21 @@
+from {{ params.cli_module_name }}.app import app
+import sys, os, json
+{{ params.tracer_setup }}
+
+def _run():
+    with tracer.start_as_current_span("cli.run") as span:
+        span.set_attribute("cli.argv", json.dumps(sys.argv))
+        span.set_attribute("cli.cwd", os.getcwd())
+        try:
+            app()                 # Typer handles dispatch
+            exit_code = 0
+        except Exception as exc:
+            exit_code = 1
+            span.record_exception(exc)
+            raise
+        finally:
+            span.set_attribute("cli.exit_code", exit_code)
+            span.add_event("operation.end")
+
+if __name__ == "__main__":
+    _run()

@@ -1,0 +1,73 @@
+from opentelemetry import trace, metrics, baggage, propagate
+from opentelemetry.sdk.resources import Resource, SERVICE_NAME, SERVICE_VERSION, DEPLOYMENT_ENVIRONMENT
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+from opentelemetry.exporter.prometheus import PrometheusMetricReader
+from opentelemetry.instrumentation.logging import LoggingInstrumentor
+from opentelemetry.propagators.composite import CompositePropagator
+from opentelemetry.propagators.b3 import B3MultiFormat
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
+
+# --- Resource Detection & Enrichment --------------------------------------------
+resource = Resource.create({
+    SERVICE_NAME: "{{ params.cli_module_name }}",
+    SERVICE_VERSION: "0.1.0",
+    DEPLOYMENT_ENVIRONMENT: "production",
+})
+
+# --- Tracing Setup --------------------------------------------------------------
+trace_provider = TracerProvider(resource=resource)
+trace.set_tracer_provider(trace_provider)
+
+# OTLP Exporter (to your collector)
+otlp_exporter = OTLPSpanExporter(
+    endpoint="grpc://otel-collector.default.svc.cluster.local:4317",
+    insecure=True,
+)
+trace_provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
+
+# Console Exporter (for local dev / debugging)
+trace_provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+
+# --- Metrics Setup --------------------------------------------------------------
+prometheus_reader = PrometheusMetricReader()
+metrics_provider = MeterProvider(resource=resource, metric_readers=[prometheus_reader])
+metrics.set_meter_provider(metrics_provider)
+
+meter = metrics.get_meter("{{ params.cli_module_name }}")
+# Example instruments
+cli_task_counter = meter.create_counter(
+    name="cli.task.count",
+    description="Number of CLI tasks executed",
+)
+cli_duration_histogram = meter.create_histogram(
+    name="cli.task.duration_ms",
+    description="Duration of CLI tasks in milliseconds",
+)
+
+# --- Logging Instrumentation ----------------------------------------------------
+# Automatically inject trace & span IDs into every log record
+LoggingInstrumentor().instrument(set_logging_format=True)
+
+# --- Propagator Configuration --------------------------------------------------
+propagator = CompositePropagator([
+    TraceContextTextMapPropagator(),
+    B3MultiFormat(),
+])
+propagate.set_global_textmap(propagator)
+
+# --- (Optional) Distributed Profiling --------------------------------------------
+try:
+    from opentelemetry.profiling import Profiler
+
+    profiler = Profiler(
+        service_name="my_cli_app",
+        endpoint="http://otel-collector.default.svc.cluster.local:8126",
+    )
+    profiler.start()
+except ImportError:
+    # profiling not installed; skip
+    pass

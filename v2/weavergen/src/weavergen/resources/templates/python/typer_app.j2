@@ -1,0 +1,9 @@
+import typer
+from importlib import import_module
+
+app = typer.Typer()
+
+{% for cmd in ctx.commands %}
+# lazy import keeps startup snappy
+app.add_typer(import_module("{{ params.cli_module_name }}.commands.{{ cmd.name | snake_case }}").app, name="{{ cmd.name }}")
+{% endfor %}

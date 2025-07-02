@@ -1,0 +1,23 @@
+{{ params.tracer_setup }}
+from functools import wraps
+from {{ params.module_name }}.models.{{ ctx.root_namespace | snake_case }}_attributes import {{ ctx.root_namespace | pascal_case }}Attributes
+from {{ params.module_name }}.context import capture_context
+
+def traced_{{ ctx.root_namespace | snake_case }}(operation: str):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            attrs = {{ ctx.root_namespace | pascal_case }}Attributes(**kwargs)
+            with tracer.start_as_current_span(f"{{ ctx.root_namespace }}.{operation}") as span:
+                for k, v in attrs.dict(exclude_none=True).items():
+                    span.set_attribute(k, v)
+                try:
+                    result = fn(*args, **kwargs)
+                except Exception as exc:
+                    span.record_exception(exc)
+                    span.set_status(trace.status.Status(trace.status.StatusCode.ERROR, str(exc)))
+                    raise
+                span.add_event("operation.end")
+                return result, capture_context(span)
+        return wrapper
+    return decorator

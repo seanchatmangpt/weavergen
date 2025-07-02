@@ -1,0 +1,20 @@
+# cli_spec.yaml
+commands:
+  - name: generate
+    summary: "Generate code using Weaver Forge"
+    params:
+      - name: target
+        type: string
+        help: "Target language for code generation (e.g., python, go, rust)"
+        required: true
+      - name: config
+        type: string
+        help: "Path to the weaver-forge.yaml configuration file"
+        default: "weaver-forge.yaml"
+  - name: validate
+    summary: "Validate semantic conventions"
+    params:
+      - name: registry
+        type: string
+        help: "Path to the semantic convention registry"
+        default: "semantic_conventions"

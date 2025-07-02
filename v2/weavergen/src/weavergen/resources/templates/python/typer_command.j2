@@ -1,0 +1,21 @@
+import typer
+{{ params.tracer_setup }}
+from {{ params.cli_module_name }}.models.{{ ctx.name | snake_case }}_params import {{ ctx.name | pascal_case }}Params
+from telemetry import traced_cli   # generated earlier from your telemetry pkg
+
+app = typer.Typer()
+
+@app.command(help="{{ ctx.summary }}")
+def {{ ctx.name | snake_case }}(
+{% for p in ctx.params %}
+    {{ p.name }}: {{ p.python_type }}{% if p.default is not none %} = "{{ p.default }}"{% endif %},
+{% endfor %}
+):
+    args = {{ ctx.name | pascal_case }}Params(**locals())
+    with tracer.start_as_current_span("cli.cmd.{{ ctx.name }}") as span:
+        for k, v in args.dict(exclude_none=True).items():
+            span.set_attribute(k, v)
+        span.add_event("operation.start")
+        result = _{{ ctx.name | snake_case }}_impl(args)   # you implement
+        span.add_event("operation.end")
+        return result, {"trace_id": format(span.get_span_context().trace_id, "032x")}

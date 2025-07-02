@@ -1,0 +1,17 @@
+{{ params.spiff_imports }}
+
+def run_{{ ctx.process_id | snake_case }}(io: {{ ctx.process_id | pascal_case }}IO):
+    parser = BpmnParser()
+    spec = parser.parse("processes/{{ ctx.filename }}")
+    wf = Workflow(spec)
+    # register each generated task
+{% for t in ctx.task_names %}
+    wf.task_registry.register("{{ t }}", {{ params.cli_module_name }}.tasks.{{ t | snake_case }}.{{ t | snake_case }})
+{% endfor %}
+    # start the run
+    with tracer.start_as_current_span("process.{{ ctx.process_id }}") as span:
+        baggage.set_baggage("process.id", "{{ ctx.process_id }}")
+        wf.do_engine_steps()   # happy-path; runs to end
+        result = {d: wf.get_data(d) for d in {{ ctx.data_objects | map(attribute="name") | list }}}
+        span.add_event("process.end", result)
+        return result, capture_context(span)

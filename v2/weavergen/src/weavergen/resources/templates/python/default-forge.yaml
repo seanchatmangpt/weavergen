@@ -1,0 +1,92 @@
+params:
+  module_name: telemetry
+  cli_module_name: workflow_cli
+  tracer_setup: |
+    from opentelemetry import trace
+    tracer = trace.get_tracer("{{ params.cli_module_name }}")
+  common_imports: |
+    from pydantic import BaseModel, Field
+    from typing import Optional, List, Any
+
+  type_map:
+    string: str
+    boolean: bool
+    int: int
+    int64: int
+    double: float
+    string[]: List[str]
+whitespace_control: { trim_blocks: true, lstrip_blocks: true }
+
+filters:
+  semconv_grouped_attributes:
+    lang: python
+    input: registry/semantic_conventions/*.yaml
+  cli_commands:
+    lang: python
+    input: cli_spec.yaml
+  spiff_bpmn:
+    lang: python
+    input: processes/*.bpmn
+
+templates:
+  # Pydantic models for semconv namespaces
+  - template: pydantic_model.j2
+    filter: semconv_grouped_attributes
+    application_mode: each
+    file_name: "{{ params.module_name }}/models/{{ ctx.root_namespace | snake_case }}_attributes.py"
+
+  # Span decorators
+  - template: decorator.j2
+    filter: semconv_grouped_attributes
+    application_mode: each
+    file_name: "{{ params.module_name }}/{{ ctx.root_namespace | snake_case }}.py"
+
+  # Context helper
+  - template: context.j2
+    application_mode: single
+    file_name: "{{ params.module_name }}/context.py"
+
+  # Package init
+  - template: module.j2
+    application_mode: single
+    file_name: "{{ params.module_name }}/__init__.py"
+
+  # CLI models & commands
+  - template: cli_model.j2
+    filter: cli_commands
+    application_mode: each
+    file_name: "{{ params.cli_module_name }}/models/{{ ctx.name | snake_case }}_params.py"
+  - template: typer_command.j2
+    filter: cli_commands
+    application_mode: each
+    file_name: "{{ params.cli_module_name }}/commands/{{ ctx.name | snake_case }}.py"
+  - template: typer_app.j2
+    filter: cli_commands
+    application_mode: single
+    file_name: "{{ params.cli_module_name }}/app.py"
+  - template: cli_entry.j2
+    application_mode: single
+    file_name: "{{ params.cli_module_name }}/__main__.py"
+
+  # BPMN-driven runners & tasks
+  - template: bpmn_model.j2
+    filter: spiff_bpmn
+    application_mode: each
+    file_name: "{{ params.cli_module_name }}/models/{{ ctx.process_id | snake_case }}_io.py"
+  - template: service_task.j2
+    filter: spiff_bpmn
+    application_mode: each
+    file_name: "{{ params.cli_module_name }}/tasks/{{ ctx.task_name | snake_case }}.py"
+  - template: spiff_runner.j2
+    filter: spiff_bpmn
+    application_mode: each
+    file_name: "{{ params.cli_module_name }}/runners/{{ ctx.process_id | snake_case }}.py"
+  - template: typer_process_cmd.j2
+    filter: spiff_bpmn
+    application_mode: each
+    file_name: "{{ params.cli_module_name }}/commands/{{ ctx.process_id | snake_case }}.py"
+
+  # Global instrumentation hooks
+  - template: instrumentation.j2
+    application_mode: single
+    file_name: "{{ params.module_name }}/instrumentation.py"

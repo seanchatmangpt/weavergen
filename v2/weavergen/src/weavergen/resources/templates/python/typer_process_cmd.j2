@@ -1,0 +1,15 @@
+import typer
+from {{ params.cli_module_name }}.models.{{ ctx.process_id | snake_case }}_io import {{ ctx.process_id | pascal_case }}IO
+from {{ params.cli_module_name }}.runners.{{ ctx.process_id | snake_case }} import run_{{ ctx.process_id | snake_case }}
+
+app = typer.Typer()
+
+@app.command(help="{{ ctx.process_name }}")
+def {{ ctx.process_id | snake_case }}(
+{% for d in ctx.data_objects %}
+    {{ d.name }}: {{ params.type_map[d.type] }}{% if d.default is not none %} = "{{ d.default }}"{% endif %},
+{% endfor %}
+):
+    io = {{ ctx.process_id | pascal_case }}IO(**locals())
+    result, trace_ctx = run_{{ ctx.process_id | snake_case }}(io)
+    typer.echo(f"Result: {result}, Trace: {trace_ctx['trace_id']}")

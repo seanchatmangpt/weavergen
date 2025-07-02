@@ -2,6 +2,10 @@
 
 import json
 import logging
+import shutil
+import subprocess
+import sys
+import yaml
 from pathlib import Path
 from typing import List, Optional
 
@@ -15,11 +19,8 @@ from .engine.simple_engine import SimpleBpmnEngine
 from .engine.service_task import WeaverGenServiceEnvironment
 from .cli_workflow import workflow_app
 from .cli_debug import debug_app
-from .commands.forge import forge_app
-from .commands.generate import generate_app
 from .commands.weaver import weaver_app
 from .commands.bpmn import bpmn_app
-from .commands.debug import debug_app as commands_debug_app
 from .commands.templates import templates_app
 from .commands.semantic import semantic_app
 from .commands.mining import mining_app
@@ -32,8 +33,6 @@ console = Console()
 app.add_typer(workflow_app, name="workflow", help="Manage BPMN workflows")
 app.add_typer(debug_app, name="debug", help="Debug and visualize OpenTelemetry spans")
 app.add_typer(weaver_app, name="weaver", help="Direct Weaver binary commands")
-app.add_typer(forge_app, name="forge", help="Weaver Forge code generation commands")
-app.add_typer(generate_app, name="generate", help="Code generation commands")
 app.add_typer(bpmn_app, name="bpmn", help="BPMN workflow execution")
 app.add_typer(templates_app, name="templates", help="Template management")
 app.add_typer(semantic_app, name="semantic", help="AI-powered semantic generation")
@@ -194,31 +193,73 @@ def delete_instance(
         raise typer.Exit(1)
 
 
+class PythonGenerator:
+    def __init__(self, config_path: Path = None, output_dir: Path = Path(".")):
+        # Load embedded default if none provided
+        if config_path is None:
+            pkg_dir = Path(__file__).parent
+            config_path = pkg_dir / "resources" / "templates" / "python" / "default-forge.yaml"
+        self.config_path = config_path
+        self.config = yaml.safe_load(config_path.read_text())
+        self.output_dir = output_dir
+
+    def run(self):
+        # Invoke the Rust CLI under the hood
+        subprocess.check_call([
+            "weaver", "registry", "generate", "python",
+            "--config", str(self.config_path),
+            "--output", str(self.output_dir),
+        ])
+
+
 @app.command()
 def generate(
-    semantic_file: str = typer.Argument(help="Path to semantic convention YAML file"),
-    language: str = typer.Option("python", "--language", "-l", help="Target language for code generation"),
-    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output directory"),
+    target: str = typer.Option("python", help="Weavergen target (e.g. python, go, rust)"),
+    config: Path = typer.Option(
+        None,
+        "--config",
+        "-c",
+        exists=True,
+        help="Path to your weaver-forge.yaml (falls back to embedded default)"
+    ),
 ):
-    """Generate code from semantic conventions (convenience command)."""
-    console.print("[cyan]Generating code from semantic conventions...[/cyan]")
-    console.print(f"  Input: {semantic_file}")
-    console.print(f"  Language: {language}")
-    console.print(f"  Output: {output or 'stdout'}")
-    
-    # This would integrate with the actual Weaver Forge
-    console.print("\n[yellow]Note: This is a placeholder. Actual Weaver Forge integration pending.[/yellow]")
+    """
+    Generate code for the given target by invoking Weavergen under the hood.
+    """
+    # Locate the Weaver Rust binary
+    weaver_bin = shutil.which("weaver")
+    if not weaver_bin:
+        typer.secho("Could not find `weaver` binary in PATH.", fg="red")
+        raise typer.Exit(1)
 
+    # Determine config path
+    if not config:
+        # Copy embedded default to cwd
+        default_cfg = Path(__file__).parent / "resources" / "templates" / "python" / "default-forge.yaml"
+        config = Path.cwd() / "weaver-forge.yaml"
+        config.write_text(default_cfg.read_text())
+        typer.secho(f"Initialized default weaver-forge.yaml", fg="green")
+
+    # Delegate to Rust CLI
+    cmd = [weaver_bin, "registry", "generate", target, "--config", str(config)]
+    typer.secho(f"Running: {' '.join(cmd)}", fg="cyan")
+    proc = subprocess.run(cmd)
+    sys.exit(proc.returncode)
 
 @app.command()
-def validate(
-    semantic_file: str = typer.Argument(help="Path to semantic convention YAML file"),
+def api(
+    config: Path = typer.Argument(
+        None,
+        help="Path to your weaver-forge.yaml (embedded default if omitted)"
+    ),
+    out_dir: Path = typer.Option(".", "--out", "-o", help="Directory to generate into"),
 ):
-    """Validate semantic convention file (convenience command)."""
-    console.print(f"[cyan]Validating semantic convention file: {semantic_file}[/cyan]")
-    
-    # This would validate against OTel semantic conventions
-    console.print("\n[yellow]Note: This is a placeholder. Actual validation logic pending.[/yellow]")
+    """
+    Programmatic API: Generate code without shelling out.
+    """
+    gen = PythonGenerator(config_path=config, output_dir=out_dir)
+    gen.run()
+    typer.secho(f"Code generated under {out_dir}", fg="green")
 
 
 @app.command()

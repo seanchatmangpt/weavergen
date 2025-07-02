@@ -1,0 +1,6 @@
+{{ params.common_imports }}
+
+class {{ ctx.process_id | pascal_case }}IO(BaseModel):
+{% for data in ctx.data_objects %}
+    {{ data.name | snake_case }}: {{ params.type_map[data.type] }}{% if not data.required %} = None{% endif %}
+{% endfor %}

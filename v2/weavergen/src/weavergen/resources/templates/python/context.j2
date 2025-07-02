@@ -1,0 +1,9 @@
+from opentelemetry.trace import Span
+
+def capture_context(span: Span) -> dict[str, str]:
+    """Returns {trace_id, span_id} as hex strings for logging / headers."""
+    ctx = span.get_span_context()
+    return {
+        "trace_id": format(ctx.trace_id, "032x"),
+        "span_id": format(ctx.span_id, "016x"),
+    }

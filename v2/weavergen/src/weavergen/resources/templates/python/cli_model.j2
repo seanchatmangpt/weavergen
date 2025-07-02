@@ -1,0 +1,6 @@
+{{ params.common_imports }}
+
+class {{ ctx.name | pascal_case }}Params(BaseModel):
+{% for p in ctx.params %}
+    {{ p.name | snake_case }}: {{ p.python_type }}{% if p.default is not none %} = "{{ p.default }}"{% endif %}{% if not p.required %} | None = None{% endif %}
+{% endfor %}

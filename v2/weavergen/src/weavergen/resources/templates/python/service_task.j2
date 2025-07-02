@@ -1,0 +1,15 @@
+{{ params.spiff_imports }}
+from {{ params.module_name }}.models.{{ ctx.process_id | snake_case }}_attributes import {{ ctx.process_id | pascal_case }}Attributes
+
+def {{ ctx.task_name | snake_case }}(workflow, task):
+    """Automatically generated for BPMN task '{{ ctx.task_name }}'."""
+    with tracer.start_as_current_span("task.{{ ctx.task_name }}") as span:
+        task_counter.add(1, {"task": "{{ ctx.task_name }}"})
+        # load inputs
+        inputs = {{ ctx.process_id | pascal_case }}IO(**task.data)
+        # USER LOGIC: fill in via an override template if needed
+        outputs = process_{{ ctx.task_name | snake_case }}(inputs)
+        # set outputs back onto task.data
+        for k, v in outputs.dict(exclude_none=True).items():
+            task.data[k] = v
+        return task

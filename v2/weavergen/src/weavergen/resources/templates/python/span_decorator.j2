@@ -1,0 +1,81 @@
+{# Jinja2 template for generating Python span decorators from semantic conventions #}
+
+from functools import wraps
+from typing import Any, Callable, Dict, Optional
+import time
+
+from opentelemetry import trace
+from opentelemetry.trace import Status, StatusCode, Span
+
+{# Import generated semantic convention attributes #}
+from weavergen.semconv import (
+    COMPONENT_TYPE,
+    COMPONENT_TYPE__WORKFLOW,
+    COMPONENT_TYPE__AGENT,
+    COMPONENT_TYPE__GENERATOR,
+    COMPONENT_TYPE__VALIDATOR,
+    ENGINE,
+    {# Add other relevant attributes from your semantic conventions here #}
+)
+
+tracer = trace.get_tracer("weavergen", "2.0.0")
+
+def get_current_span() -> Optional[Span]:
+    """Get the current active span."""
+    return trace.get_current_span()
+
+def add_span_event(name: str, attributes: Optional[Dict[str, Any]] = None):
+    """Add an event to the current span."""
+    span = get_current_span()
+    if span and span.is_recording():
+        span.add_event(name, attributes or {})
+
+{% for group in semconv_groups %}
+{% if group.type == 'span' %}
+def {{ group.id | snake_case }}_span(**kwargs) -> Callable:
+    """
+    Decorator for {{ group.brief }} spans.
+    """
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs_inner: Any) -> Any:
+            # Determine operation name for the span
+            operation_name = kwargs.get("operation", func.__name__)
+            if "cli.command" in kwargs:
+                operation_name = kwargs["cli.command"]
+            elif "service.operation" in kwargs:
+                operation_name = kwargs["service.operation"]
+            elif "task.name" in kwargs:
+                operation_name = kwargs["task.name"]
+            elif "workflow.id" in kwargs:
+                operation_name = kwargs["workflow.id"]
+
+            with tracer.start_as_current_span(f"{{ group.prefix }}.{operation_name}") as span:
+                span.set_attribute("weaver.type", "{{ group.id | snake_case }}_span")
+                
+                # Set attributes from kwargs passed to the decorator
+                for key, value in kwargs.items():
+                    if isinstance(value, (str, int, float, bool)):
+                        span.set_attribute(key, value)
+
+                # Set attributes from kwargs passed to the decorated function
+                for key, value in kwargs_inner.items():
+                    if isinstance(value, (str, int, float, bool)):
+                        span.set_attribute(key, value)
+
+                start_time = time.time()
+                try:
+                    result = func(*args, **kwargs_inner)
+                    span.set_status(Status(StatusCode.OK))
+                    span.set_attribute("duration_ms", (time.time() - start_time) * 1000)
+                    return result
+                except Exception as e:
+                    span.set_status(Status(StatusCode.ERROR, str(e)))
+                    span.record_exception(e)
+                    span.set_attribute("error.type", type(e).__name__)
+                    raise
+        return wrapper
+    return decorator
+
+{% endif %}
+{% endfor %}

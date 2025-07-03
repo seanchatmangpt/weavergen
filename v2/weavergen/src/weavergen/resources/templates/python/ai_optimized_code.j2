@@ -1,0 +1,85 @@
+{# Jinja2 template for generating AI-optimized code #}
+
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter, BatchSpanProcessor
+from opentelemetry.sdk.resources import Resource
+from typing import Dict, Any, Callable
+import logging
+
+# Configure a basic tracer for demonstration
+resource = Resource.create({"service.name": "generated-ai-optimized-code"})
+provider = TracerProvider(resource=resource)
+provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+tracer = trace.get_tracer(__name__)
+
+logger = logging.getLogger(__name__)
+
+def ai_optimized_{{ function_name | snake_case }}(input_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    AI-optimized function generated for '{{ function_name }}'.
+    This function incorporates best practices and optimizations suggested by AI.
+    """
+    with tracer.start_as_current_span("ai.optimized.{{ function_name | snake_case }}") as span:
+        span.set_attribute("function.name", "{{ function_name }}")
+        span.set_attribute("input.data_keys", str(list(input_data.keys())))
+        logger.info(f"Executing AI-optimized function: {{ function_name }} with input {input_data}")
+
+        # AI-suggested optimization: Early exit for common cases
+        {% if enable_early_exit %}
+        if input_data.get("is_cached", False):
+            span.set_attribute("optimization.early_exit", True)
+            logger.info("Early exit optimization applied.")
+            return {"status": "cached", "result": input_data.get("cached_result")}
+        {% endif %}
+
+        # AI-suggested optimization: Batch processing for performance
+        {% if enable_batch_processing %}
+        if isinstance(input_data.get("items"), list) and len(input_data["items"]) > 1:
+            span.set_attribute("optimization.batch_processing", True)
+            logger.info("Batch processing optimization applied.")
+            results = [{{ function_name | snake_case }}_single_item(item) for item in input_data["items"]]
+            return {"status": "processed_batch", "results": results}
+        {% endif %}
+
+        # Original function logic (or further AI-optimized logic)
+        import time
+        time.sleep(0.05) # Simulate complex computation
+
+        output_result = {"status": "completed", "processed_value": input_data.get("value", 0) * 2}
+        span.set_attribute("function.status", output_result["status"])
+        logger.info(f"AI-optimized function {{ function_name }} completed with result: {output_result}")
+        return output_result
+
+{% if enable_batch_processing %}
+def {{ function_name | snake_case }}_single_item(item: Any) -> Any:
+    """
+    Helper for batch processing.
+    """
+    # Simulate single item processing
+    time.sleep(0.01)
+    return item * 2
+{% endif %}
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    print(f"--- Generated AI-Optimized Code for {{ function_name }} ---")
+
+    # Example 1: Basic execution
+    print("\nRunning basic execution:")
+    result_basic = ai_optimized_{{ function_name | snake_case }}({"value": 10})
+    print(f"Result: {result_basic}")
+
+    # Example 2: With early exit optimization
+    {% if enable_early_exit %}
+    print("\nRunning with early exit:")
+    result_early_exit = ai_optimized_{{ function_name | snake_case }}({"value": 20, "is_cached": True, "cached_result": "precomputed_data"})
+    print(f"Result: {result_early_exit}")
+    {% endif %}
+
+    # Example 3: With batch processing optimization
+    {% if enable_batch_processing %}
+    print("\nRunning with batch processing:")
+    result_batch = ai_optimized_{{ function_name | snake_case }}({"items": [1, 2, 3, 4, 5]})
+    print(f"Result: {result_batch}")
+    {% endif %}

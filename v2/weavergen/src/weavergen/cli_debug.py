@@ -4,6 +4,7 @@ import json
 from typing import Optional
 from datetime import datetime
 import time
+from pathlib import Path
 
 import typer
 from rich.console import Console
@@ -27,23 +28,132 @@ debug_app = typer.Typer(help="Debug and visualize OpenTelemetry spans")
 console = Console()
 
 # In-memory span storage for debugging
+SPAN_FILE = Path("/tmp/weavergen_spans.json")
+
 class InMemorySpanExporter:
     """Simple in-memory span storage."""
     def __init__(self):
-        self.spans = []
+        self.spans = self._load_spans()
     
     def export(self, spans):
-        self.spans.extend(spans)
+        for span in spans:
+            self.spans.append(self._serialize_span(span))
+        self._save_spans()
         return True
     
     def get_finished_spans(self):
-        return self.spans
+        # Deserialize spans when retrieved
+        return [self._deserialize_span(s) for s in self.spans]
     
     def clear(self):
         self.spans = []
+        self._save_spans()
+
+    def shutdown(self):
+        self._save_spans()
+
+    def _load_spans(self):
+        if SPAN_FILE.exists():
+            try:
+                with open(SPAN_FILE, 'r') as f:
+                    return json.load(f)
+            except json.JSONDecodeError:
+                return []
+        return []
+
+    def _save_spans(self):
+        with open(SPAN_FILE, 'w') as f:
+            json.dump(self.spans, f, indent=2, default=str)
+
+    def _serialize_span(self, span):
+        return {
+            "name": span.name,
+            "context": {
+                "trace_id": format(span.context.trace_id, "032x"),
+                "span_id": format(span.context.span_id, "016x"),
+                "is_remote": span.context.is_remote,
+                "trace_flags": format(span.context.trace_flags, "02x"),
+                "trace_state": dict(span.context.trace_state) if span.context.trace_state else None,
+            },
+            "parent_span_id": format(span.parent.span_id, "016x") if span.parent else None,
+            "start_time": span.start_time,
+            "end_time": span.end_time,
+            "attributes": dict(span.attributes),
+            "events": [
+                {
+                    "name": event.name,
+                    "timestamp": event.timestamp,
+                    "attributes": dict(event.attributes),
+                }
+                for event in span.events
+            ],
+            "status": {
+                "status_code": span.status.status_code.name,
+                "description": span.status.description,
+            },
+            "kind": span.kind.name,
+            "resource": {
+                "attributes": dict(span.resource.attributes)
+            }
+        }
+
+    def _deserialize_span(self, data):
+        from opentelemetry.trace import SpanContext, TraceFlags, SpanKind, Status, StatusCode
+        from opentelemetry.sdk.trace import ReadableSpan
+        from opentelemetry.sdk.resources import Resource
+        from opentelemetry.sdk.trace.export import SpanLimits
+
+        span_context = SpanContext(
+            trace_id=int(data["context"]["trace_id"], 16),
+            span_id=int(data["context"]["span_id"], 16),
+            is_remote=data["context"]["is_remote"],
+            trace_flags=TraceFlags(int(data["context"]["trace_flags"], 16)),
+            trace_state=data["context"]["trace_state"],
+        )
+
+        parent = None
+        if data["parent_span_id"]:
+            parent = SpanContext(
+                trace_id=span_context.trace_id,
+                span_id=int(data["parent_span_id"], 16),
+                is_remote=True, # Assuming parent is remote if not current
+            )
+
+        status_code = getattr(StatusCode, data["status"]["status_code"])
+        status = Status(status_code, data["status"]["description"])
+        kind = getattr(SpanKind, data["kind"])
+        resource = Resource.create(data["resource"]["attributes"])
+
+        # Create a dummy tracer provider and tracer for ReadableSpan constructor
+        from opentelemetry.sdk.trace import TracerProvider
+        provider = TracerProvider(resource=resource)
+        tracer = provider.get_tracer("dummy_tracer")
+
+        # Reconstruct ReadableSpan (some fields might be missing or simplified)
+        span = ReadableSpan(
+            name=data["name"],
+            context=span_context,
+            parent=parent,
+            resource=resource,
+            attributes=data["attributes"],
+            events=[], # Events are handled separately
+            links=[],
+            kind=kind,
+            status=status,
+            start_time=data["start_time"],
+            end_time=data["end_time"],
+            tracer=tracer,
+            span_limits=SpanLimits(), # Default limits
+        )
+        # Manually add events as ReadableSpan constructor doesn't take them directly
+        for event_data in data["events"]:
+            span.add_event(event_data["name"], event_data["attributes"], event_data["timestamp"])
+
+        return span
 
 _span_storage = InMemorySpanExporter()
 _debug_enabled = False
+
 
 
 def enable_span_capture():

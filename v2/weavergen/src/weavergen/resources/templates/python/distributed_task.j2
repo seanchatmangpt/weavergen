@@ -1,0 +1,43 @@
+{# Jinja2 template for generating a distributed task runner #}
+
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter, BatchSpanProcessor
+from opentelemetry.sdk.resources import Resource
+from typing import Dict, Any
+import logging
+
+# Configure a basic tracer for demonstration
+resource = Resource.create({"service.name": "generated-distributed-task"})
+provider = TracerProvider(resource=resource)
+provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+tracer = trace.get_tracer(__name__)
+
+logger = logging.getLogger(__name__)
+
+def run_{{ task_name | snake_case }}(task_params: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Generated runner for the distributed task '{{ task_name }}'.
+    This function executes the task and ensures OpenTelemetry tracing.
+    """
+    with tracer.start_as_current_span("{{ task_name | snake_case }}.execute") as span:
+        span.set_attribute("task.generated_name", "{{ task_name }}")
+        span.set_attribute("task.generated_params", str(task_params))
+        logger.info(f"Executing generated distributed task: {{ task_name }} with params {task_params}")
+
+        # Placeholder for actual task logic, which would be injected or called remotely
+        # For demonstration, we simulate a successful execution.
+        import time
+        time.sleep(0.05) # Simulate some work
+
+        result = {"status": "completed", "output": f"Task {{ task_name }} processed successfully by generated runner"}
+        span.set_attribute("task.generated_result", result["status"])
+        logger.info(f"Generated distributed task {{ task_name }} completed with result: {result}")
+        return result
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    print(f"--- Generated Distributed Task Runner for {{ task_name }} ---")
+    sample_params = {"input_data": "sample_value", "config_id": "abc123"}
+    task_output = run_{{ task_name | snake_case }}(sample_params)
+    print(f"Output: {task_output}")

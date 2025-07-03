@@ -1,0 +1,42 @@
+commands:
+  - name: init
+    help: Scaffold a new weavergen project.
+    options:
+      - name: --force
+        type: bool
+        help: Overwrite existing files.
+  - name: generate
+    help: Generate code from specifications.
+    subcommands:
+      - name: python
+        help: Generate Python code.
+        options:
+          - name: --config
+            type: str
+            default: ./weaver-forge.yaml
+            help: Path to weaver-forge.yaml.
+          - name: --filter
+            type: str
+            help: Name of the filter to use.
+          - name: --incremental
+            type: bool
+            help: Enable incremental generation.
+          - name: --watch
+            type: bool
+            help: Enable watch mode.
+          - name: --hot-reload
+            type: bool
+            help: Enable hot-reloading.
+  - name: certify
+    help: Run Zero-Drift Governance Certification.
+    options:
+      - name: --governance
+        type: str
+        default: ./governance.yaml
+        help: Path to governance.yaml.
+      - name: --report
+        type: str
+        help: Path to save the JSON report.
+      - name: --fail-on-warning
+        type: bool
+        help: Exit with a non-zero status code on warnings.

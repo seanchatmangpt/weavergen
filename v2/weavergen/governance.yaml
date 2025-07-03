@@ -1,0 +1,24 @@
+# GCT-1: Weavergen Governance Certification Tests
+# This file defines the Zero-Drift Governance checks for your project.
+
+rules:
+  # Process Drift: Ensures BPMN models match the generated workflow code.
+  - id: GCT-1.1
+    name: process_drift
+    description: "Verify that the implemented BPMN process has not drifted from its definition."
+    enabled: true
+    # Configuration for the process drift check would go here.
+    # For example, which BPMN files to check against which generated code.
+
+  # Trace Coverage: Ensures all generated code is adequately instrumented.
+  - id: GCT-1.2
+    name: trace_coverage
+    description: "Verify that all generated service tasks and CLI commands have complete OpenTelemetry trace coverage."
+    enabled: true
+    # Configuration for trace coverage, e.g., minimum span count per function.
+
+  # Decision Fidelity: Ensures decision points in workflows are correctly implemented.
+  - id: GCT-1.3
+    name: decision_fidelity
+    description: "Verify that DMN decision tables or BPMN gateways are accurately reflected in the generated code."
+    enabled: false # This might require more advanced static analysis.

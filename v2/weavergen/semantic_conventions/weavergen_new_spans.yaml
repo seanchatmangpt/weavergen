@@ -1,0 +1,329 @@
+# semantic_conventions/weavergen_new_spans.yaml
+# Defines OpenTelemetry semantic conventions for new Weavergen functionalities.
+
+groups:
+  - id: weavergen.semantic
+    prefix: weavergen.semantic
+    type: span
+    brief: "Generic semantic span for operations."
+    attributes:
+      - id: component
+        type: string
+        brief: "Type of component (e.g., bpmn_engine, generator, validator)."
+        examples: ["bpmn_engine", "generator"]
+      - id: operation
+        type: string
+        brief: "Name of the operation."
+        examples: ["execute_workflow", "generate_code"]
+      - id: instance.type
+        type: string
+        brief: "Class name of the instance."
+        examples: ["SimpleBpmnEngine", "CodeGenerator"]
+
+  - id: weavergen.workflow
+    prefix: weavergen.workflow
+    type: span
+    brief: "Span for workflow execution."
+    attributes:
+      - id: workflow.id
+        type: string
+        brief: "ID of the workflow."
+        examples: ["my-workflow-123"]
+      - id: workflow.spec
+        type: string
+        brief: "Specification name of the workflow.""
+        examples: ["my_workflow_spec"]
+
+  - id: weavergen.task
+    prefix: weavergen.task
+    type: span
+    brief: "Span for BPMN task execution."
+    attributes:
+      - id: task.name
+        type: string
+        brief: "Name of the BPMN task."
+        examples: ["process_data_task"]
+      - id: task.type
+        type: string
+        brief: "Type of the BPMN task (e.g., service_task, user_task)."
+        examples: ["service_task"]
+
+  - id: weavergen.service_task
+    prefix: weavergen.service_task
+    type: span
+    brief: "Span for service task execution."
+    attributes:
+      - id: service.operation
+        type: string
+        brief: "Name of the service operation."
+        examples: ["call_external_api"]
+      - id: param.key
+        type: string
+        brief: "Key of the operation parameter."
+        examples: ["input_data"]
+      - id: param.value
+        type: string
+        brief: "Value of the operation parameter."
+        examples: ["some_value"]
+
+  - id: weavergen.cli_command
+    prefix: weavergen.cli_command
+    type: span
+    brief: "Span for CLI command execution."
+    attributes:
+      - id: cli.command
+        type: string
+        brief: "Name of the CLI command."
+        examples: ["generate"]
+      - id: arg.key
+        type: string
+        brief: "Key of the command argument."
+        examples: ["config_file"]
+      - id: arg.value
+        type: string
+        brief: "Value of the command argument."
+        examples: ["weaver-forge.yaml"]
+
+  - id: weavergen.distributed_orchestration
+    prefix: distributed.orchestration
+    type: span
+    brief: "Spans for distributed execution orchestration."
+    attributes:
+      - id: task.name
+        type: string
+        brief: "Name of the distributed task."
+        examples: ["data_processing_job", "model_training_task"]
+      - id: task.parameters
+        type: string
+        brief: "JSON string of task parameters."
+        examples: ["{\"input_file\": \"data.csv\", \"output_format\": \"json\"}"]
+      - id: task.result
+        type: string
+        brief: "Result status of the distributed task."
+        examples: ["completed", "failed", "skipped"]
+      - id: workflow.id
+        type: string
+        brief: "ID of the distributed workflow."
+        examples: ["workflow-12345", "pipeline-abc"]
+      - id: workflow.status
+        type: string
+        brief: "Current status of the distributed workflow."
+        examples: ["in_progress", "completed", "failed", "paused"]
+
+  - id: weavergen.ai_optimization
+    prefix: ai.optimization
+    type: span
+    brief: "Spans for AI-powered optimization processes."
+    attributes:
+      - id: input.telemetry_keys
+        type: string
+        brief: "JSON string of keys from input telemetry data."
+        examples: ["{\"cpu_usage\", \"memory_usage\"}"]
+      - id: optimization.score
+        type: double
+        brief: "Overall optimization score (0.0-1.0)."
+        examples: [0.85, 0.92]
+      - id: optimization.recommendations_count
+        type: int
+        brief: "Number of optimization recommendations generated."
+        examples: [1, 3]
+      - id: optimization.plan_keys
+        type: string
+        brief: "JSON string of keys from the optimization plan."
+        examples: ["{\"resource_allocation\", \"workflow_adjustments\"}"]
+      - id: optimization.apply_status
+        type: string
+        brief: "Status of applying the optimization plan."
+        examples: ["applied", "partially_applied", "failed"]
+
+  - id: weavergen.security_compliance
+    prefix: security.compliance
+    type: span
+    brief: "Spans for security and compliance operations."
+    attributes:
+      - id: user.id
+        type: string
+        brief: "Identifier of the user performing the action."
+        examples: ["user-123", "admin_user"]
+      - id: resource.id
+        type: string
+        brief: "Identifier of the resource being accessed."
+        examples: ["sensitive_data_api", "customer_database"]
+      - id: security.authorized
+        type: boolean
+        brief: "True if the action was authorized, false otherwise."
+        examples: [true, false]
+      - id: security.reason
+        type: string
+        brief: "Reason for authorization status."
+        examples: ["admin access", "granted", "denied"]
+      - id: compliance.tags
+        type: string
+        brief: "JSON string of compliance tags applied."
+        examples: ["{\"gdpr_compliant\": \"true\", \"pci_scope\": \"false\"}"]
+      - id: compliance.status
+        type: string
+        brief: "Status of compliance metadata handling."
+        examples: ["processed", "skipped", "error"]
+
+  - id: weavergen.process_mining
+    prefix: process.mining
+    type: span
+    brief: "Spans for process mining and analytics operations."
+    attributes:
+      - id: input.span_log_count
+        type: int
+        brief: "Number of span logs processed as input."
+        examples: [100, 5000]
+      - id: input.span_logs_json
+        type: string
+        brief: "JSON string of the input span logs (truncated if large)."
+        examples: ["[{\"trace_id\": \"t1\", \"name\": \"activityA\"}, ...]", "[]"]
+      - id: model.id
+        type: string
+        brief: "Identifier of the discovered process model."
+        examples: ["model-123", "alpha-miner-output"]
+      - id: model.fitness
+        type: double
+        brief: "Fitness score of the discovered model (0.0-1.0)."
+        examples: [0.92, 0.75]
+      - id: conformance.score
+        type: double
+        brief: "Conformance score between logs and model (0.0-1.0)."
+        examples: [0.88, 0.65]
+      - id: conformance.deviations
+        type: int
+        brief: "Number of deviations found during conformance checking."
+        examples: [0, 5]
+      - id: performance.avg_duration_ms
+        type: double
+        brief: "Average duration of the process in milliseconds."
+        examples: [150.5, 1200.0]
+      - id: performance.bottlenecks_count
+        type: int
+        brief: "Number of bottlenecks identified."
+        examples: [0, 2]
+
+  - id: weavergen.self_improvement
+    prefix: feedback.self_improvement
+    type: span
+    brief: "Spans for self-improvement feedback loops."
+    attributes:
+      - id: artifacts.count
+        type: int
+        brief: "Number of generated artifacts analyzed."
+        examples: [10, 50]
+      - id: metrics.code_quality_score
+        type: double
+        brief: "Code quality score of generated artifacts (0.0-1.0)."
+        examples: [0.9, 0.75]
+      - id: metrics.generation_time_ms
+        type: double
+        brief: "Time taken for code generation in milliseconds."
+        examples: [250.0, 1500.0]
+      - id: metrics.template_reuse_rate
+        type: double
+        brief: "Rate of template reuse (0.0-1.0)."
+        examples: [0.6, 0.9]
+      - id: metrics.errors_detected
+        type: int
+        brief: "Number of errors detected during generation."
+        examples: [0, 5]
+      - id: feedback.keys
+        type: string
+        brief: "JSON string of keys from feedback data."
+        examples: ["{\"code_quality_score\", \"generation_time_ms\"}"]
+      - id: analysis.opportunities
+        type: int
+        brief: "Number of optimization opportunities identified."
+        examples: [0, 3]
+      - id: plan.recommendations_count
+        type: int
+        brief: "Number of recommendations in the optimization plan."
+        examples: [1, 2]
+      - id: optimization.apply_status
+        type: string
+        brief: "Status of applying self-optimization."
+        examples: ["applied", "no_change_needed", "failed"]
+
+  - id: weavergen.predictive_semantics
+    prefix: predictive.semantics
+    type: span
+    brief: "Spans for predictive analytics on semantic evolution."
+    attributes:
+      - id: telemetry.data_points
+        type: int
+        brief: "Number of telemetry data points analyzed."
+        examples: [1000, 10000]
+      - id: trends.emerging_patterns_count
+        type: int
+        brief: "Number of emerging patterns identified."
+        examples: [0, 2]
+      - id: trends.overall_stability_score
+        type: double
+        brief: "Overall stability score of semantic conventions (0.0-1.0)."
+        examples: [0.95, 0.8]
+      - id: trends.predicted_evolution_json
+        type: string
+        brief: "JSON string of predicted semantic evolution details."
+        examples: ["{\"timestamp\": \"07/2025\", \"emerging_patterns\": []}"]
+      - id: analysis.opportunities
+        type: int
+        brief: "Number of opportunities for semantic updates."
+        examples: [0, 1]
+      - id: recommendations.count
+        type: int
+        brief: "Number of semantic update recommendations."
+        examples: [0, 1]
+
+  - id: weavergen.autonomous_semconv
+    prefix: autonomous.semconv
+    type: span
+    brief: "Spans for autonomous semantic convention recommendations."
+    attributes:
+      - id: telemetry.data_points
+        type: int
+        brief: "Number of telemetry data points analyzed for patterns."
+        examples: [500, 2000]
+      - id: patterns.identified_count
+        type: int
+        brief: "Number of operational patterns identified."
+        examples: [1, 3]
+      - id: proposals.count
+        type: int
+        brief: "Number of new semantic convention proposals generated."
+        examples: [0, 1]
+
+  - id: weavergen.ai_code_optimization
+    prefix: ai.code_optimization
+    type: span
+    brief: "Spans for AI-driven code generation and workflow optimization."
+    attributes:
+      - id: code.snippet_length
+        type: int
+        brief: "Length of the code snippet being optimized."
+        examples: [100, 500]
+      - id: optimization.goals
+        type: string
+        brief: "JSON string of optimization goals."
+        examples: ["{\"performance\", \"readability\"}"]
+      - id: optimization.score
+        type: double
+        brief: "Optimization score (0.0-1.0)."
+        examples: [0.9, 0.82]
+      - id: optimization.improvements_count
+        type: int
+        brief: "Number of improvements applied."
+        examples: [1, 3]
+      - id: bpmn.xml_length
+        type: int
+        brief: "Length of the BPMN XML being optimized."
+        examples: [200, 800]
+      - id: optimization.strategy
+        type: string
+        brief: "Strategy used for BPMN optimization."
+        examples: ["cost_reduction", "performance_enhancement"]
+      - id: workflow.efficiency_gain
+        type: double
+        brief: "Efficiency gain from BPMN optimization (0.0-1.0)."
+        examples: [0.15, 0.08]

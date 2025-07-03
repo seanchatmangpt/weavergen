@@ -1,0 +1,5 @@
+schema_version: 1.0
+
+registry:
+  path: semantic_conventions/weavergen_new_spans.yaml
+

@@ -1,0 +1,31 @@
+[project]  # https://packaging.python.org/en/latest/specifications/pyproject-toml/
+[project.urls]  # https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels
+  "pytest (>=8.3.4)",
+  "pytest-mock (>=3.14.0)",
+  "pytest-xdist (>=3.6.1)",
+[tool.coverage.report]  # https://coverage.readthedocs.io/en/latest/config.html#report
+[tool.coverage.run]  # https://coverage.readthedocs.io/en/latest/config.html#run
+command_line = "--module pytest"
+[tool.coverage.xml]  # https://coverage.readthedocs.io/en/latest/config.html#xml
+[tool.mypy]  # https://mypy.readthedocs.io/en/latest/config_file.html
+[tool.pytest.ini_options]  # https://docs.pytest.org/en/latest/reference/reference.html#ini-options-ref
+addopts = "--color=yes --doctest-modules --exitfirst --failed-first --verbosity=2 --junitxml=reports/pytest.xml"
+testpaths = ["src", "tests"]
+src = ["src", "tests"]
+    test: bool = typer.Option(False, "--test", help="Run test orchestration"),
+            mode = "test" if test else "production" if production else "default"
+            console.print("   Variables: {semantic_file: 'test.yaml', version: '1.0'}")
+    test_data: Optional[Path] = typer.Option(None, "--test-data", "-t", help="Test data file (JSON)"),
+            if test_data:
+    def test_agent_communication(data: Dict[str, Any]) -> None:
+        with tracer.start_as_current_span("agent.service.test_communication") as span:
+            # Simulate communication test
+                    console.print(f"[green]✓[/green] Communication test: agent_{i} → agent_{i+1}")
+                    console.print(f"[green]✓[/green] Event test: agent_{i} broadcast to {agent_count - 1} subscribers")
+            data['communication_test'] = {
+                'flows_tested': len(communication_flows),
+            span.set_attribute("flows_tested", len(communication_flows))
+            span.set_attribute("test_success", True)
+            console.print(f"[green]✓[/green] Communication test completed - {len(communication_flows)} flows tested")
+    globals_dict['agent_test_communication'] = tasks.test_agent_communication
+    user_info = {"user_id": "test_user", "is_admin": False, "has_access": True}

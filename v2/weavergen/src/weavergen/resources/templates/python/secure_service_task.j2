@@ -1,0 +1,83 @@
+{# Jinja2 template for generating a secure service task #}
+
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter, BatchSpanProcessor
+from opentelemetry.sdk.resources import Resource
+from typing import Dict, Any
+import logging
+
+from weavergen.security.compliance import perform_security_check, handle_compliance_metadata
+
+# Configure a basic tracer for demonstration
+resource = Resource.create({"service.name": "generated-secure-task"})
+provider = TracerProvider(resource=resource)
+provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+tracer = trace.get_tracer(__name__)
+
+logger = logging.getLogger(__name__)
+
+def execute_{{ task_name | snake_case }}(task_params: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Generated secure service task runner for '{{ task_name }}'.
+    This function incorporates security checks and compliance metadata handling.
+    """
+    with tracer.start_as_current_span("{{ task_name | snake_case }}.execute_secure") as span:
+        span.set_attribute("task.generated_name", "{{ task_name }}")
+        span.set_attribute("task.generated_params", str(task_params))
+        logger.info(f"Executing generated secure task: {{ task_name }} with params {task_params}")
+
+        # 1. Perform Security Check
+        user_context = task_params.get("user_context", {})
+        resource_to_access = task_params.get("resource_id", "unknown_resource")
+        
+        security_result = perform_security_check(user_context, resource_to_access)
+        span.set_attribute("security.check_authorized", security_result["authorized"])
+        span.set_attribute("security.check_reason", security_result["reason"])
+
+        if not security_result["authorized"]:
+            logger.warning(f"Access denied for task {{ task_name }}: {security_result["reason"]}")
+            span.set_attribute("task.status", "access_denied")
+            return {"status": "failed", "message": f"Access denied: {security_result["reason"]}"}
+
+        # 2. Handle Compliance Metadata
+        data_to_process = task_params.get("data", {})
+        compliance_tags = task_params.get("compliance_tags", {})
+
+        processed_data = handle_compliance_metadata(data_to_process, compliance_tags)
+        span.set_attribute("compliance.processed", True)
+
+        # 3. Execute actual task logic (placeholder)
+        import time
+        time.sleep(0.07) # Simulate some work
+
+        final_result = {"status": "completed", "output": f"Secure task {{ task_name }} processed successfully", "processed_data": processed_data}
+        span.set_attribute("task.status", final_result["status"])
+        logger.info(f"Secure task {{ task_name }} completed with result: {final_result}")
+        return final_result
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    print(f"--- Generated Secure Service Task Runner for {{ task_name }} ---")
+    
+    # Example: Authorized access
+    authorized_params = {
+        "user_context": {"user_id": "admin", "is_admin": True},
+        "resource_id": "critical_system",
+        "data": {"record_id": "123"},
+        "compliance_tags": {"gdpr": "true"}
+    }
+    print("\nRunning with authorized access:")
+    result_authorized = execute_{{ task_name | snake_case }}(authorized_params)
+    print(f"Result: {result_authorized}")
+
+    # Example: Unauthorized access
+    unauthorized_params = {
+        "user_context": {"user_id": "guest", "has_access": False},
+        "resource_id": "critical_system",
+        "data": {"record_id": "456"},
+        "compliance_tags": {"gdpr": "false"}
+    }
+    print("\nRunning with unauthorized access:")
+    result_unauthorized = execute_{{ task_name | snake_case }}(unauthorized_params)
+    print(f"Result: {result_unauthorized}")

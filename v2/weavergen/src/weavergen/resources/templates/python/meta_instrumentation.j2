@@ -1,0 +1,98 @@
+{# Jinja2 template for generating meta-observability instrumentation #}
+
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter, BatchSpanProcessor
+from opentelemetry.sdk.resources import Resource
+from typing import Dict, Any, Callable
+import time
+import logging
+
+# Configure a basic tracer for demonstration
+resource = Resource.create({"service.name": "generated-meta-instrumentation"})
+provider = TracerProvider(resource=resource)
+provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
+tracer = trace.get_tracer(__name__)
+
+logger = logging.getLogger(__name__)
+
+def instrument_generation_process(func: Callable) -> Callable:
+    """
+    Decorator to instrument a code generation function with meta-observability spans.
+    Captures metrics about the generation process itself.
+    """
+    def wrapper(*args, **kwargs) -> Any:
+        with tracer.start_as_current_span(f"meta.generation.{{ func.__name__ }}") as span:
+            span.set_attribute("meta.component", "code_generation")
+            span.set_attribute("meta.operation", func.__name__)
+            
+            start_time = time.time()
+            try:
+                result = func(*args, **kwargs)
+                end_time = time.time()
+                duration_ms = (end_time - start_time) * 1000
+                
+                span.set_attribute("meta.duration_ms", duration_ms)
+                span.set_attribute("meta.status", "success")
+                logger.info(f"Meta-instrumented generation function {{ func.__name__ }} completed in {{ duration_ms:.2f }}ms")
+                return result
+            except Exception as e:
+                end_time = time.time()
+                duration_ms = (end_time - start_time) * 1000
+                span.set_attribute("meta.duration_ms", duration_ms)
+                span.set_attribute("meta.status", "failure")
+                span.record_exception(e)
+                logger.error(f"Meta-instrumented generation function {{ func.__name__ }} failed: {{ e }}")
+                raise
+    return wrapper
+
+
+def instrument_template_usage(template_name: str) -> Callable:
+    """
+    Decorator to instrument the usage of a specific Jinja2 template.
+    """
+    def decorator(func: Callable) -> Callable:
+        def wrapper(*args, **kwargs) -> Any:
+            with tracer.start_as_current_span(f"meta.template.{{ template_name }}") as span:
+                span.set_attribute("meta.component", "template_rendering")
+                span.set_attribute("meta.template_name", template_name)
+                
+                start_time = time.time()
+                try:
+                    result = func(*args, **kwargs)
+                    end_time = time.time()
+                    duration_ms = (end_time - start_time) * 1000
+                    
+                    span.set_attribute("meta.duration_ms", duration_ms)
+                    span.set_attribute("meta.status", "success")
+                    logger.info(f"Meta-instrumented template {{ template_name }} rendered in {{ duration_ms:.2f }}ms")
+                    return result
+                except Exception as e:
+                    end_time = time.time()
+                    duration_ms = (end_time - start_time) * 1000
+                    span.set_attribute("meta.duration_ms", duration_ms)
+                    span.set_attribute("meta.status", "failure")
+                    span.record_exception(e)
+                    logger.error(f"Meta-instrumented template {{ template_name }} failed: {{ e }}")
+                    raise
+        return wrapper
+    return decorator
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    print("--- Meta-Observability Instrumentation Simulation ---")
+
+    @instrument_generation_process
+    def simulate_pydantic_generation(data: Dict[str, Any]):
+        print(f"Simulating Pydantic model generation for: {data.get('model_name')}")
+        time.sleep(0.15)
+        return {"status": "success", "files": 1}
+
+    @instrument_template_usage("my_custom_template.j2")
+    def render_cli_template(context: Dict[str, Any]):
+        print(f"Rendering CLI template with context: {context.get('command_name')}")
+        time.sleep(0.08)
+        return {"output_lines": 50}
+
+    simulate_pydantic_generation({"model_name": "UserModel"})
+    render_cli_template({"command_name": "create_user"})
